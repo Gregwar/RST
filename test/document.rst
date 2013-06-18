@@ -20,3 +20,19 @@ A test:
         2. Sub ordered 2!
     * Sub hello two
 * World
+
+Code
+----
+
+Here is a piece of code:
+
+    Testing !
+    This is a piece of code!
+
+Feature
+-------
+
+.. code-block:: php
+
+    <?php
+    $a = 123;

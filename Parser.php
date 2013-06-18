@@ -3,6 +3,7 @@
 namespace Gregwar\RST;
 
 use Gregwar\RST\Nodes\Node;
+use Gregwar\RST\Nodes\CodeNode;
 use Gregwar\RST\Nodes\TitleNode;
 use Gregwar\RST\Nodes\ListNode;
 use Gregwar\RST\Nodes\SeparatorNode;
@@ -20,6 +21,7 @@ class Parser
     protected $document;
     protected $buffer;
     protected $specialLevel;
+    protected $feature = false;
 
     protected function init()
     {
@@ -86,6 +88,40 @@ class Parser
     }
 
     /**
+     * Is the current block a code block ?
+     */
+    protected function isCode()
+    {
+        if (!$this->buffer) {
+            return false;
+        }
+
+        foreach ($this->buffer as $line) {
+            if (strlen($line) && trim($line[0])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Get current feature
+     */
+    protected function getFeature()
+    {
+        if (count($this->buffer) != 1) {
+            return false;
+        }
+
+        if (preg_match('/^\.\. (.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
+            return array($match[1], $match[2]);
+        }
+
+        return false;
+    }
+
+    /**
      * Flushes the current node
      */
     protected function flush()
@@ -95,6 +131,7 @@ class Parser
         }
 
         $node = null;
+        $feature = null;
 
         if ($this->specialLevel) {
             $data = implode("\n", $this->buffer);
@@ -124,10 +161,21 @@ class Parser
                     $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
                 }
                 $node->close();
+            } else if ($this->isCode()) {
+                if ($this->feature) {
+                    die("Unknown feature: ".$this->feature[0]."\n");
+                } else {
+                    $node = new CodeNode(implode("\n", $this->buffer));
+                }
             } else {
-                $node = new Node($this->parseSpan($this->buffer));
+                $feature = $this->getFeature();
+                if (!$feature) {
+                    $node = new Node($this->parseSpan($this->buffer));
+                }
             }
         }
+
+        $this->feature = $feature;
 
         if ($node) {
             $this->document->addNode($node);
@@ -186,6 +234,9 @@ class Parser
         return $this->document;
     }
 
+    /**
+     * Parses a span, this will apply emphasis, references etc.
+     */
     public function parseSpan($span)
     {
         if (is_array($span)) {
@@ -193,7 +244,7 @@ class Parser
         }
 
         $span = preg_replace('/``(.+)``/mUsi', '<code>$1</code>', $span);
-        $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
+        $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<em>$1</em>', $span);
         $span = preg_replace('/_(.+)_/mUsi', '<b>$1</b>', $span);
 
         return $span;
