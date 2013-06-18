@@ -4,11 +4,10 @@ namespace Gregwar\RST\Nodes;
 
 class ListNode extends Node
 {
-    protected $lines;
     protected $stack = array();
     protected $currentDepth = 0;
 
-    public function addLine(array $lines, $ordered, $depth)
+    public function addLine($text, $ordered, $depth)
     {
         $keyword = $ordered ? 'ol' : 'ul';
         $depth += 1;
@@ -20,7 +19,7 @@ class ListNode extends Node
         }
         $this->popTo($depth);
 
-        $this->value .= '<li>'.implode("\n", $lines).'</li>'."\n";
+        $this->value .= '<li>'.$text.'</li>'."\n";
     }
 
     protected function popTo($depth)

@@ -65,7 +65,7 @@ class Parser
             }
         }
 
-        if (preg_match('/^((\*)|([\d]+\.)) /', trim($line))) {
+        if (preg_match('/^((\*)|([\-])) /', trim($line))) {
             return array($line[$i] == '*' ? false : true,
                 $depth);
         }
@@ -112,21 +112,20 @@ class Parser
                     $infos = $this->parseListLine($line);
                     if ($infos) {
                         if ($listLine) {
-                            $node->addLine($listLine, $lineInfo[0], $lineInfo[1]);
+                            $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
                         }
-                        $listLine = array(preg_replace('/^((\*)|([\d]+\.)) /', '', trim($line)));
+                        $listLine = array(preg_replace('/^((\*)|([\-])) /', '', trim($line)));
                         $lineInfo = $infos;
                     } else {
                         $listLine[] = $line;
                     }
                 }
                 if ($listLine) {
-                    $node->addLine($listLine, $lineInfo[0], $lineInfo[1]);
+                    $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
                 }
                 $node->close();
             } else {
-                $data = implode("\n", $this->buffer);
-                $node = new Node($data);
+                $node = new Node($this->parseSpan($this->buffer));
             }
         }
 
@@ -185,5 +184,18 @@ class Parser
         $this->parseLines(trim($document));
 
         return $this->document;
+    }
+
+    public function parseSpan($span)
+    {
+        if (is_array($span)) {
+            $span = implode("\n", $span);
+        }
+
+        $span = preg_replace('/``(.+)``/mUsi', '<code>$1</code>', $span);
+        $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
+        $span = preg_replace('/_(.+)_/mUsi', '<b>$1</b>', $span);
+
+        return $span;
     }
 }
