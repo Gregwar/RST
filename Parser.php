@@ -130,8 +130,6 @@ class Parser
             return false;
         }
 
-        var_dump($this->buffer);
-
         if (preg_match('/^\.\. (\[(.+)\] |)(.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
             $directive = array(
                 'variable' => $match[2],
@@ -159,58 +157,55 @@ class Parser
      */
     protected function flush()
     {
-        if (!$this->buffer) {
-            $this->init();
-            return;
-        }
-
         $node = null;
         $directive = null;
 
-        if ($this->specialLevel) {
-            $data = implode("\n", $this->buffer);
-            if ($data) {
-                $node = new TitleNode($data, $this->specialLevel);
-            } else {
-                $node = new SeparatorNode;
-            }
-        } else if ($this->isBlock) {
-            if ($this->directive) {
-                throw new \Exception('Unknown directive: '.$this->directive['name']);
-            } else {
+        if ($this->buffer) {
+            if ($this->specialLevel) {
+                $data = implode("\n", $this->buffer);
+                if ($data) {
+                    $node = new TitleNode($data, $this->specialLevel);
+                } else {
+                    $node = new SeparatorNode;
+                }
+            } else if ($this->isBlock) {
                 if ($this->isCode) {
                     $node = new CodeNode(implode("\n", $this->buffer));
                 } else {
                     $node = new QuoteNode(implode("\n", $this->buffer));
                 }
-            }
-        } else {
-            if ($this->isList()) {
-                $node = new ListNode();
-                $lineInfo = null;
-                $listLine = array();
-                foreach ($this->buffer as $line) {
-                    $infos = $this->parseListLine($line);
-                    if ($infos) {
-                        if ($listLine) {
-                            $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
+            } else {
+                if ($this->isList()) {
+                    $node = new ListNode();
+                    $lineInfo = null;
+                    $listLine = array();
+                    foreach ($this->buffer as $line) {
+                        $infos = $this->parseListLine($line);
+                        if ($infos) {
+                            if ($listLine) {
+                                $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
+                            }
+                            $listLine = array(preg_replace('/^((\*)|([\d]+\.)) /', '', trim($line)));
+                            $lineInfo = $infos;
+                        } else {
+                            $listLine[] = $line;
                         }
-                        $listLine = array(preg_replace('/^((\*)|([\d]+\.)) /', '', trim($line)));
-                        $lineInfo = $infos;
-                    } else {
-                        $listLine[] = $line;
+                    }
+                    if ($listLine) {
+                        $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
+                    }
+                    $node->close();
+                } else {
+                    $directive = $this->getDirective();
+                    if (!$directive) {
+                        $node = new Node($this->parseSpan($this->buffer));
                     }
                 }
-                if ($listLine) {
-                    $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
-                }
-                $node->close();
-            } else {
-                $directive = $this->getDirective();
-                if (!$directive) {
-                    $node = new Node($this->parseSpan($this->buffer));
-                }
             }
+        }
+
+        if ($this->directive) {
+        //    throw new \Exception('Unknown directive: '.$this->directive['name']);
         }
 
         $this->directive = $directive;
@@ -270,6 +265,7 @@ class Parser
             $this->parseLine($line);
         }
         
+        $this->flush();
         $this->flush();
     }
 

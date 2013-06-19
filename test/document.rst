@@ -66,6 +66,6 @@ Inline style
 Directives
 ----------
 
-.. test::
+.. test:: 
     :a: 123
 
