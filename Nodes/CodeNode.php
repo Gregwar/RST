@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Nodes;
 
-class CodeNode extends Node
+class CodeNode extends BlockNode
 {
     public function render()
     {

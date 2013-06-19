@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Nodes;
 
-class QuoteNode extends Node
+class QuoteNode extends BlockNode
 {
     public function render()
     {
