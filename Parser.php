@@ -11,6 +11,9 @@ use Gregwar\RST\Nodes\SeparatorNode;
 
 class Parser
 {
+    /**
+     * Letters used as separators for titles and horizontal line
+     */
     public static $letters = array(
         '=' => 1,
         '-' => 2,
@@ -18,7 +21,6 @@ class Parser
         '~' => 4
     );
 
-    protected $node;
     protected $document;
     protected $buffer;
     protected $specialLevel;
@@ -26,6 +28,9 @@ class Parser
     protected $isBlock = false;
     protected $isCode = false;
 
+    /**
+     * Tells if the current buffer is announcing a block of code
+     */
     protected function prepareCode()
     {
         if (!$this->buffer) {
@@ -45,10 +50,14 @@ class Parser
     {
         $this->isBlock = false;
         $this->specialLevel = 0;
-        $this->isCode = $this->prepareCode();
+        $this->isCode = $this->prepareCode() || $this->directive;
         $this->buffer = array();
     }
 
+    /**
+     * Tell if a line is a special separating line for title and separators,
+     * returns the depth of the special line
+     */
     protected function isSpecialLine($line)
     {
         if (strlen($line) < 3) {
@@ -72,6 +81,12 @@ class Parser
 
     /**
      * Parses a list line
+     *
+     * @param $line the string line
+     * @return an array containing:
+     *         - true if the list is ordered, false else
+     *         - the depth of the list
+     *         - the text of the first line without the tick
      */
     protected function parseListLine($line)
     {
@@ -88,9 +103,9 @@ class Parser
             }
         }
 
-        if (preg_match('/^((\*)|([\d]+)\.) /', trim($line))) {
+        if (preg_match('/^((\*)|([\d]+)\.) (.+)$/', trim($line), $match)) {
             return array($line[$i] == '*' ? false : true,
-                $depth);
+                $depth, $match[4]);
         }
 
         return false;
@@ -98,6 +113,8 @@ class Parser
 
     /**
      * Is the current block a list ?
+     *
+     * @return bool true if the current buffer should be treated as a list
      */
     protected function isList()
     {
@@ -105,12 +122,51 @@ class Parser
             return false;
         }
 
+        // A buffer is a list if at leas the first line is a list-style
         return $this->parseListLine($this->buffer[0]);
     }
 
     /**
+     * Create a list node from the current buffer
+     *
+     * @return ListNode a list node containing all list items
+     */
+    public function createListNode()
+    {
+            $node = new ListNode();
+            $lineInfo = null;
+            $listLine = array();
+            foreach ($this->buffer as $line) {
+                $infos = $this->parseListLine($line);
+                if ($infos) {
+                    if ($listLine) {
+                        $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
+                    }
+                    $listLine = array($infos[2]);
+                    $lineInfo = $infos;
+                } else {
+                    $listLine[] = $line;
+                }
+            }
+            if ($listLine) {
+                $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
+            }
+            $node->close();
+
+            return $node;
+    }
+
+    /**
      * A line is a code line if it's empty or if it begins with
-     * a trimable caracter
+     * a trimable caracter, for instance:
+     *
+     *     This is a block because there is a space in the front
+     *     of the caracters
+     *
+     *     This is still part of the block, even if there is an empty line
+     *
+     * @param $line the line text
+     * @return true if the line is still in a block
      */
     protected function isBlockLine($line)
     {
@@ -122,7 +178,17 @@ class Parser
     }
 
     /**
-     * Get current directive
+     * Get current directive if the buffer contains one
+     *
+     * .. [variable] name:: data
+     *     :option: value
+     *     :otherOption: otherValue
+     *
+     * @return false if this is not a directive, else an array containing :
+     *         - variable: the variable name of the directive
+     *         - name: the directive name
+     *         - data: the data of the directive
+     *         - options: an array of all the options and their values
      */
     protected function getDirective()
     {
@@ -153,7 +219,7 @@ class Parser
     }
 
     /**
-     * Flushes the current node
+     * Flushes the current buffer to create a node
      */
     protected function flush()
     {
@@ -176,29 +242,11 @@ class Parser
                 }
             } else {
                 if ($this->isList()) {
-                    $node = new ListNode();
-                    $lineInfo = null;
-                    $listLine = array();
-                    foreach ($this->buffer as $line) {
-                        $infos = $this->parseListLine($line);
-                        if ($infos) {
-                            if ($listLine) {
-                                $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
-                            }
-                            $listLine = array(preg_replace('/^((\*)|([\d]+\.)) /', '', trim($line)));
-                            $lineInfo = $infos;
-                        } else {
-                            $listLine[] = $line;
-                        }
-                    }
-                    if ($listLine) {
-                        $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
-                    }
-                    $node->close();
+                    $node = $this->createListNode();
                 } else {
                     $directive = $this->getDirective();
                     if (!$directive) {
-                        $node = new Node($this->parseSpan($this->buffer));
+                        $node = new Node($this->createSpan($this->buffer));
                     }
                 }
             }
@@ -219,6 +267,8 @@ class Parser
 
     /**
      * Process one line
+     *
+     * @param $line the line string
      */
     protected function parseLine(&$line)
     {
@@ -256,6 +306,8 @@ class Parser
 
     /**
      * Process all the lines of a document string
+     *
+     * @param $document the string (content) of the document
      */
     protected function parseLines(&$document)
     {
@@ -264,13 +316,17 @@ class Parser
         foreach ($lines as $line) {
             $this->parseLine($line);
         }
-        
+
+        // Document is flushed twice to trigger the directives
         $this->flush();
         $this->flush();
     }
 
     /**
      * Parse a document and return a Document instance
+     *
+     * @param $document the contents (string) of the document
+     * @return $document the created document
      */
     public function parse(&$document)
     {
@@ -282,30 +338,13 @@ class Parser
     }
 
     /**
-     * Parses a span, this will apply emphasis, references etc.
+     * Create a span, which is a text with inline style
+     *
+     * @param $span the content string
+     * @return Span a span object
      */
-    public function parseSpan($span)
+    public function createSpan($span)
     {
-        if (is_array($span)) {
-            $span = implode("\n", $span);
-        }
-
-        $prefix = sha1(time().'/'.mt_rand());
-        $tokens = array();
-        $span = preg_replace_callback('/`(.+)`/mUsi', function($match) use (&$tokens, $prefix) {
-            $id = $prefix.count($tokens);
-            $tokens[$id] = '<code>'.htmlspecialchars($match[1]).'</code>';
-
-            return $id;
-        }, $span);
-        $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
-        $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
-        $span = preg_replace('/_(.+)_/mUsi', '<u>$1</u>', $span);
-
-        foreach ($tokens as $id => $value) {
-            $span = str_replace($id, $value, $span);
-        }
-
-        return $span;
+        return new Span($this, $span);
     }
 }
