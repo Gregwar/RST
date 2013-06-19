@@ -4,6 +4,7 @@ namespace Gregwar\RST;
 
 use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Nodes\CodeNode;
+use Gregwar\RST\Nodes\QuoteNode;
 use Gregwar\RST\Nodes\TitleNode;
 use Gregwar\RST\Nodes\ListNode;
 use Gregwar\RST\Nodes\SeparatorNode;
@@ -143,7 +144,7 @@ class Parser
             if ($this->feature) {
                 die("Unknown feature: ".$this->feature[0]."\n");
             } else {
-                $node = new CodeNode(implode("\n", $this->buffer));
+                $node = new QuoteNode(implode("\n", $this->buffer));
             }
         } else {
             if ($this->isList()) {
@@ -255,9 +256,20 @@ class Parser
             $span = implode("\n", $span);
         }
 
-        $span = preg_replace('/``(.+)``/mUsi', '<code>$1</code>', $span);
-        $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<em>$1</em>', $span);
-        $span = preg_replace('/_(.+)_/mUsi', '<b>$1</b>', $span);
+        $tokens = array();
+        $span = preg_replace_callback('/`(.+)`/mUsi', function($match) use (&$tokens) {
+            $id = '@verbatim@['.count($tokens).']';
+            $tokens[$id] = '<code>'.$match[1].'</code>';
+
+            return $id;
+        }, $span);
+        $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
+        $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
+        $span = preg_replace('/_(.+)_/mUsi', '<u>$1</u>', $span);
+
+        foreach ($tokens as $id => $value) {
+            $span = str_replace($id, $value, $span);
+        }
 
         return $span;
     }
