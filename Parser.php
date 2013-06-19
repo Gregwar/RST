@@ -37,6 +37,9 @@ class Parser
     // Current directive to be applied on next node
     protected $directive = false;
 
+    // Are we parsing a directive ?
+    protected $parsingDirective = false;
+
     // Current directives
     protected $directives = array();
 
@@ -252,32 +255,56 @@ class Parser
      *         - data: the data of the directive
      *         - options: an array of all the options and their values
      */
-    protected function getDirective()
+    protected function initDirective($line)
     {
-        if (!$this->buffer) {
-            return false;
-        }
-
-        if (preg_match('/^\.\. (\|(.+)\| |)(.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
-            $directive = array(
+        if (preg_match('/^\.\. (\|(.+)\| |)(.+):: (.*)$/mUsi', $line, $match)) {
+            $this->directive = array(
                 'variable' => $match[2],
                 'name' => $match[3],
                 'data' => $match[4],
                 'options' => array()
             );
 
-            for ($i=1; $i<count($this->buffer); $i++) {
-                if (preg_match('/^([ ]+):(.+): (.+)$/mUsi', $this->buffer[$i], $match)) {
-                    $directive['options'][$match[2]] = $match[3];
-                } else {
-                    return false;
-                }
-            }
-
-            return $directive;
+            return true;
         }
 
         return false;
+    }
+
+    /**
+     * Is this line a comment ?
+     *
+     * @param $line the line
+     * @return bool true if it's a comment
+     */
+    protected function isComment($line)
+    {
+        return preg_match('/^\.\.(.*)$/mUsi', $line);
+    }
+
+    /**
+     * Is this line a directive ?
+     *
+     * @param $line the line
+     * @return bool true if it's a directive
+     */
+    protected function isDirective($line)
+    {
+        return preg_match('/^\.\. (\|(.+)\| |)(.+):: (.*)$/mUsi', $line);
+    }
+
+    /**
+     * Try to add an option line to the current directive, returns true if sucess
+     * and false if failure
+     */
+    protected function directiveAddOption($line)
+    {
+        if (preg_match('/^([ ]+):(.+): (.+)$/mUsi', $line, $match)) {
+            $this->directive['options'][$match[2]] = $match[3];
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -286,7 +313,6 @@ class Parser
     protected function flush()
     {
         $node = null;
-        $directive = null;
 
         if ($this->buffer) {
             if ($this->specialLevel) {
@@ -306,10 +332,7 @@ class Parser
                 if ($this->isList()) {
                     $node = $this->createListNode();
                 } else {
-                    $directive = $this->getDirective();
-                    if (!$directive) {
-                        $node = new Node($this->createSpan($this->buffer));
-                    }
+                    $node = new Node($this->createSpan($this->buffer));
                 }
             }
         }
@@ -326,7 +349,7 @@ class Parser
             }
         }
 
-        $this->directive = $directive;
+        $this->directive = null;
 
         if ($node) {
             $this->document->addNode($node);
@@ -336,7 +359,7 @@ class Parser
     }
 
     /**
-     * Get the current document
+     i* Get the current document
      *
      * @return Document the document
      */
@@ -352,19 +375,24 @@ class Parser
      */
     protected function parseLine(&$line)
     {
-        if ($this->isBlockLine($line)) {
-            if (!$this->buffer && trim($line)) {
-                $this->isBlock = true;
-            }
-        } else {
-            if ($this->isBlock) {
-                $this->flush();
+        if (!$this->parsingDirective) {
+            if ($this->isBlockLine($line)) {
+                if (!$this->buffer && trim($line)) {
+                    $this->isBlock = true;
+                }
+            } else {
+                if ($this->isBlock) {
+                    $this->flush();
+                }
             }
         }
 
         if (!$this->isBlock) {
             if (!trim($line)) {
-                $this->flush();
+                if ($this->buffer) {
+                    $this->flush();
+                    $this->parsingDirective = false;
+                }
             } else {
                 $specialLevel = $this->isSpecialLine($line);
 
@@ -376,7 +404,30 @@ class Parser
                     $this->buffer = array($lastLine);
                     $this->flush();
                 } else {
-                    $this->buffer[] = $line;
+                    if (!$this->buffer) {
+                        if (!$this->parsingDirective) {
+                            if ($this->isDirective($line)) {
+                                $this->parsingDirective = true;
+                                $this->flush();
+                                $this->initDirective($line);
+                            }
+                        } else {
+                            if (!$this->directiveAddOption($line)) {
+                                if ($this->isDirective($line)) {
+                                    $this->flush();
+                                    $this->initDirective($line);
+                                } else {
+                                    $this->parsingDirective = false;
+                                }
+                            }
+                        }
+                    }
+
+                    if (!$this->parsingDirective) {
+                        if (!$this->isComment($line)) {
+                            $this->buffer[] = $line;
+                        }
+                    }
                 }
             }
         } else {

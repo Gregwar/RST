@@ -4,6 +4,8 @@ Gregwar/RST Cheat Sheet
 Title
 -----
 
+.. This is a comment and won't appear in the final render
+
 The second-level titles are specified with `---` under the text
 
 Sub title
@@ -67,6 +69,10 @@ Directives
 ----------
 
 .. |test| replace:: The Test String!!
+    :opt: 123
+.. |othertest| replace:: An other test!
 
-Testing the replace: |test|
+Testing the replace: |test|, an other: |othertest|
 
+.. |testing| replace:: Magic
+Ho Ho Ho
