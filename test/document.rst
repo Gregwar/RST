@@ -1,32 +1,32 @@
-Document title
-==============
+Gregwar/RST Cheat Sheet
+=======================
 
-First title
----------
+Title
+-----
 
-Sub title 1
-~~~~~~~~~~~
+The second-level titles are specified with `---` under the text
 
-Hello world !
+Sub title
+~~~~~~~~~
 
-Sub title 2
-~~~~~~~~~~~
+The third-level titles are specified with `~~~` under the text
 
-Lorem ipsum
+Blocks
+------
 
 Separator
----------
+~~~~~~~~~
 
-Test of separator :
+A separator is like a title underline but without any text :
 
 -----
 
-This is the text under the separator
+This will result in a text separation
 
 Lists
------
+~~~~~
 
-Test list
+Test list :
 
 * Element A
     * Sub A, this a
@@ -47,10 +47,25 @@ As Shakespeare said:
 
     God has given you one face, and you make yourself another.
 
-Inline
------
+Code
+----
+
+Here is a piece of code::
+
+    <?php
+
+    echo "I love RST";
+
+Inline style
+------------
 
 * `*italic*` renders as *italic*
 * `**strong**` renders as **strong**
 * `_underlined_` renders as _underlined_
+
+Directives
+----------
+
+.. test::
+    :a: 123
 

@@ -1,34 +1,70 @@
-<h1>Document title</h1>
+array(1) {
+  [0] =>
+  string(63) "The second-level titles are specified with `---` under the text"
+}
+array(1) {
+  [0] =>
+  string(62) "The third-level titles are specified with `~~~` under the text"
+}
+array(1) {
+  [0] =>
+  string(60) "A separator is like a title underline but without any text :"
+}
+array(1) {
+  [0] =>
+  string(37) "This will result in a text separation"
+}
+array(1) {
+  [0] =>
+  string(11) "Test list :"
+}
+array(1) {
+  [0] =>
+  string(20) "As Shakespeare said:"
+}
+array(1) {
+  [0] =>
+  string(25) "Here is a piece of code::"
+}
+array(2) {
+  [0] =>
+  string(9) ".. test::"
+  [1] =>
+  string(11) "    :a: 123"
+}
+<h1>Gregwar/RST Cheat Sheet</h1>
 
-<h2>First title</h2>
+<h2>Title</h2>
 
-<h4>Sub title 1</h4>
+<p>The second-level titles are specified with <code>---</code> under the text</p>
 
-<p>Hello world !</p>
+<h4>Sub title</h4>
 
-<h4>Sub title 2</h4>
+<p>The third-level titles are specified with <code>~~~</code> under the text</p>
 
-<p>Lorem ipsum</p>
+<h2>Blocks</h2>
 
-<h2>Separator</h2>
+<h4>Separator</h4>
 
-<p>Test of separator :</p>
+<p>A separator is like a title underline but without any text :</p>
 
 <hr />
 
-<p>This is the text under the separator</p>
+<p>This will result in a text separation</p>
 
-<h2>Lists</h2>
+<h4>Lists</h4>
 
-<p>Test list</p>
+<p>Test list :</p>
 
 <p><ul>
 <li>Element A</li>
 <ul>
 <li>Sub A, this a
-      multiline sentence in the source
-        1. Sub ordered as "1"
-        2. Sub ordered as "2"</li>
+      multiline sentence in the source</li>
+<ol>
+<li>Sub ordered as "1"</li>
+<li>Sub ordered as "2"</li>
+</ol>
 <li>Sub hello two</li>
 </ul>
 <li>Element B</li>
@@ -46,7 +82,16 @@
     God has given you one face, and you make yourself another.<br />
 </blockquote>
 
-<h2>Inline</h2>
+<h2>Code</h2>
+
+<p>Here is a piece of code::</p>
+
+<pre><code>    &lt;?php
+
+    echo &quot;I love RST&quot;;
+</code></pre>
+
+<h2>Inline style</h2>
 
 <p><ul>
 <li><code>*italic*</code> renders as <em>italic</em></li>
@@ -54,4 +99,9 @@
 <li><code>_underlined_</code> renders as <u>underlined</u></li>
 </ul>
 </p>
+
+<h2>Directives</h2>
+
+<p>.. test::
+    :a: 123</p>
 

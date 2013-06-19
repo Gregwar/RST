@@ -22,14 +22,31 @@ class Parser
     protected $document;
     protected $buffer;
     protected $specialLevel;
-    protected $feature = false;
+    protected $directive = false;
+    protected $isBlock = false;
     protected $isCode = false;
+
+    protected function prepareCode()
+    {
+        if (!$this->buffer) {
+            return false;
+        }
+
+        $lastLine = trim($this->buffer[count($this->buffer)-1]);
+
+        if (strlen($lastLine) >= 2) {
+            return substr($lastLine, -2) == '::';
+        } else {
+            return false;
+        }
+    }
 
     protected function init()
     {
-        $this->buffer = array();
-        $this->isCode = false;
+        $this->isBlock = false;
         $this->specialLevel = 0;
+        $this->isCode = $this->prepareCode();
+        $this->buffer = array();
     }
 
     protected function isSpecialLine($line)
@@ -71,7 +88,7 @@ class Parser
             }
         }
 
-        if (preg_match('/^((\*)|([\-])) /', trim($line))) {
+        if (preg_match('/^((\*)|([\d]+)\.) /', trim($line))) {
             return array($line[$i] == '*' ? false : true,
                 $depth);
         }
@@ -95,7 +112,7 @@ class Parser
      * A line is a code line if it's empty or if it begins with
      * a trimable caracter
      */
-    protected function isCodeLine($line)
+    protected function isBlockLine($line)
     {
         if (strlen($line)) {
             return !trim($line[0]);
@@ -105,16 +122,33 @@ class Parser
     }
 
     /**
-     * Get current feature
+     * Get current directive
      */
-    protected function getFeature()
+    protected function getDirective()
     {
-        if (count($this->buffer) != 1) {
+        if (!$this->buffer) {
             return false;
         }
 
-        if (preg_match('/^\.\. (.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
-            return array($match[1], $match[2]);
+        var_dump($this->buffer);
+
+        if (preg_match('/^\.\. (\[(.+)\] |)(.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
+            $directive = array(
+                'variable' => $match[2],
+                'name' => $match[3],
+                'data' => $match[4],
+                'options' => array()
+            );
+
+            for ($i=1; $i<count($this->buffer); $i++) {
+                if (preg_match('/^([ ]+):(.+): (.+)$/mUsi', $this->buffer[$i], $match)) {
+                    $directive['options'][$match[2]] = $match[3];
+                } else {
+                    return false;
+                }
+            }
+
+            return $directive;
         }
 
         return false;
@@ -131,7 +165,7 @@ class Parser
         }
 
         $node = null;
-        $feature = null;
+        $directive = null;
 
         if ($this->specialLevel) {
             $data = implode("\n", $this->buffer);
@@ -140,11 +174,15 @@ class Parser
             } else {
                 $node = new SeparatorNode;
             }
-        } else if ($this->isCode) {
-            if ($this->feature) {
-                die("Unknown feature: ".$this->feature[0]."\n");
+        } else if ($this->isBlock) {
+            if ($this->directive) {
+                throw new \Exception('Unknown directive: '.$this->directive['name']);
             } else {
-                $node = new QuoteNode(implode("\n", $this->buffer));
+                if ($this->isCode) {
+                    $node = new CodeNode(implode("\n", $this->buffer));
+                } else {
+                    $node = new QuoteNode(implode("\n", $this->buffer));
+                }
             }
         } else {
             if ($this->isList()) {
@@ -157,7 +195,7 @@ class Parser
                         if ($listLine) {
                             $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
                         }
-                        $listLine = array(preg_replace('/^((\*)|([\-])) /', '', trim($line)));
+                        $listLine = array(preg_replace('/^((\*)|([\d]+\.)) /', '', trim($line)));
                         $lineInfo = $infos;
                     } else {
                         $listLine[] = $line;
@@ -168,14 +206,14 @@ class Parser
                 }
                 $node->close();
             } else {
-                $feature = $this->getFeature();
-                if (!$feature) {
+                $directive = $this->getDirective();
+                if (!$directive) {
                     $node = new Node($this->parseSpan($this->buffer));
                 }
             }
         }
 
-        $this->feature = $feature;
+        $this->directive = $directive;
 
         if ($node) {
             $this->document->addNode($node);
@@ -189,17 +227,17 @@ class Parser
      */
     protected function parseLine(&$line)
     {
-        if ($this->isCodeLine($line)) {
+        if ($this->isBlockLine($line)) {
             if (!$this->buffer && trim($line)) {
-                $this->isCode = true;
+                $this->isBlock = true;
             }
         } else {
-            if ($this->isCode) {
+            if ($this->isBlock) {
                 $this->flush();
             }
         }
 
-        if (!$this->isCode) {
+        if (!$this->isBlock) {
             if (!trim($line)) {
                 $this->flush();
             } else {
@@ -260,7 +298,7 @@ class Parser
         $tokens = array();
         $span = preg_replace_callback('/`(.+)`/mUsi', function($match) use (&$tokens, $prefix) {
             $id = $prefix.count($tokens);
-            $tokens[$id] = '<code>'.$match[1].'</code>';
+            $tokens[$id] = '<code>'.htmlspecialchars($match[1]).'</code>';
 
             return $id;
         }, $span);
