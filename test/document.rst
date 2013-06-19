@@ -29,10 +29,12 @@ Here is a piece of code:
     Testing !
     This is a piece of code!
 
+    Multi parts!
+
 Feature
 -------
 
-.. code-block:: php
+#.. code-block:: php
 
     <?php
     $a = 123;

@@ -22,10 +22,13 @@ class Parser
     protected $buffer;
     protected $specialLevel;
     protected $feature = false;
+    protected $isCode = false;
 
     protected function init()
     {
         $this->buffer = array();
+        $this->isCode = false;
+        $this->specialLevel = 0;
     }
 
     protected function isSpecialLine($line)
@@ -88,21 +91,16 @@ class Parser
     }
 
     /**
-     * Is the current block a code block ?
+     * A line is a code line if it's empty or if it begins with
+     * a trimable caracter
      */
-    protected function isCode()
+    protected function isCodeLine($line)
     {
-        if (!$this->buffer) {
-            return false;
+        if (strlen($line)) {
+            return !trim($line[0]);
+        } else {
+            return !trim($line);
         }
-
-        foreach ($this->buffer as $line) {
-            if (strlen($line) && trim($line[0])) {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     /**
@@ -127,6 +125,7 @@ class Parser
     protected function flush()
     {
         if (!$this->buffer) {
+            $this->init();
             return;
         }
 
@@ -139,6 +138,12 @@ class Parser
                 $node = new TitleNode($data, $this->specialLevel);
             } else {
                 $node = new SeparatorNode;
+            }
+        } else if ($this->isCode) {
+            if ($this->feature) {
+                die("Unknown feature: ".$this->feature[0]."\n");
+            } else {
+                $node = new CodeNode(implode("\n", $this->buffer));
             }
         } else {
             if ($this->isList()) {
@@ -161,12 +166,6 @@ class Parser
                     $node->addLine($this->parseSpan($listLine), $lineInfo[0], $lineInfo[1]);
                 }
                 $node->close();
-            } else if ($this->isCode()) {
-                if ($this->feature) {
-                    die("Unknown feature: ".$this->feature[0]."\n");
-                } else {
-                    $node = new CodeNode(implode("\n", $this->buffer));
-                }
             } else {
                 $feature = $this->getFeature();
                 if (!$feature) {
@@ -180,9 +179,8 @@ class Parser
         if ($node) {
             $this->document->addNode($node);
         }
-
-        $this->buffer = array();
-        $this->specialLevel = 0;
+        
+        $this->init();
     }
 
     /**
@@ -190,21 +188,35 @@ class Parser
      */
     protected function parseLine(&$line)
     {
-        if (!trim($line)) {
-            $this->flush();
+        if ($this->isCodeLine($line)) {
+            if (!$this->buffer && trim($line)) {
+                $this->isCode = true;
+            }
         } else {
-            $specialLevel = $this->isSpecialLine($line);
-
-            if ($specialLevel) {
-                $lastLine = array_pop($this->buffer);
+            if ($this->isCode) {
                 $this->flush();
+            }
+        }
 
-                $this->specialLevel = $specialLevel;
-                $this->buffer = array($lastLine);
+        if (!$this->isCode) {
+            if (!trim($line)) {
                 $this->flush();
             } else {
-                $this->buffer[] = $line;
+                $specialLevel = $this->isSpecialLine($line);
+
+                if ($specialLevel) {
+                    $lastLine = array_pop($this->buffer);
+                    $this->flush();
+
+                    $this->specialLevel = $specialLevel;
+                    $this->buffer = array($lastLine);
+                    $this->flush();
+                } else {
+                    $this->buffer[] = $line;
+                }
             }
+        } else {
+            $this->buffer[] = $line;
         }
     }
 
