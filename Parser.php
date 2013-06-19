@@ -256,9 +256,10 @@ class Parser
             $span = implode("\n", $span);
         }
 
+        $prefix = sha1(time().'/'.mt_rand());
         $tokens = array();
-        $span = preg_replace_callback('/`(.+)`/mUsi', function($match) use (&$tokens) {
-            $id = '@verbatim@['.count($tokens).']';
+        $span = preg_replace_callback('/`(.+)`/mUsi', function($match) use (&$tokens, $prefix) {
+            $id = $prefix.count($tokens);
             $tokens[$id] = '<code>'.$match[1].'</code>';
 
             return $id;
