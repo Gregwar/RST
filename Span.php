@@ -4,13 +4,24 @@ namespace Gregwar\RST;
 
 class Span
 {
+    protected $parser;
     protected $span;
 
     public function __construct(Parser $parser, $span)
     {
+        $this->parser = $parser;
         $this->span = $span;
     }
 
+    /**
+     * Renders the Span, which includes :
+     *
+     * - `verbatim`
+     * - *italic*
+     * - **bold**
+     * - _underlined_
+     * - |variable|
+     */
     public function render()
     {
         $span = $this->span;
@@ -34,6 +45,11 @@ class Span
         foreach ($tokens as $id => $value) {
             $span = str_replace($id, $value, $span);
         }
+
+        $environment = $this->parser->getEnvironment();
+        $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {
+            return $environment->getVariable($match[1]);
+        }, $span);
 
         return $span;
     }

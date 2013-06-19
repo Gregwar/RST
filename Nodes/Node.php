@@ -11,6 +11,11 @@ class Node
         $this->value = $value;
     }
 
+    public function getValue()
+    {
+        return $this->value;
+    }
+
     public function render()
     {
         return "<p>".$this->value."</p>";

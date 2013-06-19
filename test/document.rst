@@ -66,6 +66,7 @@ Inline style
 Directives
 ----------
 
-.. test:: 
-    :a: 123
+.. |test| replace:: The Test String!!
+
+Testing the replace: |test|
 

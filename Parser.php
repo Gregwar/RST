@@ -2,12 +2,16 @@
 
 namespace Gregwar\RST;
 
+// Nodes
 use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Nodes\CodeNode;
 use Gregwar\RST\Nodes\QuoteNode;
 use Gregwar\RST\Nodes\TitleNode;
 use Gregwar\RST\Nodes\ListNode;
 use Gregwar\RST\Nodes\SeparatorNode;
+
+// Directives
+use Gregwar\RST\Directives\Replace;
 
 class Parser
 {
@@ -21,12 +25,70 @@ class Parser
         '~' => 4
     );
 
+    // Current document
     protected $document;
+
+    // The buffer is an array containing current lines that are parsed
     protected $buffer;
+
+    // Current level of special lines (==== and so)
     protected $specialLevel;
+
+    // Current directive to be applied on next node
     protected $directive = false;
+
+    // Current directives
+    protected $directives = array();
+
+    // Environment
+    protected $environment = null;
+
+    // Is the current node a block ?
     protected $isBlock = false;
+
+    // Is the current node code ?
     protected $isCode = false;
+
+    public function __construct()
+    {
+        $this->environment = new Environment;
+        $this->initDirectives();
+    }
+
+    /**
+     * Initializing built-in directives
+     */
+    public function initDirectives()
+    {
+        $directives = array(
+            'replace' => new Replace
+        );
+
+        foreach ($directives as $name => $directive) {
+            $this->registerDirective($name, $directive);
+        }
+    }
+
+    /**
+     * Get the current environment
+     *
+     * @return Environment the parser environment
+     */
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
+
+    /**
+     * Register a new directive handler
+     *
+     * @param $name a string representing the directive name
+     * @param $directive a directive handler
+     */
+    protected function registerDirective($name, Directive $directive)
+    {
+        $this->directives[$name] = $directive;
+    }
 
     /**
      * Tells if the current buffer is announcing a block of code
@@ -180,7 +242,7 @@ class Parser
     /**
      * Get current directive if the buffer contains one
      *
-     * .. [variable] name:: data
+     * .. |variable| name:: data
      *     :option: value
      *     :otherOption: otherValue
      *
@@ -196,7 +258,7 @@ class Parser
             return false;
         }
 
-        if (preg_match('/^\.\. (\[(.+)\] |)(.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
+        if (preg_match('/^\.\. (\|(.+)\| |)(.+):: (.*)$/mUsi', $this->buffer[0], $match)) {
             $directive = array(
                 'variable' => $match[2],
                 'name' => $match[3],
@@ -236,9 +298,9 @@ class Parser
                 }
             } else if ($this->isBlock) {
                 if ($this->isCode) {
-                    $node = new CodeNode(implode("\n", $this->buffer));
+                    $node = new CodeNode($this->buffer);
                 } else {
-                    $node = new QuoteNode(implode("\n", $this->buffer));
+                    $node = new QuoteNode($this->buffer);
                 }
             } else {
                 if ($this->isList()) {
@@ -253,7 +315,15 @@ class Parser
         }
 
         if ($this->directive) {
-        //    throw new \Exception('Unknown directive: '.$this->directive['name']);
+            $name = $this->directive['name'];
+
+            if (isset($this->directives[$name])) {
+                $currentDirective = $this->directives[$name];
+                $currentDirective->process($this, $node, $this->directive['variable'], $this->directive['data'], $this->directive['options']);
+                $node = null;
+            } else {
+                throw new \Exception('Unknown directive: '.$name);
+            }
         }
 
         $this->directive = $directive;
@@ -263,6 +333,16 @@ class Parser
         }
         
         $this->init();
+    }
+
+    /**
+     * Get the current document
+     *
+     * @return Document the document
+     */
+    public function getDocument()
+    {
+        return $this->document;
     }
 
     /**
