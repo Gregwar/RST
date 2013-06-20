@@ -25,6 +25,18 @@ class Parser
         '~' => 4
     );
 
+    const STATE_BEGIN = 0;
+    const STATE_NORMAL = 1;
+    const STATE_DIRECTIVE = 2;
+    const STATE_BLOCK = 3;
+    const STATE_TITLE = 4;
+    const STATE_LIST = 5;
+    const STATE_SEPARATOR = 6;
+    const STATE_CODE = 7;
+
+    // Current state
+    protected $state;
+
     // Current document
     protected $document;
 
@@ -37,17 +49,11 @@ class Parser
     // Current directive to be applied on next node
     protected $directive = false;
 
-    // Are we parsing a directive ?
-    protected $parsingDirective = false;
-
     // Current directives
     protected $directives = array();
 
     // Environment
     protected $environment = null;
-
-    // Is the current node a block ?
-    protected $isBlock = false;
 
     // Is the current node code ?
     protected $isCode = false;
@@ -113,7 +119,6 @@ class Parser
 
     protected function init()
     {
-        $this->isBlock = false;
         $this->specialLevel = 0;
         $this->isCode = $this->prepareCode() || $this->directive;
         $this->buffer = array();
@@ -198,27 +203,27 @@ class Parser
      */
     public function createListNode()
     {
-            $node = new ListNode();
-            $lineInfo = null;
-            $listLine = array();
-            foreach ($this->buffer as $line) {
-                $infos = $this->parseListLine($line);
-                if ($infos) {
-                    if ($listLine) {
-                        $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
-                    }
-                    $listLine = array($infos[2]);
-                    $lineInfo = $infos;
-                } else {
-                    $listLine[] = $line;
+        $node = new ListNode();
+        $lineInfo = null;
+        $listLine = array();
+        foreach ($this->buffer as $line) {
+            $infos = $this->parseListLine($line);
+            if ($infos) {
+                if ($listLine) {
+                    $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
                 }
+                $listLine = array($infos[2]);
+                $lineInfo = $infos;
+            } else {
+                $listLine[] = $line;
             }
-            if ($listLine) {
-                $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
-            }
-            $node->close();
+        }
+        if ($listLine) {
+            $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
+        }
+        $node->close();
 
-            return $node;
+        return $node;
     }
 
     /**
@@ -315,25 +320,26 @@ class Parser
         $node = null;
 
         if ($this->buffer) {
-            if ($this->specialLevel) {
+            switch ($this->state) {
+            case self::STATE_TITLE:
                 $data = implode("\n", $this->buffer);
-                if ($data) {
-                    $node = new TitleNode($data, $this->specialLevel);
-                } else {
-                    $node = new SeparatorNode;
-                }
-            } else if ($this->isBlock) {
-                if ($this->isCode) {
-                    $node = new CodeNode($this->buffer);
-                } else {
-                    $node = new QuoteNode($this->buffer);
-                }
-            } else {
-                if ($this->isList()) {
-                    $node = $this->createListNode();
-                } else {
-                    $node = new Node($this->createSpan($this->buffer));
-                }
+                $node = new TitleNode($data, $this->specialLevel);
+                break;
+            case self::STATE_SEPARATOR:
+                $node = new SeparatorNode;
+                break;
+            case self::STATE_CODE:
+                $node = new CodeNode($this->buffer);
+                break;
+            case self::STATE_BLOCK:
+                $node = new QuoteNode($this->buffer);
+                break;
+            case self::STATE_LIST:
+                $node = $this->createListNode();
+                break;
+            case self::STATE_NORMAL:
+                $node = new Node($this->createSpan($this->buffer));
+                break;
             }
         }
 
@@ -354,7 +360,7 @@ class Parser
         if ($node) {
             $this->document->addNode($node);
         }
-        
+
         $this->init();
     }
 
@@ -375,64 +381,85 @@ class Parser
      */
     protected function parseLine(&$line)
     {
-        if (!$this->parsingDirective) {
-            if ($this->isBlockLine($line)) {
-                if (!$this->buffer && trim($line)) {
-                    $this->isBlock = true;
+        switch ($this->state) {
+        case self::STATE_BEGIN:
+            if ($this->isBlockLine($line) && trim($line)) {
+                if ($this->isCode) {
+                    $this->state = self::STATE_CODE;
+                } else {
+                    $this->state = self::STATE_BLOCK;
                 }
+                return false;
+            } else if ($this->isDirective($line)) {
+                $this->state = self::STATE_DIRECTIVE;
+                $this->buffer = array();
+                $this->flush();
+                $this->initDirective($line);
             } else {
-                if ($this->isBlock) {
-                    $this->flush();
-                }
+                $this->state = self::STATE_NORMAL;
+                return false;
             }
-        }
+            break;
 
-        if (!$this->isBlock) {
-            if (!trim($line)) {
-                if ($this->buffer) {
-                    $this->flush();
-                    $this->parsingDirective = false;
-                }
-            } else {
+        case self::STATE_NORMAL:
+            if (trim($line)) {
                 $specialLevel = $this->isSpecialLine($line);
 
                 if ($specialLevel) {
-                    $lastLine = array_pop($this->buffer);
-                    $this->flush();
-
                     $this->specialLevel = $specialLevel;
-                    $this->buffer = array($lastLine);
-                    $this->flush();
-                } else {
-                    if (!$this->buffer) {
-                        if (!$this->parsingDirective) {
-                            if ($this->isDirective($line)) {
-                                $this->parsingDirective = true;
-                                $this->flush();
-                                $this->initDirective($line);
-                            }
-                        } else {
-                            if (!$this->directiveAddOption($line)) {
-                                if ($this->isDirective($line)) {
-                                    $this->flush();
-                                    $this->initDirective($line);
-                                } else {
-                                    $this->parsingDirective = false;
-                                }
-                            }
-                        }
-                    }
+                    $lastLine = array_pop($this->buffer);
 
-                    if (!$this->parsingDirective) {
-                        if (!$this->isComment($line)) {
-                            $this->buffer[] = $line;
-                        }
+                    if ($lastLine) {
+                        $this->buffer = array($lastLine);
+                        $this->state = self::STATE_TITLE;
+                    } else {
+                        $this->buffer[] = $line;
+                        $this->state = self::STATE_SEPARATOR;
+                    }
+                    $this->flush();
+                    $this->state = self::STATE_BEGIN;
+                } else {
+                    if (!$this->isComment($line)) {
+                        $this->buffer[] = $line;
                     }
                 }
+            } else {
+                if ($this->isList()) {
+                    $this->state = self::STATE_LIST;
+                }
+                $this->flush();
+                $this->state = self::STATE_BEGIN;
             }
-        } else {
-            $this->buffer[] = $line;
+            break;
+
+        case self::STATE_BLOCK:
+        case self::STATE_CODE:
+            if (!$this->isBlockLine($line)) {
+                $this->flush();
+                $this->state = self::STATE_BEGIN;
+                return false;
+            } else {
+                $this->buffer[] = $line;
+            }
+            break;
+
+        case self::STATE_DIRECTIVE:
+            if (!$this->directiveAddOption($line)) {
+                if ($this->isDirective($line)) {
+                    $this->flush();
+                    $this->initDirective($line);
+                } else {
+                    $this->state = self::STATE_BEGIN;
+                    return false;
+                }
+            }
+            break;
+
+        default:
+            throw new \Exception('Parser ended in an unexcepted state');
         }
+
+        return true;
     }
 
     /**
@@ -443,9 +470,10 @@ class Parser
     protected function parseLines(&$document)
     {
         $lines = explode("\n", $document);
+        $this->state = self::STATE_BEGIN;
 
         foreach ($lines as $line) {
-            $this->parseLine($line);
+            while (!$this->parseLine($line));
         }
 
         // Document is flushed twice to trigger the directives

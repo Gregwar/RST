@@ -75,4 +75,4 @@ Directives
 Testing the replace: |test|, an other: |othertest|
 
 .. |testing| replace:: Magic
-Ho Ho Ho
+Testing
