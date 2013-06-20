@@ -12,6 +12,11 @@ use Gregwar\RST\Directive;
  */
 class Replace extends Directive
 {
+    public function getName()
+    {
+        return 'replace';
+    }
+
     public function processAction(Parser $parser, $variable, $data, array $options)
     {
         $environment = $parser->getEnvironment();

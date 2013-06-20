@@ -98,3 +98,12 @@ Do you know `Annymous links`__ ?
 It's great, and can be defined quickly__
 
 __ http://quickly.anonymous.com/
+
+Code block
+----------
+
+.. code-block:: test
+
+    This is a multiple line block
+
+    Of code!!

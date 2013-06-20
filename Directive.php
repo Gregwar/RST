@@ -2,8 +2,13 @@
 
 namespace Gregwar\RST;
 
-class Directive
+abstract class Directive
 {
+    /**
+     * Get the directive name
+     */
+    abstract  public function getName();
+
     /**
      * This is the function called by the parser to process the directive, it can be overloaded
      * to do anything with the document, like tweaking nodes or change the environment

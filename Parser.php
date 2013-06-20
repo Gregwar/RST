@@ -12,6 +12,7 @@ use Gregwar\RST\Nodes\ListNode;
 use Gregwar\RST\Nodes\SeparatorNode;
 
 // Directives
+use Gregwar\RST\Directives\CodeBlock;
 use Gregwar\RST\Directives\Replace;
 
 class Parser
@@ -100,11 +101,12 @@ class Parser
     public function initDirectives()
     {
         $directives = array(
-            'replace' => new Replace
+            new CodeBlock,
+            new Replace
         );
 
         foreach ($directives as $name => $directive) {
-            $this->registerDirective($name, $directive);
+            $this->registerDirective($directive);
         }
     }
 
@@ -121,12 +123,11 @@ class Parser
     /**
      * Register a new directive handler
      *
-     * @param $name a string representing the directive name
      * @param $directive a directive handler
      */
-    protected function registerDirective($name, Directive $directive)
+    protected function registerDirective(Directive $directive)
     {
-        $this->directives[$name] = $directive;
+        $this->directives[$directive->getName()] = $directive;
     }
 
     /**
@@ -142,7 +143,11 @@ class Parser
 
         if (strlen($lastLine) >= 2) {
             if (substr($lastLine, -2) == '::') {
-                $this->buffer[count($this->buffer)-1] = substr($lastLine, 0, -1);
+                if (trim($lastLine) == '::') {
+                    array_pop($this->buffer);
+                } else {
+                    $this->buffer[count($this->buffer)-1] = substr($lastLine, 0, -1);
+                }
                 return true;
             }
         }
@@ -418,23 +423,25 @@ class Parser
     {
         switch ($this->state) {
         case self::STATE_BEGIN:
-            if ($this->isBlockLine($line) && trim($line)) {
-                if ($this->isCode) {
-                    $this->state = self::STATE_CODE;
+            if (trim($line)) {
+                if ($this->isBlockLine($line)) {
+                    if ($this->isCode) {
+                        $this->state = self::STATE_CODE;
+                    } else {
+                        $this->state = self::STATE_BLOCK;
+                    }
+                    return false;
+                } else if ($this->isDirective($line)) {
+                    $this->state = self::STATE_DIRECTIVE;
+                    $this->buffer = array();
+                    $this->flush();
+                    $this->initDirective($line);
+                } else if ($this->parseLink($line)) {
+                    return true;
                 } else {
-                    $this->state = self::STATE_BLOCK;
+                    $this->state = self::STATE_NORMAL;
+                    return false;
                 }
-                return false;
-            } else if ($this->isDirective($line)) {
-                $this->state = self::STATE_DIRECTIVE;
-                $this->buffer = array();
-                $this->flush();
-                $this->initDirective($line);
-            } else if ($this->parseLink($line)) {
-                return true;
-            } else {
-                $this->state = self::STATE_NORMAL;
-                return false;
             }
             break;
 
