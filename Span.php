@@ -16,10 +16,9 @@ class Span
     /**
      * Renders the Span, which includes :
      *
-     * - `verbatim`
+     * - ``verbatim``
      * - *italic*
      * - **bold**
-     * - _underlined_
      * - |variable|
      */
     public function render()
@@ -32,7 +31,7 @@ class Span
 
         $prefix = sha1(time().'/'.mt_rand());
         $tokens = array();
-        $span = preg_replace_callback('/`(.+)`/mUsi', function($match) use (&$tokens, $prefix) {
+        $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $prefix) {
             $id = $prefix.count($tokens);
             $tokens[$id] = '<code>'.htmlspecialchars($match[1]).'</code>';
 
@@ -40,7 +39,6 @@ class Span
         }, $span);
         $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
         $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
-        $span = preg_replace('/_(.+)_/mUsi', '<u>$1</u>', $span);
 
         foreach ($tokens as $id => $value) {
             $span = str_replace($id, $value, $span);

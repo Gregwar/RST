@@ -1,17 +1,20 @@
 Gregwar/RST Cheat Sheet
 =======================
 
+*Note: have a look of the source of this document to understand exactly
+how it works*
+
 Title
 -----
 
 .. This is a comment and won't appear in the final render
 
-The second-level titles are specified with `---` under the text
+The second-level titles are specified with ``---`` under the text
 
 Sub title
 ~~~~~~~~~
 
-The third-level titles are specified with `~~~` under the text
+The third-level titles are specified with ``~~~`` under the text
 
 Blocks
 ------
@@ -61,9 +64,8 @@ Here is a piece of code::
 Inline style
 ------------
 
-* `*italic*` renders as *italic*
-* `**strong**` renders as **strong**
-* `_underlined_` renders as _underlined_
+* ``*italic*`` renders as *italic*
+* ``**strong**`` renders as **strong**
 
 Directives
 ----------
