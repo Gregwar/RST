@@ -1,8 +1,7 @@
 Gregwar/RST Cheat Sheet
 =======================
 
-*Note: have a look of the source of this document to understand exactly
-how it works*
+*Note: this is my developping sandbox, will be documented more clearly later*
 
 Title
 -----
@@ -107,3 +106,11 @@ Code block
     This is a multiple line block
 
     Of code!!
+
+Image
+-----
+
+.. image:: https://www.google.com/images/srpr/logo4w.png
+    :width: 250px
+    :title: The Google logo
+

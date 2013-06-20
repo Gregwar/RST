@@ -14,6 +14,7 @@ use Gregwar\RST\Nodes\SeparatorNode;
 // Directives
 use Gregwar\RST\Directives\CodeBlock;
 use Gregwar\RST\Directives\Replace;
+use Gregwar\RST\Directives\Image;
 
 class Parser
 {
@@ -102,6 +103,7 @@ class Parser
     {
         $directives = array(
             new CodeBlock,
+            new Image,
             new Replace
         );
 
