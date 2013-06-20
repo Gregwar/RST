@@ -4,6 +4,7 @@ namespace Gregwar\RST;
 
 // Nodes
 use Gregwar\RST\Nodes\Node;
+use Gregwar\RST\Nodes\RawNode;
 use Gregwar\RST\Nodes\CodeNode;
 use Gregwar\RST\Nodes\QuoteNode;
 use Gregwar\RST\Nodes\TitleNode;
@@ -71,6 +72,13 @@ class Parser
     {
         if (preg_match('/^\.\. _(.+): (.+)$/mUsi', $line, $match)) {
             $this->environment->setLink($match[1], $match[2]);
+            return true;
+        }
+        
+        if (preg_match('/^\.\. _(.+):$/mUsi', trim($line), $match)) {
+            $anchor = $match[1];
+            $this->document->addNode(new RawNode('<a id="'.$anchor.'"></a>'));
+            $this->environment->setLink($match[1], '#'.$anchor);
             return true;
         }
 

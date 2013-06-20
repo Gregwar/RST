@@ -11,6 +11,8 @@ Title
 
 The second-level titles are specified with ``---`` under the text
 
+Go to the hyperlinks_ section
+
 Sub title
 ~~~~~~~~~
 
@@ -78,6 +80,8 @@ Testing the replace: |test|, an other: |othertest|
 
 .. |testing| replace:: Magic
 Testing
+
+.. _hyperlinks:
 
 Hyperlinks
 ----------
