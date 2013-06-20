@@ -111,16 +111,18 @@ class Parser
         $lastLine = trim($this->buffer[count($this->buffer)-1]);
 
         if (strlen($lastLine) >= 2) {
-            return substr($lastLine, -2) == '::';
-        } else {
-            return false;
+            if (substr($lastLine, -2) == '::') {
+                $this->buffer[count($this->buffer)-1] = substr($lastLine, 0, -1);
+                return true;
+            }
         }
+
+        return false;
     }
 
     protected function init()
     {
         $this->specialLevel = 0;
-        $this->isCode = $this->prepareCode() || $this->directive;
         $this->buffer = array();
     }
 
@@ -319,6 +321,8 @@ class Parser
     {
         $node = null;
 
+        $this->isCode = false;
+
         if ($this->buffer) {
             switch ($this->state) {
             case self::STATE_TITLE:
@@ -338,6 +342,7 @@ class Parser
                 $node = $this->createListNode();
                 break;
             case self::STATE_NORMAL:
+                $this->isCode = $this->prepareCode();
                 $node = new Node($this->createSpan($this->buffer));
                 break;
             }
