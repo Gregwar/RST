@@ -9,8 +9,20 @@ class Span
 
     public function __construct(Parser $parser, $span)
     {
+        if (is_array($span)) {
+            $span = implode("\n", $span);
+        }
+
         $this->parser = $parser;
         $this->span = $span;
+
+        $environment = $parser->getEnvironment();
+
+        // Signaling anonymous names
+        if (preg_match('/(([a-z0-9]+)|(`(.+)`))__/mUsi', $span, $match)) {
+            $name = $match[2] ?: $match[4];
+            $environment->setAnonymousName($name);
+        }
     }
 
     /**
@@ -25,10 +37,6 @@ class Span
     {
         $environment = $this->parser->getEnvironment();
         $span = $this->span;
-
-        if (is_array($span)) {
-            $span = implode("\n", $span);
-        }
 
         // Replacing literal with tokens
         $prefix = sha1(time().'/'.mt_rand());
@@ -52,6 +60,13 @@ class Span
         // Replacing variables
         $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {
             return $environment->getVariable($match[1]);
+        }, $span);
+        
+        // Replacing anonymous links
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__/mUsi', function($match) use ($environment) {
+            $link = $match[2] ?: $match[4];
+
+            return '<a href="'.$environment->getLink($link).'">'.$link.'</a>';
         }, $span);
 
         // Replacing links

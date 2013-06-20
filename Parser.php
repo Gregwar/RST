@@ -70,11 +70,20 @@ class Parser
      */
     public function parseLink($line)
     {
+        // Links
         if (preg_match('/^\.\. _(.+): (.+)$/mUsi', $line, $match)) {
             $this->environment->setLink($match[1], $match[2]);
             return true;
         }
-        
+
+        // Short anonymous links
+        if (preg_match('/^__ (.+)$/mUsi', trim($line), $match)) {
+            $url = $match[1];
+            $this->environment->setLink('_', $url);
+            return true;
+        }
+
+        // Anchor link 
         if (preg_match('/^\.\. _(.+):$/mUsi', trim($line), $match)) {
             $anchor = $match[1];
             $this->document->addNode(new RawNode('<a id="'.$anchor.'"></a>'));

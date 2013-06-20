@@ -91,3 +91,10 @@ Do you want to learn about PHP_, this is `my favorite language`_
 .. _PHP: http://php.net/
 .. _my favorite language: http://php.net/
 
+Do you know `Annymous links`__ ?
+
+.. __: http://anon.ymo.us/
+
+It's great, and can be defined quickly__
+
+__ http://quickly.anonymous.com/

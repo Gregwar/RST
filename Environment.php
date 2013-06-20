@@ -41,7 +41,20 @@ class Environment
     public function setLink($name, $url)
     {
         $name = trim(strtolower($name));
+
+        if ($name == '_') {
+            $name = $this->anonymous;
+        }
+
         $this->links[$name] = $url;
+    }
+
+    /**
+     * Set the current anonymous links name
+     */
+    public function setAnonymousName($name)
+    {
+        $this->anonymous = trim(strtolower($name));
     }
 
     /**
