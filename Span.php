@@ -23,12 +23,14 @@ class Span
      */
     public function render()
     {
+        $environment = $this->parser->getEnvironment();
         $span = $this->span;
 
         if (is_array($span)) {
             $span = implode("\n", $span);
         }
 
+        // Replacing literal with tokens
         $prefix = sha1(time().'/'.mt_rand());
         $tokens = array();
         $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $prefix) {
@@ -37,16 +39,26 @@ class Span
 
             return $id;
         }, $span);
+
+        // Emphasis
         $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
         $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
 
+        // Replacing literal tokens
         foreach ($tokens as $id => $value) {
             $span = str_replace($id, $value, $span);
         }
-
-        $environment = $this->parser->getEnvironment();
+        
+        // Replacing variables
         $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {
             return $environment->getVariable($match[1]);
+        }, $span);
+
+        // Replacing links
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_/mUsi', function($match) use ($environment) {
+            $link = $match[2] ?: $match[4];
+
+            return '<a href="'.$environment->getLink($link).'">'.$link.'</a>';
         }, $span);
 
         return $span;

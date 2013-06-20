@@ -78,3 +78,12 @@ Testing the replace: |test|, an other: |othertest|
 
 .. |testing| replace:: Magic
 Testing
+
+Hyperlinks
+----------
+
+Do you want to learn about PHP_, this is `my favorite language`_
+
+.. _PHP: http://php.net/
+.. _my favorite language: http://php.net/
+

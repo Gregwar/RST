@@ -5,7 +5,10 @@ namespace Gregwar\RST;
 class Environment
 {
     // Variables of the document
-    protected $variables;
+    protected $variables = array();
+
+    // Links
+    protected $links = array();
 
     /**
      * Sets the giving variable to a value
@@ -30,5 +33,27 @@ class Environment
         }
 
         return $default;
+    }
+
+    /**
+     * Set the link url
+     */
+    public function setLink($name, $url)
+    {
+        $name = trim(strtolower($name));
+        $this->links[$name] = $url;
+    }
+
+    /**
+     * Get a link value
+     */
+    public function getLink($name)
+    {
+        $name = trim(strtolower($name));
+        if (isset($this->links[$name])) {
+            return $this->links[$name];
+        }
+
+        return null;
     }
 }

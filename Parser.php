@@ -65,6 +65,19 @@ class Parser
     }
 
     /**
+     * Try to parse a link definition
+     */
+    public function parseLink($line)
+    {
+        if (preg_match('/^\.\. _(.+): (.+)$/mUsi', $line, $match)) {
+            $this->environment->setLink($match[1], $match[2]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Initializing built-in directives
      */
     public function initDirectives()
@@ -400,6 +413,8 @@ class Parser
                 $this->buffer = array();
                 $this->flush();
                 $this->initDirective($line);
+            } else if ($this->parseLink($line)) {
+                return true;
             } else {
                 $this->state = self::STATE_NORMAL;
                 return false;
