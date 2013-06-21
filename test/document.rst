@@ -3,14 +3,14 @@ Gregwar/RST Sandbox
 
 .. note:: 
     **Note**: 
-    This is a testing sandbox, if you want to understand how it works, have a 
+    This is a testing sandbox, if you want to understand how it works, have a
     look to the rst original file
 
 #=) Titles
 ----------
 
-Using titles
-~~~~~~~~~~~~
+#-) Using titles
+~~~~~~~~~~~~~~~~
 
 Titles can be wrote using the underlining, the default order is:
 
@@ -19,8 +19,8 @@ Titles can be wrote using the underlining, the default order is:
 3. ``~~~~~~~``
 4. ``*******``
 
-Using auto-numbering
-~~~~~~~~~~~~~~~~~~~~
+#-) Using auto-numbering
+~~~~~~~~~~~~~~~~~~~~~~~~
 
 This is not a standard of RST but is really useful, you can use the special syntax
 ``#`` followed by the letter of the title you are in (it resets the counter when used).
@@ -39,8 +39,8 @@ The second question
 This can of course also be used to number parts, chapter etc.
 
 
-Separator
-~~~~~~~~~
+#-) Separator
+~~~~~~~~~~~~~
 
 A separator is like a title underline but without any text above::
 
@@ -55,6 +55,8 @@ This will result in a text separation:
 
 * ``*italic*`` renders as *italic*
 * ``**strong**`` renders as **strong**
+
+You can force a line break by adding an extra space at the end of a line
 
 #=) Lists
 ---------
@@ -82,8 +84,8 @@ While result in:
 #=) Blocks
 ----------
 
-Quoting
-~~~~~~~
+#-) Quoting
+~~~~~~~~~~~
 
 You can quote a block by indenting it::
 
@@ -97,8 +99,8 @@ This is a normal paragraph
 
     This is a quote
 
-Code
-~~~~
+#-) Code
+~~~~~~~~
 
 You can quote code the same way as quote, but using the ``::`` at the end
 of the previous paragraph::
@@ -120,8 +122,8 @@ Here is a piece of code::
 #=) Links
 ---------
 
-Standard links
-~~~~~~~~~~~~~~
+#-) Standard links
+~~~~~~~~~~~~~~~~~~
 
 Links can be defined once for all using the trailing ``_``, like this::
 
@@ -135,8 +137,8 @@ PHP_ is a great language
 
 .. _PHP: http://php.net/
 
-Anonymous links
-~~~~~~~~~~~~~~~
+#-) Anonymous links
+~~~~~~~~~~~~~~~~~~~
 
 Anonymous links can also be used to avoid copying the name just after the
 block that uses it, for instance::
@@ -157,8 +159,8 @@ You can use the following shortcut::
 
     __ http://www.github.com/
 
-Inline links
-~~~~~~~~~~~~
+#-) Inline links
+~~~~~~~~~~~~~~~~
 
 You can also define the link target inside the link::
 
@@ -171,13 +173,13 @@ Do you know `Google <http://www.google.com>`_ ?
 #=) Directives
 --------------
 
-Include
-~~~~~~~
+#-) Include
+~~~~~~~~~~~
 
 .. include:: include.rst
 
-Replace
-~~~~~~~
+#-) Replace
+~~~~~~~~~~~
 
 You can use the replace directive like this::
 
@@ -191,8 +193,8 @@ Will result in:
 
 Hello |name| !
 
-Image
-~~~~~
+#-) Image
+~~~~~~~~~
 
 The ``image`` directive can be used to display images, this way::
 

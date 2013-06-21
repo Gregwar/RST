@@ -92,6 +92,9 @@ class Span
         // Replacing links
         $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_/mUsi', $linkCallback, $span);
 
+        // Adding brs when a space is at the end of a line
+        $span = preg_replace('/ \n/', '<br />', $span);
+
         return $span;
     }
 
