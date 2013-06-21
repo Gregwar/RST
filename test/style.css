@@ -28,20 +28,23 @@ a {
 }
 
 code {
-    border:1px solid #aaa;
+    border:1px solid #ddd;
     border-radius:3px;
     font-family:Courier;
     font-size:12px;
+    background-color:#fafafa;
+    color:#333;
 }
 
 pre code {
     border:none;
+    background-color:transparent;
+    color:#eee;
 }
 
 pre {
     padding:5px;
     border-radius:10px;
     font-weight:bold;
-    color:#aaa;
     background-color:black;
 }
