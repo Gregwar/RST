@@ -4,11 +4,31 @@ namespace Gregwar\RST;
 
 class Environment
 {
+    /**
+     * Letters used as separators for titles and horizontal line
+     */
+    public static $letters = array(
+        '=' => 1,
+        '-' => 2,
+        '*' => 3,
+        '~' => 4
+    );
+
     // Variables of the document
     protected $variables = array();
 
     // Links
     protected $links = array();
+
+    // Level counters
+    protected $levels;
+
+    public function __construct()
+    {
+        foreach (self::$letters as $letter => $level) {
+            $this->levels[$level] = 1;
+        }
+    }
 
     /**
      * Sets the giving variable to a value
@@ -19,6 +39,27 @@ class Environment
     public function setVariable($variable, $value)
     {
         $this->variables[$variable] = $value;
+    }
+
+    /**
+     * Title level
+     */
+    public function createTitle($letter)
+    {
+        $level = self::$letters[$letter];
+        foreach (self::$letters as $letter => $currentLevel) {
+            if ($currentLevel > $level) {
+                $this->levels[$level] = 1;
+            }
+        }
+    }
+
+    /**
+     * Get a level number
+     */
+    public function getNumber($level)
+    {
+        return $this->levels[$level]++;
     }
 
     /**

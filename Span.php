@@ -6,17 +6,36 @@ class Span
 {
     protected $parser;
     protected $span;
+    protected $tokens;
 
     public function __construct(Parser $parser, $span)
     {
         if (is_array($span)) {
             $span = implode("\n", $span);
         }
+        
+        // Replacing literal with tokens
+        $prefix = sha1(time().'/'.mt_rand());
+        $tokens = array();
+        $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $prefix) {
+            $id = $prefix.'/'.sha1($match[1]);
+            $tokens[$id] = '<code>'.htmlspecialchars($match[1]).'</code>';
 
+            return $id;
+        }, $span);
+        
+        $environment = $parser->getEnvironment();
+
+        // Replacing numbering
+        foreach ($environment::$letters as $letter => $level) {
+            $span = preg_replace_callback('/\#\\'.$letter.'/mUsi', function($match) use ($environment, $level) {
+                return $environment->getNumber($level);
+            }, $span);
+        }
+
+        $this->tokens = $tokens;
         $this->parser = $parser;
         $this->span = $span;
-
-        $environment = $parser->getEnvironment();
 
         // Signaling anonymous names
         if (preg_match('/(([a-z0-9]+)|(`(.+)`))__/mUsi', $span, $match)) {
@@ -38,22 +57,12 @@ class Span
         $environment = $this->parser->getEnvironment();
         $span = $this->span;
 
-        // Replacing literal with tokens
-        $prefix = sha1(time().'/'.mt_rand());
-        $tokens = array();
-        $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $prefix) {
-            $id = $prefix.count($tokens);
-            $tokens[$id] = '<code>'.htmlspecialchars($match[1]).'</code>';
-
-            return $id;
-        }, $span);
-
         // Emphasis
         $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
         $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
 
         // Replacing literal tokens
-        foreach ($tokens as $id => $value) {
+        foreach ($this->tokens as $id => $value) {
             $span = str_replace($id, $value, $span);
         }
         

@@ -18,16 +18,6 @@ use Gregwar\RST\Directives\Image;
 
 class Parser
 {
-    /**
-     * Letters used as separators for titles and horizontal line
-     */
-    public static $letters = array(
-        '=' => 1,
-        '-' => 2,
-        '*' => 3,
-        '~' => 4
-    );
-
     const STATE_BEGIN = 0;
     const STATE_NORMAL = 1;
     const STATE_DIRECTIVE = 2;
@@ -47,7 +37,7 @@ class Parser
     protected $buffer;
 
     // Current level of special lines (==== and so)
-    protected $specialLevel;
+    protected $specialLetter;
 
     // Current directive to be applied on next node
     protected $directive = false;
@@ -159,7 +149,7 @@ class Parser
 
     protected function init()
     {
-        $this->specialLevel = 0;
+        $this->specialLetter = false;
         $this->buffer = array();
     }
 
@@ -175,7 +165,7 @@ class Parser
 
         $letter = $line[0];
 
-        if (!isset(self::$letters[$letter])) {
+        if (!isset(Environment::$letters[$letter])) {
             return false;
         }
 
@@ -185,7 +175,7 @@ class Parser
             }
         }
 
-        return self::$letters[$letter];
+        return $letter;
     }
 
     /**
@@ -364,7 +354,8 @@ class Parser
             switch ($this->state) {
             case self::STATE_TITLE:
                 $data = implode("\n", $this->buffer);
-                $node = new TitleNode($data, $this->specialLevel);
+                $this->environment->createTitle($this->specialLetter);
+                $node = new TitleNode($this->createSpan($data), Environment::$letters[$this->specialLetter]);
                 break;
             case self::STATE_SEPARATOR:
                 $node = new SeparatorNode;
@@ -449,10 +440,10 @@ class Parser
 
         case self::STATE_NORMAL:
             if (trim($line)) {
-                $specialLevel = $this->isSpecialLine($line);
+                $specialLetter = $this->isSpecialLine($line);
 
-                if ($specialLevel) {
-                    $this->specialLevel = $specialLevel;
+                if ($specialLetter) {
+                    $this->specialLetter = $specialLetter;
                     $lastLine = array_pop($this->buffer);
 
                     if ($lastLine) {

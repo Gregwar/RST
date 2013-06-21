@@ -12,10 +12,28 @@ The second-level titles are specified with ``---`` under the text
 
 Go to the hyperlinks_ section
 
-Sub title
-~~~~~~~~~
+Using the auto-numbering
+------------------------
 
 The third-level titles are specified with ``~~~`` under the text
+
+Using auto-numbering
+********************
+
+This is not a standard of RST but is really useful, you can use the special syntax
+``#`` followed by the letter of the title you are in (it resets the counter when used).
+
+You can for instance use ``Question #*`` if you are under an ``*******``, the number
+displayed will be auto-incremented:
+
+** Question #* **
+
+The first question
+
+** Question #* **
+
+The second question
+
 
 Blocks
 ------
