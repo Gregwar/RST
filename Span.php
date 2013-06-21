@@ -38,9 +38,12 @@ class Span
         $this->span = $span;
 
         // Signaling anonymous names
-        if (preg_match('/(([a-z0-9]+)|(`(.+)`))__/mUsi', $span, $match)) {
-            $name = $match[2] ?: $match[4];
-            $environment->setAnonymousName($name);
+        $environment->resetAnonymousStack();
+        if (preg_match_all('/(([a-z0-9]+)|(`(.+)`))__/mUsi', $span, $matches)) {
+            foreach ($matches[2] as $k => $y) {
+                $name = $matches[2][$k] ?: $matches[4][$k];
+                $environment->pushAnonymous($name);
+            }
         }
     }
 

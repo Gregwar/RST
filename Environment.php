@@ -23,6 +23,9 @@ class Environment
     // Level counters
     protected $levels;
 
+    // Anonymous links stack
+    protected $anonymous = array();
+
     public function __construct()
     {
         foreach (self::$letters as $letter => $level) {
@@ -84,18 +87,26 @@ class Environment
         $name = trim(strtolower($name));
 
         if ($name == '_') {
-            $name = $this->anonymous;
+            $name = array_shift($this->anonymous);
         }
 
         $this->links[$name] = $url;
     }
 
     /**
+     * Resets the anonymous stack
+     */
+    public function resetAnonymousStack()
+    {
+        $this->anonymous = array();
+    }
+
+    /**
      * Set the current anonymous links name
      */
-    public function setAnonymousName($name)
+    public function pushAnonymous($name)
     {
-        $this->anonymous = trim(strtolower($name));
+        $this->anonymous[] = $name;
     }
 
     /**
