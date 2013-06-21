@@ -169,6 +169,11 @@ Do you know `Google <http://www.google.com>`_ ?
 #=) Directives
 --------------
 
+Include
+~~~~~~~
+
+.. include:: include.rst
+
 Replace
 ~~~~~~~
 

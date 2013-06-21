@@ -500,12 +500,28 @@ class Parser
     }
 
     /**
+     * Include all files described in $document and returns the new string of the given
+     * document with includes processed
+     */
+    public function includeFiles($document)
+    {
+        $parser = $this;
+
+        return preg_replace_callback('/\n\.\. include:: (.+)\n/', function($match) use ($parser) {
+            return $parser->includeFiles(file_get_contents($match[1]));
+        }, $document);
+    }
+
+    /**
      * Process all the lines of a document string
      *
      * @param $document the string (content) of the document
      */
     protected function parseLines(&$document)
     {
+        // Including files
+        $document = $this->includeFiles($document);
+
         $lines = explode("\n", $document);
         $this->state = self::STATE_BEGIN;
 
