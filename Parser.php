@@ -15,6 +15,7 @@ use Gregwar\RST\Nodes\SeparatorNode;
 use Gregwar\RST\Directives\CodeBlock;
 use Gregwar\RST\Directives\Replace;
 use Gregwar\RST\Directives\Image;
+use Gregwar\RST\Directives\Note;
 
 class Parser
 {
@@ -51,10 +52,25 @@ class Parser
     // Is the current node code ?
     protected $isCode = false;
 
-    public function __construct()
+    public function __construct($environment = null, array $directives = array())
     {
-        $this->environment = new Environment;
-        $this->initDirectives();
+        $this->environment = $environment ?: new Environment;
+
+        if (!$directives) {
+            $this->initDirectives();
+        } else {
+            $this->directives = $directives;
+        }
+    }
+
+    /**
+     * Get a parser with the same environment that this one
+     *
+     * @return Parser a new parser with the same environment
+     */
+    public function getSubParser()
+    {
+        return new Parser($this->environment, $this->directives);
     }
 
     /**
@@ -94,6 +110,7 @@ class Parser
         $directives = array(
             new CodeBlock,
             new Image,
+            new Note,
             new Replace
         );
 

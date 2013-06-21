@@ -48,3 +48,21 @@ pre {
     font-weight:bold;
     background-color:black;
 }
+
+.note {
+    color:#5555ff;
+    background-color:#e9e9ff;
+    padding:5px;
+    border-radius:4px;
+}
+
+.note * {
+    margin:0;
+}
+
+blockquote {
+    padding:5px;
+    padding-left:10px;
+    border-left:15px solid #eee;
+    font-style:italic;
+}

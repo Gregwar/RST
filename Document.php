@@ -4,7 +4,7 @@ namespace Gregwar\RST;
 
 use Gregwar\RST\Nodes\Node;
 
-class Document
+class Document extends Node
 {
     protected $nodes = array();
 

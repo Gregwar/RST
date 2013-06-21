@@ -1,8 +1,10 @@
 Gregwar/RST Sandbox
 ===================
 
-*Note: this is a testing sandbox, if you want to understand how it works, have a 
-look to the rst original file*
+.. note:: 
+    **Note**: 
+    This is a testing sandbox, if you want to understand how it works, have a 
+    look to the rst original file
 
 #=) Titles
 ----------
