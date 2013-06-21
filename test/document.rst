@@ -1,24 +1,24 @@
-Gregwar/RST Cheat Sheet
-=======================
+Gregwar/RST Sandbox
+===================
 
-*Note: this is my developping sandbox, will be documented more clearly later*
+*Note: this is a testing sandbox, if you want to understand how it works, have a 
+look to the rst original file*
 
-Title
------
+#=) Titles
+----------
 
-.. This is a comment and won't appear in the final render
+Using titles
+~~~~~~~~~~~~
 
-The second-level titles are specified with ``---`` under the text
+Titles can be wrote using the underlining, the default order is:
 
-Go to the hyperlinks_ section
-
-Using the auto-numbering
-------------------------
-
-The third-level titles are specified with ``~~~`` under the text
+1. ``=======``
+2. ``-------``
+3. ``~~~~~~~``
+4. ``*******``
 
 Using auto-numbering
-********************
+~~~~~~~~~~~~~~~~~~~~
 
 This is not a standard of RST but is really useful, you can use the special syntax
 ``#`` followed by the letter of the title you are in (it resets the counter when used).
@@ -34,23 +34,40 @@ The first question
 
 The second question
 
+This can of course also be used to number parts, chapter etc.
 
-Blocks
-------
 
 Separator
 ~~~~~~~~~
 
-A separator is like a title underline but without any text :
+A separator is like a title underline but without any text above::
 
------
+    -----
 
-This will result in a text separation
+This will result in a text separation:
 
-Lists
-~~~~~
+----
 
-Test list :
+#=) Inline style
+----------------
+
+* ``*italic*`` renders as *italic*
+* ``**strong**`` renders as **strong**
+
+#=) Lists
+---------
+
+Lists can be ordered or unordered, and nested, for instance this::
+
+    * Element A
+        * Sub A, this a
+          multiline sentence in the source
+            1. Sub ordered as "1"
+            2. Sub ordered as "2"
+        * Sub hello two
+    * Element B
+
+While result in:
 
 * Element A
     * Sub A, this a
@@ -60,19 +77,37 @@ Test list :
     * Sub hello two
 * Element B
 
-Quote
------
+#=) Blocks
+----------
 
-As Shakespeare said:
+Quoting
+~~~~~~~
 
-    To thine own self be true, and it must follow, as the night the day, thou canst not then be false to any man.
+You can quote a block by indenting it::
 
-    And
+    This is a normal pagagraph
 
-    God has given you one face, and you make yourself another.
+        This is a quote
+
+Will result in:
+
+This is a normal paragraph
+
+    This is a quote
 
 Code
-----
+~~~~
+
+You can quote code the same way as quote, but using the ``::`` at the end
+of the previous paragraph::
+
+    Here is a piece of code::
+
+        <?php
+
+        echo "I love RST";
+
+Will result in:
 
 Here is a piece of code::
 
@@ -80,58 +115,86 @@ Here is a piece of code::
 
     echo "I love RST";
 
-Inline style
-------------
+#=) Links
+---------
 
-* ``*italic*`` renders as *italic*
-* ``**strong**`` renders as **strong**
+Standard links
+~~~~~~~~~~~~~~
 
-Directives
-----------
+Links can be defined once for all using the trailing ``_``, like this::
 
-.. |test| replace:: The Test String!!
-    :opt: 123
-.. |othertest| replace:: An other test!
+    PHP_ is a great language
 
-Testing the replace: |test|, an other: |othertest|
+    .. _PHP: http://php.net/
 
-.. |testing| replace:: Magic
-Testing
-
-.. _hyperlinks:
-
-Hyperlinks
-----------
-
-Do you want to learn about PHP_, this is `my favorite language`_
+Will result in:
+    
+PHP_ is a great language
 
 .. _PHP: http://php.net/
-.. _my favorite language: http://php.net/
 
-Do you know `Annymous links`__ ? 
+Anonymous links
+~~~~~~~~~~~~~~~
 
-.. __: http://anon.ymo.us/
+Anonymous links can also be used to avoid copying the name just after the
+block that uses it, for instance::
 
-It's great, and can be defined quickly__, and twice__ 
+    I love GitHub__
 
-__ http://quickly.anonymous.com/
-__ http://twice.com
+    .. __: http://www.github.com/
 
-Inline `Link <http://www.inline.com>`_
+Will result in:
 
-Code block
-----------
+I love GitHub__
 
-.. code-block:: test
+.. __: http://www.github.com/
 
-    This is a multiple line block
+You can use the following shortcut::
 
-    Of code!!
+    I love GitHub__
+
+    __ http://www.github.com/
+
+Inline links
+~~~~~~~~~~~~
+
+You can also define the link target inside the link::
+
+    Do you know `Google <http://www.google.com>`_ ?
+
+Will result in:
+
+Do you know `Google <http://www.google.com>`_ ?
+
+#=) Directives
+--------------
+
+Replace
+~~~~~~~
+
+You can use the replace directive like this::
+
+    .. |name| replace:: bob
+
+    Hello |name| !
+
+Will result in:
+    
+.. |name| replace:: bob
+
+Hello |name| !
 
 Image
------
+~~~~~
+
+The ``image`` directive can be used to display images, this way::
+
+    .. image:: https://www.google.com/images/srpr/logo4w.png
+        :width: 250px
+        :title: The Google logo
+
+Will result in:
 
 .. image:: https://www.google.com/images/srpr/logo4w.png
     :width: 250px
     :title: The Google logo
-

@@ -1,16 +1,21 @@
-<h1>Gregwar/RST Cheat Sheet</h1>
+<h1>Gregwar/RST Sandbox</h1>
 
-<p><em>Note: this is my developping sandbox, will be documented more clearly later</em></p>
+<p><em>Note: this is a testing sandbox, if you want to understand how it works, have a 
+look to the rst original file</em></p>
 
-<h2>Title</h2>
+<h2>1) Titles</h2>
 
-<p>The second-level titles are specified with <code>---</code> under the text</p>
+<h3>Using titles</h3>
 
-<p>Go to the <a href="#hyperlinks">hyperlinks</a> section</p>
+<p>Titles can be wrote using the underlining, the default order is:</p>
 
-<h2>Using the auto-numbering</h2>
-
-<p>The third-level titles are specified with <code>~~~</code> under the text</p>
+<p><ol>
+<li><code>=======</code></li>
+<li><code>-------</code></li>
+<li><code>~~~~~~~</code></li>
+<li><code>*******</code></li>
+</ol>
+</p>
 
 <h3>Using auto-numbering</h3>
 
@@ -28,19 +33,41 @@ displayed will be auto-incremented:</p>
 
 <p>The second question</p>
 
-<h2>Blocks</h2>
+<p>This can of course also be used to number parts, chapter etc.</p>
 
-<h4>Separator</h4>
+<h3>Separator</h3>
 
-<p>A separator is like a title underline but without any text :</p>
+<p>A separator is like a title underline but without any text above:</p>
+
+<pre><code>-----
+</code></pre>
+
+<p>This will result in a text separation:</p>
 
 <hr />
 
-<p>This will result in a text separation</p>
+<h2>2) Inline style</h2>
 
-<h4>Lists</h4>
+<p><ul>
+<li><code>*italic*</code> renders as <em>italic</em></li>
+<li><code>**strong**</code> renders as <b>strong</b></li>
+</ul>
+</p>
 
-<p>Test list :</p>
+<h2>3) Lists</h2>
+
+<p>Lists can be ordered or unordered, and nested, for instance this:</p>
+
+<pre><code>* Element A
+    * Sub A, this a
+      multiline sentence in the source
+        1. Sub ordered as &quot;1&quot;
+        2. Sub ordered as &quot;2&quot;
+    * Sub hello two
+* Element B
+</code></pre>
+
+<p>While result in:</p>
 
 <p><ul>
 <li>Element A</li>
@@ -57,18 +84,37 @@ displayed will be auto-incremented:</p>
 </ul>
 </p>
 
-<h2>Quote</h2>
+<h2>4) Blocks</h2>
 
-<p>As Shakespeare said:</p>
+<h3>Quoting</h3>
 
-<blockquote>To thine own self be true, and it must follow, as the night the day, thou canst not then be false to any man.<br />
-<br />
-And<br />
-<br />
-God has given you one face, and you make yourself another.<br />
+<p>You can quote a block by indenting it:</p>
+
+<pre><code>This is a normal pagagraph
+
+    This is a quote
+</code></pre>
+
+<p>Will result in:</p>
+
+<p>This is a normal paragraph</p>
+
+<blockquote>This is a quote<br />
 </blockquote>
 
-<h2>Code</h2>
+<h3>Code</h3>
+
+<p>You can quote code the same way as quote, but using the <code>::</code> at the end
+of the previous paragraph:</p>
+
+<pre><code>Here is a piece of code::
+
+    &lt;?php
+
+    echo &quot;I love RST&quot;;
+</code></pre>
+
+<p>Will result in:</p>
 
 <p>Here is a piece of code:</p>
 
@@ -77,40 +123,78 @@ God has given you one face, and you make yourself another.<br />
 echo &quot;I love RST&quot;;
 </code></pre>
 
-<h2>Inline style</h2>
+<h2>5) Links</h2>
 
-<p><ul>
-<li><code>*italic*</code> renders as <em>italic</em></li>
-<li><code>**strong**</code> renders as <b>strong</b></li>
-</ul>
-</p>
+<h3>Standard links</h3>
 
-<h2>Directives</h2>
+<p>Links can be defined once for all using the trailing <code>_</code>, like this:</p>
 
-<p>Testing the replace: The Test String!!, an other: An other test!</p>
+<pre><code>PHP_ is a great language
 
-<p>Testing</p>
+.. _PHP: http://php.net/
+</code></pre>
 
-<a id="hyperlinks"></a>
+<p>Will result in:</p>
 
-<h2>Hyperlinks</h2>
+<p><a href="http://php.net/">PHP</a> is a great language</p>
 
-<p>Do you want to learn about <a href="http://php.net/">PHP</a>, this is <a href="http://php.net/">my favorite language</a></p>
+<h3>Anonymous links</h3>
 
-<p>Do you know <a href="">Annymous links</a> ? </p>
+<p>Anonymous links can also be used to avoid copying the name just after the
+block that uses it, for instance:</p>
 
-<p>It's great, and can be defined <a href="http://quickly.anonymous.com/">quickly</a>, and <a href="http://twice.com">twice</a> </p>
+<pre><code>I love GitHub__
 
-<p>Inline <a href="http://www.inline.com">Link</a></p>
+.. __: http://www.github.com/
+</code></pre>
 
-<h2>Code block</h2>
+<p>Will result in:</p>
 
-<div class="codeBlock"><blockquote>This is a multiple line block<br />
-<br />
-Of code!!<br />
-</blockquote></div>
+<p>I love <a href="">GitHub</a></p>
 
-<h2>Image</h2>
+<p>You can use the following shortcut:</p>
+
+<pre><code>I love GitHub__
+
+__ http://www.github.com/
+</code></pre>
+
+<h3>Inline links</h3>
+
+<p>You can also define the link target inside the link:</p>
+
+<pre><code>Do you know `Google &lt;http://www.google.com&gt;`_ ?
+</code></pre>
+
+<p>Will result in:</p>
+
+<p>Do you know <a href="http://www.google.com">Google</a> ?</p>
+
+<h2>6) Directives</h2>
+
+<h3>Replace</h3>
+
+<p>You can use the replace directive like this:</p>
+
+<pre><code>.. |name| replace:: bob
+
+Hello |name| !
+</code></pre>
+
+<p>Will result in:</p>
+
+<p>Hello bob !</p>
+
+<h3>Image</h3>
+
+<p>The <code>image</code> directive can be used to display images, this way:</p>
+
+<pre><code>.. image:: https://www.google.com/images/srpr/logo4w.png
+    :width: 250px
+    :title: The Google logo
+</code></pre>
+
+<p>Will result in:</p>
 
 <img src="https://www.google.com/images/srpr/logo4w.png"  width="250px" title="The Google logo" />
 

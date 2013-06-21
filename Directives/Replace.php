@@ -2,6 +2,7 @@
 
 namespace Gregwar\RST\Directives;
 
+use Gregwar\RST\Span;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
@@ -20,6 +21,6 @@ class Replace extends Directive
     public function processAction(Parser $parser, $variable, $data, array $options)
     {
         $environment = $parser->getEnvironment();
-        $environment->setVariable($variable, $data);
+        $environment->setVariable($variable, new Span($parser, $data));
     }
 }

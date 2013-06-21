@@ -74,6 +74,7 @@ class Span
             return $environment->getVariable($match[1]);
         }, $span);
 
+        // Link callback
         $linkCallback = function($match) use ($environment) {
             $link = $match[2] ?: $match[4];
 
