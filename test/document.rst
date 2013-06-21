@@ -117,6 +117,8 @@ It's great, and can be defined quickly__, and twice__
 __ http://quickly.anonymous.com/
 __ http://twice.com
 
+Inline `Link <http://www.inline.com>`_
+
 Code block
 ----------
 

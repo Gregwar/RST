@@ -73,20 +73,23 @@ class Span
         $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {
             return $environment->getVariable($match[1]);
         }, $span);
+
+        $linkCallback = function($match) use ($environment) {
+            $link = $match[2] ?: $match[4];
+
+            if (preg_match('/^(.+) <(.+)>$/mUsi', $link, $match)) {
+                $link = $match[1];
+                $environment->setLink($link, $match[2]);
+            }
+
+            return '<a href="'.$environment->getLink($link).'">'.$link.'</a>';
+        };
         
         // Replacing anonymous links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__/mUsi', function($match) use ($environment) {
-            $link = $match[2] ?: $match[4];
-
-            return '<a href="'.$environment->getLink($link).'">'.$link.'</a>';
-        }, $span);
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__/mUsi', $linkCallback, $span);
 
         // Replacing links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_/mUsi', function($match) use ($environment) {
-            $link = $match[2] ?: $match[4];
-
-            return '<a href="'.$environment->getLink($link).'">'.$link.'</a>';
-        }, $span);
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_/mUsi', $linkCallback, $span);
 
         return $span;
     }
