@@ -1,0 +1,47 @@
+
+body {
+    font-family:Sans-serif;
+    font-size:14px;
+    width:900px;
+    margin:auto;
+}
+
+h1 {
+    border-bottom:2px solid #666;
+}
+
+h2 {
+    margin-left:10px;
+    border-bottom:1px dotted #aaa;
+}
+
+h3 {
+    margin-left:20px;
+}
+
+h4 {
+    margin-left:30px;
+}
+
+a {
+    color:#c00;
+}
+
+code {
+    border:1px solid #aaa;
+    border-radius:3px;
+    font-family:Courier;
+    font-size:12px;
+}
+
+pre code {
+    border:none;
+}
+
+pre {
+    padding:5px;
+    border-radius:10px;
+    font-weight:bold;
+    color:#aaa;
+    background-color:black;
+}
