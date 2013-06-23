@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Demo</title>
-        <link rel="stylesheet" type="text/css" href="style.css" />
-    </head>
+<head>
+<meta charset="utf-8" />
+<title>Demo document</title>
+<link rel="stylesheet" type="text/css" href="style.css" />
+<meta name="description" content="A demo Gregwar/RST document" />
+</head>
 <body>
 <h1>Gregwar/RST Sandbox</h1>
 
@@ -63,6 +64,8 @@ displayed will be auto-incremented:</p>
 <li><code>**strong**</code> renders as <b>strong</b></li>
 </ul>
 </p>
+
+<p>You can force a line break by adding an extra space at the end of a line</p>
 
 <h2>3) Lists</h2>
 
@@ -206,13 +209,14 @@ Hello |name| !
 
 <p>The <code>image</code> directive can be used to display images, this way:</p>
 
-<pre><code>.. image:: https://www.google.com/images/srpr/logo4w.png
+<pre><code>.. image:: rst.png
     :width: 250px
-    :title: The Google logo
+    :title: RST logo
 </code></pre>
 
 <p>Will result in:</p>
 
-<img src="https://www.google.com/images/srpr/logo4w.png"  width="250px" title="The Google logo" />
+<img src="rst.png"  width="250px" title="RST logo" />
 
 </body>
+</html

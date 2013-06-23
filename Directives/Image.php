@@ -5,12 +5,14 @@ namespace Gregwar\RST\Directives;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
-use Gregwar\RST\Nodes\RawNode;
+use Gregwar\RST\Nodes\ImageNode;
 
 /**
- * Renders an image
+ * Renders an image, example :
  *
- * .. image:: url
+ * .. image:: image.jpg
+ *      :width: 100
+ *      :title: An image
  *
  */
 class Image extends Directive
@@ -22,11 +24,6 @@ class Image extends Directive
 
     public function processNode(Parser $parser, $variable, $data, array $options)
     {
-        $attributes = '';
-        foreach ($options as $key => $value) {
-            $attributes .= ' '.$key . '="'.htmlspecialchars($value).'"';
-        }
-
-        return new RawNode('<img src="'.$data.'" '.$attributes.' />');
+        return new ImageNode($data, $options);
     }
 }

@@ -16,6 +16,9 @@ use Gregwar\RST\Directives\CodeBlock;
 use Gregwar\RST\Directives\Replace;
 use Gregwar\RST\Directives\Image;
 use Gregwar\RST\Directives\Note;
+use Gregwar\RST\Directives\Stylesheet;
+use Gregwar\RST\Directives\Meta;
+use Gregwar\RST\Directives\Title;
 
 class Parser
 {
@@ -110,7 +113,10 @@ class Parser
         $directives = array(
             new CodeBlock,
             new Image,
+            new Meta,
             new Note,
+            new Stylesheet,
+            new Title,
             new Replace
         );
 

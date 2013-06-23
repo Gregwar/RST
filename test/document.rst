@@ -1,3 +1,8 @@
+.. title:: Demo document
+.. stylesheet:: style.css
+.. meta:: 
+    :description: A demo Gregwar/RST document
+
 Gregwar/RST Sandbox
 ===================
 
@@ -198,12 +203,12 @@ Hello |name| !
 
 The ``image`` directive can be used to display images, this way::
 
-    .. image:: https://www.google.com/images/srpr/logo4w.png
+    .. image:: rst.png
         :width: 250px
-        :title: The Google logo
+        :title: RST logo
 
 Will result in:
 
-.. image:: https://www.google.com/images/srpr/logo4w.png
+.. image:: rst.png
     :width: 250px
-    :title: The Google logo
+    :title: RST logo
