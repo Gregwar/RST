@@ -543,6 +543,7 @@ class Parser
     protected function parseLines(&$document)
     {
         // Including files
+        $document = "\n$document\n";
         $document = $this->includeFiles($document);
 
         $lines = explode("\n", $document);
