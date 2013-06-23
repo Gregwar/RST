@@ -90,7 +90,7 @@ class Environment
             $name = array_shift($this->anonymous);
         }
 
-        $this->links[$name] = $url;
+        $this->links[$name] = trim($url);
     }
 
     /**

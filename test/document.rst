@@ -140,7 +140,7 @@ Will result in:
     
 PHP_ is a great language
 
-.. _PHP: http://php.net/
+.. _PHP:   http://php.net/   
 
 #-) Anonymous links
 ~~~~~~~~~~~~~~~~~~~
