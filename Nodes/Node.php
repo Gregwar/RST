@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Nodes;
 
-class Node
+abstract class Node
 {
     protected $value;
 
@@ -16,8 +16,5 @@ class Node
         return $this->value;
     }
 
-    public function render()
-    {
-        return "<p>".$this->value."</p>";
-    }
+    abstract public function render();
 }

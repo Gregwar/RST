@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Nodes;
 
-class BlockNode extends Node
+abstract class BlockNode extends Node
 {
     public function __construct(array $lines)
     {

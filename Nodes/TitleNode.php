@@ -12,6 +12,11 @@ class TitleNode extends Node
         $this->level = $level;
     }
 
+    public function getLevel()
+    {
+        return $this->level;
+    }
+
     public function render()
     {
         return '<h'.$this->level.'>'.$this->value.'</h'.$this->level.">";

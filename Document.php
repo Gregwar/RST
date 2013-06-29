@@ -39,6 +39,27 @@ class Document extends Node
         return $document;
     }
 
+    /**
+     * Getting all nodes of the document that satisfies the given
+     * function. If the function is null, all the nodes are returned.
+     */
+    public function getNodes($function = null)
+    {
+        $nodes = array();
+
+        if ($function == null) {
+            return $this->nodes;
+        }
+
+        foreach ($this->nodes as $node) {
+            if ($function($node)) {
+                $nodes[] = $node;
+            }
+        }
+
+        return $nodes;
+    }
+
     public function addNode(Node $node)
     {
         $this->nodes[] = $node;

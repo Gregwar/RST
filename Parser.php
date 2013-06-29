@@ -3,7 +3,7 @@
 namespace Gregwar\RST;
 
 // Nodes
-use Gregwar\RST\Nodes\Node;
+use Gregwar\RST\Nodes\ParagraphNode;
 use Gregwar\RST\Nodes\RawNode;
 use Gregwar\RST\Nodes\CodeNode;
 use Gregwar\RST\Nodes\QuoteNode;
@@ -394,7 +394,7 @@ class Parser
                 break;
             case self::STATE_NORMAL:
                 $this->isCode = $this->prepareCode();
-                $node = new Node($this->createSpan($this->buffer));
+                $node = new ParagraphNode($this->createSpan($this->buffer));
                 break;
             }
         }
