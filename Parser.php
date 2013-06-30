@@ -2,24 +2,6 @@
 
 namespace Gregwar\RST;
 
-// Nodes
-use Gregwar\RST\Nodes\ParagraphNode;
-use Gregwar\RST\Nodes\RawNode;
-use Gregwar\RST\Nodes\CodeNode;
-use Gregwar\RST\Nodes\QuoteNode;
-use Gregwar\RST\Nodes\TitleNode;
-use Gregwar\RST\Nodes\ListNode;
-use Gregwar\RST\Nodes\SeparatorNode;
-
-// Directives
-use Gregwar\RST\Directives\CodeBlock;
-use Gregwar\RST\Directives\Replace;
-use Gregwar\RST\Directives\Image;
-use Gregwar\RST\Directives\Note;
-use Gregwar\RST\Directives\Stylesheet;
-use Gregwar\RST\Directives\Meta;
-use Gregwar\RST\Directives\Title;
-
 class Parser
 {
     const STATE_BEGIN = 0;
@@ -55,9 +37,14 @@ class Parser
     // Is the current node code ?
     protected $isCode = false;
 
-    public function __construct($environment = null, array $directives = array())
+    public function __construct($environment = null, array $directives = array(), $factory = null)
     {
         $this->environment = $environment ?: new Environment;
+
+        if ($factory == null) {
+            $factory = new \Gregwar\RST\HTML\Factory;
+        }
+        $this->factory = $factory;
 
         if (!$directives) {
             $this->initDirectives();
@@ -73,7 +60,7 @@ class Parser
      */
     public function getSubParser()
     {
-        return new Parser($this->environment, $this->directives);
+        return new Parser($this->environment, $this->directives, $this->factory);
     }
 
     /**
@@ -110,15 +97,7 @@ class Parser
      */
     public function initDirectives()
     {
-        $directives = array(
-            new CodeBlock,
-            new Image,
-            new Meta,
-            new Note,
-            new Stylesheet,
-            new Title,
-            new Replace
-        );
+        $directives = $this->factory->getDirectives();
 
         foreach ($directives as $name => $directive) {
             $this->registerDirective($directive);
@@ -133,6 +112,16 @@ class Parser
     public function getEnvironment()
     {
         return $this->environment;
+    }
+
+    /**
+     * Get the current factory
+     *
+     * @return Factory the factory
+     */
+    public function getFactory()
+    {
+        return $this->factory;
     }
 
     /**
@@ -255,7 +244,7 @@ class Parser
      */
     public function createListNode()
     {
-        $node = new ListNode();
+        $node = $this->factory->createNode('ListNode');
         $lineInfo = null;
         $listLine = array();
         foreach ($this->buffer as $line) {
@@ -378,23 +367,23 @@ class Parser
             case self::STATE_TITLE:
                 $data = implode("\n", $this->buffer);
                 $this->environment->createTitle($this->specialLetter);
-                $node = new TitleNode($this->createSpan($data), Environment::$letters[$this->specialLetter]);
+                $node = $this->factory->createNode('TitleNode', $this->createSpan($data), Environment::$letters[$this->specialLetter]);
                 break;
             case self::STATE_SEPARATOR:
-                $node = new SeparatorNode;
+                $node = $this->factory->createNode('SeparatorNode');
                 break;
             case self::STATE_CODE:
-                $node = new CodeNode($this->buffer);
+                $node = $this->factory->createNode('CodeNode', $this->buffer);
                 break;
             case self::STATE_BLOCK:
-                $node = new QuoteNode($this->buffer);
+                $node = $this->factory->createNode('QuoteNode', $this->buffer);
                 break;
             case self::STATE_LIST:
                 $node = $this->createListNode();
                 break;
             case self::STATE_NORMAL:
                 $this->isCode = $this->prepareCode();
-                $node = new ParagraphNode($this->createSpan($this->buffer));
+                $node = $this->factory->createNode('ParagraphNode', $this->createSpan($this->buffer));
                 break;
             }
         }
@@ -566,7 +555,7 @@ class Parser
      */
     public function parse(&$document)
     {
-        $this->document = new Document;
+        $this->document = $this->factory->createNode('Document');
         $this->init();
         $this->parseLines(trim($document));
 
@@ -581,6 +570,6 @@ class Parser
      */
     public function createSpan($span)
     {
-        return new Span($this, $span);
+        return $this->factory->createNode('Span', $this, $span);
     }
 }

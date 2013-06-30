@@ -1,6 +1,6 @@
 <?php
 
-namespace Gregwar\RST\Directives;
+namespace Gregwar\RST\HTML\Directives;
 
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
@@ -8,22 +8,22 @@ use Gregwar\RST\Directive;
 use Gregwar\RST\Nodes\RawNode;
 
 /**
- * Adds a stylesheet to a document, example:
+ * Add a meta title to the document
  *
- * .. stylesheet:: style.css
+ * .. title:: Page title
  */
-class Stylesheet extends Directive
+class Title extends Directive
 {
     public function getName()
     {
-        return 'stylesheet';
+        return 'title';
     }
 
     public function process(Parser $parser, $node, $variable, $data, array $options)
     {
         $document = $parser->getDocument();
 
-        $document->addHeaderNode(new RawNode('<link rel="stylesheet" type="text/css" href="'.$data.'" />'));
+        $document->addHeaderNode(new RawNode('<title>'.htmlspecialchars($data).'</title>'));
 
         if ($node) {
             $document->addNode($node);

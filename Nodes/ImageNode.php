@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Nodes;
 
-class ImageNode extends Node
+abstract class ImageNode extends Node
 {
     protected $url;
     protected $options;
@@ -11,15 +11,5 @@ class ImageNode extends Node
     {
         $this->url = $url;
         $this->options = $options;
-    }
-
-    public function render()
-    {
-        $attributes = '';
-        foreach ($this->options as $key => $value) {
-            $attributes .= ' '.$key . '="'.htmlspecialchars($value).'"';
-        }
-
-        return '<img src="'.$this->url.'" '.$attributes.' />';
     }
 }

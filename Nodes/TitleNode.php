@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Nodes;
 
-class TitleNode extends Node
+abstract class TitleNode extends Node
 {
     protected $level;
 
@@ -15,10 +15,5 @@ class TitleNode extends Node
     public function getLevel()
     {
         return $this->level;
-    }
-
-    public function render()
-    {
-        return '<h'.$this->level.'>'.$this->value.'</h'.$this->level.">";
     }
 }

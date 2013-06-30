@@ -2,10 +2,6 @@
 
 namespace Gregwar\RST\Nodes;
 
-class SeparatorNode extends Node
+abstract class SeparatorNode extends Node
 {
-    public function render()
-    {
-        return '<hr />';
-    }
 }

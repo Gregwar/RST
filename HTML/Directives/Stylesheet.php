@@ -1,33 +1,29 @@
 <?php
 
-namespace Gregwar\RST\Directives;
+namespace Gregwar\RST\HTML\Directives;
 
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
-use Gregwar\RST\Nodes\MetaNode;
+use Gregwar\RST\Nodes\RawNode;
 
 /**
- * Add a meta information:
+ * Adds a stylesheet to a document, example:
  *
- * .. meta::
- *      :key: value
+ * .. stylesheet:: style.css
  */
-class Meta extends Directive
+class Stylesheet extends Directive
 {
     public function getName()
     {
-        return 'meta';
+        return 'stylesheet';
     }
 
     public function process(Parser $parser, $node, $variable, $data, array $options)
     {
         $document = $parser->getDocument();
 
-        foreach ($options as $key => $value) {
-            $meta = new MetaNode($key, $value);
-            $document->addHeaderNode($meta);
-        }
+        $document->addHeaderNode(new RawNode('<link rel="stylesheet" type="text/css" href="'.$data.'" />'));
 
         if ($node) {
             $document->addNode($node);

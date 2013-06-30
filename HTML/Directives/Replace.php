@@ -1,8 +1,8 @@
 <?php
 
-namespace Gregwar\RST\Directives;
+namespace Gregwar\RST\HTML\Directives;
 
-use Gregwar\RST\Span;
+use Gregwar\RST\HTML\Span;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 

@@ -1,29 +1,33 @@
 <?php
 
-namespace Gregwar\RST\Directives;
+namespace Gregwar\RST\HTML\Directives;
 
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
-use Gregwar\RST\Nodes\RawNode;
+use Gregwar\RST\HTML\MetaNode;
 
 /**
- * Add a meta title to the document
+ * Add a meta information:
  *
- * .. title:: Page title
+ * .. meta::
+ *      :key: value
  */
-class Title extends Directive
+class Meta extends Directive
 {
     public function getName()
     {
-        return 'title';
+        return 'meta';
     }
 
     public function process(Parser $parser, $node, $variable, $data, array $options)
     {
         $document = $parser->getDocument();
 
-        $document->addHeaderNode(new RawNode('<title>'.htmlspecialchars($data).'</title>'));
+        foreach ($options as $key => $value) {
+            $meta = new MetaNode($key, $value);
+            $document->addHeaderNode($meta);
+        }
 
         if ($node) {
             $document->addNode($node);
