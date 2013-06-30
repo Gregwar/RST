@@ -75,7 +75,7 @@ class FormTests extends \PHPUnit_Framework_TestCase
     /**
      * Testing the titling
      */
-    public function testTitlse()
+    public function testTitles()
     {
         $document = $this->parse('title.rst');
         
@@ -89,6 +89,18 @@ class FormTests extends \PHPUnit_Framework_TestCase
         $this->assertHasNode($document, function($node) {
             return $node instanceof TitleNode
                 && $node->getLevel() == 2;
+        }, 1);
+    }
+
+    /**
+     * Testing the titling
+     */
+    public function testList()
+    {
+        $document = $this->parse('list.rst');
+        
+        $this->assertHasNode($document, function($node) {
+            return $node instanceof ListNode;
         }, 1);
     }
 
