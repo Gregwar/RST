@@ -2,6 +2,19 @@
 
 namespace Gregwar\RST;
 
+/**
+ * A directive is like a function you can call or apply to a block
+ * Il looks like:
+ *
+ * .. function:: main
+ *     :arg1: value
+ *     :arg2: otherValue
+ *
+ *     Some block !
+ *
+ *  The directive can define variables, create special nodes or change
+ *  the node that directly follows it
+ */
 abstract class Directive
 {
     /**
