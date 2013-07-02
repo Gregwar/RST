@@ -370,7 +370,7 @@ class Parser
                 $node = $this->factory->createNode('TitleNode', $this->createSpan($data), Environment::$letters[$this->specialLetter]);
                 break;
             case self::STATE_SEPARATOR:
-                $node = $this->factory->createNode('SeparatorNode');
+                $node = $this->factory->createNode('SeparatorNode', Environment::$letters[$this->specialLetter]);
                 break;
             case self::STATE_CODE:
                 $node = $this->factory->createNode('CodeNode', $this->buffer);
