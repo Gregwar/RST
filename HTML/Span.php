@@ -25,7 +25,20 @@ class Span extends Base
 
         // Replacing literal tokens
         foreach ($this->tokens as $id => $value) {
-            $span = str_replace($id, '<code>'.$value.'</code>', $span);
+            if ($value['type'] == 'literal') {
+                $span = str_replace($id, '<code>'.$value['text'].'</code>', $span);
+            }
+            if ($value['type'] == 'reference') {
+                $reference = $environment->resolve($value['url']);
+
+                if ($reference) {
+                    $text = $value['text'] ?: $reference['title'];
+                    $link = '<a href="/'.$value['url'].'.html">'.trim($text).'</a>';
+                } else {
+                    $link = '<a href="#">(unresolved reference)</a>';
+                }
+                $span = str_replace($id, $link, $span);
+            }
         }
         
         // Replacing variables

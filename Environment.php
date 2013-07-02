@@ -14,6 +14,12 @@ class Environment
         '*' => 4
     );
 
+    // Metas
+    protected $metas = null;
+
+    // Dependencies of this document
+    protected $dependencies = array();
+
     // Variables of the document
     protected $variables = array();
 
@@ -30,6 +36,23 @@ class Environment
     {
         foreach (self::$letters as $letter => $level) {
             $this->levels[$level] = 1;
+        }
+    }
+
+    public function setMetas($metas)
+    {
+        $this->metas = $metas;
+    }
+
+    /**
+     * Resolves a reference URL
+     */
+    public function resolve($url)
+    {
+        if ($this->metas) {
+            return $this->metas->get($url);
+        } else {
+            return null;
         }
     }
 
@@ -120,5 +143,13 @@ class Environment
         }
 
         return null;
+    }
+
+    /**
+     * Adds a dependency to the document
+     */
+    public function addDependency($dependency)
+    {
+        $this->dependencies[] = $dependency;
     }
 }

@@ -37,9 +37,12 @@ class Parser
     // Is the current node code ?
     protected $isCode = false;
 
-    public function __construct($environment = null, array $directives = array(), $factory = null)
+    public function __construct($metas = null, $environment = null, array $directives = array(), $factory = null)
     {
         $this->environment = $environment ?: new Environment;
+        if ($metas) {
+            $this->environment->setMetas($metas);
+        }
 
         if ($factory == null) {
             $factory = new \Gregwar\RST\HTML\Factory;
@@ -60,7 +63,7 @@ class Parser
      */
     public function getSubParser()
     {
-        return new Parser($this->environment, $this->directives, $this->factory);
+        return new Parser(null, $this->environment, $this->directives, $this->factory);
     }
 
     /**

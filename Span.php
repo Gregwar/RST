@@ -21,23 +21,23 @@ abstract class Span
         $tokens = array();
         $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $prefix) {
             $id = $prefix.'/'.sha1($match[1]);
-            $tokens[$id] = htmlspecialchars($match[1]);
+            $tokens[$id] = array(
+                'type' => 'literal',
+                'text' => htmlspecialchars($match[1])
+            );
 
             return $id;
         }, $span);
         
         $environment = $parser->getEnvironment();
 
+        
         // Replacing numbering
         foreach ($environment::$letters as $letter => $level) {
             $span = preg_replace_callback('/\#\\'.$letter.'/mUsi', function($match) use ($environment, $level) {
                 return $environment->getNumber($level);
             }, $span);
         }
-
-        $this->tokens = $tokens;
-        $this->parser = $parser;
-        $this->span = $span;
 
         // Signaling anonymous names
         $environment->resetAnonymousStack();
@@ -47,6 +47,32 @@ abstract class Span
                 $environment->pushAnonymous($name);
             }
         }
+
+        // Looking for references to other documents
+        $prefix = sha1(time().'/'.mt_rand());
+        $span = preg_replace_callback('/:doc:`(.+)`/mUsi', function($match) use (&$environment, $prefix, &$tokens) {
+            $url = $match[1];
+            $text = null;
+            if (preg_match('/^(.+)<(.+)>$/mUsi', $url, $match)) {
+                $text = $match[1];
+                $url = $match[2];
+            }
+
+            $id = $prefix.'/'.sha1($url);
+            $tokens[$id] = array(
+                'type' => 'reference',
+                'url' => $url,
+                'text' => $text
+            );
+
+            $environment->addDependency($url);
+
+            return $id;
+        }, $span);
+        
+        $this->tokens = $tokens;
+        $this->parser = $parser;
+        $this->span = $span;
     }
 
     public function __toString()

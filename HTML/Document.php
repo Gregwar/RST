@@ -31,7 +31,7 @@ class Document extends Base
         $document .= "<body>\n";
         $document .= $this->render();
         $document .= "</body>\n";
-        $document .= "</html\n";
+        $document .= "</html>\n";
 
         return $document;
     }

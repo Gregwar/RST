@@ -1,6 +1,6 @@
 <?php
 
-include('../autoload.php');
+include('../../autoload.php');
 
 use Gregwar\RST\Parser;
 

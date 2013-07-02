@@ -6,6 +6,8 @@
 Gregwar/RST Sandbox
 ===================
 
+Reference to :doc:`HoHo <some/doc>`
+
 .. note:: 
     **Note**: 
     This is a testing sandbox, if you want to understand how it works, have a
