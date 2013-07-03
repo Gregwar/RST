@@ -165,7 +165,7 @@ You can use the following shortcut::
     I love GitHub__
 
     __ http://www.github.com/
-
+    
 #-) Inline links
 ~~~~~~~~~~~~~~~~
 
@@ -176,6 +176,21 @@ You can also define the link target inside the link::
 Will result in:
 
 Do you know `Google <http://www.google.com>`_ ?
+
+#-) Anchor links
+~~~~~~~~~~~~~~~~
+
+An anchor can be used like this::
+
+    .. _anchor:
+
+    Some anchor section, you can link to it like `this <#anchor>`_
+
+Will result in:
+
+.. _anchor:
+
+Some anchor section, you can link to it like `this <#anchor>`_
 
 #=) Directives
 --------------

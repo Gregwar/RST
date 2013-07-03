@@ -9,6 +9,8 @@
 <body>
 <h1>Gregwar/RST Sandbox</h1>
 
+<p>Reference to <a href="#">(unresolved reference)</a></p>
+
 <div class="note"><p><b>Note</b>:<br />This is a testing sandbox, if you want to understand how it works, have a
 look to the rst original file</p>
 
@@ -183,6 +185,21 @@ __ http://www.github.com/
 
 <p>Do you know <a href="http://www.google.com">Google</a> ?</p>
 
+<h3>4) Anchor links</h3>
+
+<p>An anchor can be used like this:</p>
+
+<pre><code>.. _anchor:
+
+Some anchor section, you can link to it like `this &lt;#anchor&gt;`_
+</code></pre>
+
+<p>Will result in:</p>
+
+<a id="anchor"></a>
+
+<p>Some anchor section, you can link to it like <a href="#anchor">this</a></p>
+
 <h2>6) Directives</h2>
 
 <h3>1) Include</h3>
@@ -219,4 +236,4 @@ Hello |name| !
 <img src="rst.png"  width="250px" title="RST logo" />
 
 </body>
-</html
+</html>

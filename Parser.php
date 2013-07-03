@@ -87,8 +87,8 @@ class Parser
         // Anchor link 
         if (preg_match('/^\.\. _(.+):$/mUsi', trim($line), $match)) {
             $anchor = $match[1];
-            $this->document->addNode(new RawNode('<a id="'.$anchor.'"></a>'));
-            $this->environment->setLink($match[1], '#'.$anchor);
+            $this->document->addNode($this->factory->createNode('AnchorNode', $anchor));
+            $this->environment->setLink($anchor, '#'.$anchor);
             return true;
         }
 
