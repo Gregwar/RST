@@ -24,6 +24,9 @@ class Image extends Directive
 
     public function processNode(Parser $parser, $variable, $data, array $options)
     {
-        return new ImageNode($data, $options);
+        $environment = $parser->getEnvironment();
+        $url = $environment->relativeUrl($data);
+
+        return new ImageNode($url, $options);
     }
 }

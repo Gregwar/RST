@@ -183,17 +183,29 @@ class Environment
     }
 
     /**
-     * Resolves a reference URL
+     * Resolves a relative URL using directories, for instance, if the
+     * current directory is "path/to/something", and you want to get the
+     * relative URL to "path/to/something/else.html", the result will
+     * be else.html. Else, "../" will be added to go to the upper directory
      */
     public function relativeUrl($url)
     {
+        // If string contains ://, it is considered as absolute
+        if (preg_match('/:\\/\\//mUsi', $url)) {
+            return $url;
+        }
+
+        // If string begins with "/", the "/" is removed to resolve the
+        // relative path
         if (strlen($url) && $url[0] == '/') {
-            $url = substr($url);
+            $url = substr($url, 1);
         }
 
         if ($this->samePrefix($url)) {
+            // If the prefix is the same, simply returns the file name
             $relative = basename($url);
         } else {
+            // Else, returns enough ../ to get upper
             $relative = '';
 
             for ($k=0; $k<$this->getDepth(); $k++) {
