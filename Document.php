@@ -3,6 +3,7 @@
 namespace Gregwar\RST;
 
 use Gregwar\RST\Nodes\Node;
+use Gregwar\RST\Nodes\TitleNode;
 
 abstract class Document extends Node
 {
@@ -33,6 +34,52 @@ abstract class Document extends Node
         }
 
         return $nodes;
+    }
+
+    /**
+     * Gets the main title of the document
+     */
+    public function getTitle()
+    {
+        foreach ($this->nodes as $node) {
+            if ($node instanceof TitleNode && $node->getLevel() == 1) {
+                return $node->getValue().'';
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the titles hierarchy in arrays, for instance :
+     *
+     * array(
+     *     array('Main title', array(
+     *         array('Sub title', array()),
+     *         array('Sub title 2', array()
+     *     )
+     * )
+     */
+    public function getTitles()
+    {
+        $titles = array();
+        $levels = array(&$titles);
+
+        foreach ($this->nodes as $node) {
+            if ($node instanceof TitleNode) {
+                $level = $node->getLevel();
+                $text = $node->getValue() . '';
+
+                if (isset($levels[$level-1])) {
+                    $parent = &$levels[$level-1];
+                    $element = array($text, array());
+                    $parent[] = $element;
+                    $levels[$level] = &$parent[count($parent)-1][1];
+                }
+            }
+        }
+
+        return $titles;
     }
 
     public function addNode(Node $node)

@@ -105,6 +105,28 @@ class FormTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing the titles retrieving
+     */
+    public function testGetTitles()
+    {
+        $document = $this->parse('titles.rst');
+
+        $this->assertEquals($document->getTitle(), 'The main title');
+        $this->assertEquals($document->getTitles(), array(
+            array('The main title', array(
+                array('First level title', array(
+                    array('Second level title', array()),
+                    array('Other second level title', array())
+                )),
+                array('Other first level title', array(
+                    array('Next second level title', array()),
+                    array('Yet another second level title', array())
+                ))
+            )))
+        );
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */
