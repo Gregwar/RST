@@ -11,6 +11,9 @@ class Builder
     const NO_PARSE = 1;
     const PARSE = 2;
 
+    // Files to copy at the end of the build
+    protected $toCopy = array();
+
     // Source and target directory
     protected $directory;
     protected $targetDirectory;
@@ -55,6 +58,10 @@ class Builder
         // Saving the meta
         echo "* Writing metas\n";
         $this->saveMetas();
+
+        // Copy the files
+        echo "* Running the copies\n";
+        $this->doCopy();
     }
 
     /**
@@ -258,5 +265,31 @@ class Builder
     public function getSourceFile($filename)
     {
         return $this->directory . '/' . $filename;
+    }
+
+    /**
+     * Run the copy
+     */
+    public function doCopy()
+    {
+        foreach ($this->toCopy as $copy) {
+            list($source, $destination) = $copy;
+            $source = $this->getSourceFile($source);
+            $destination = $this->getTargetFile($destination);
+
+            if (is_dir($source) && is_dir($destination)) {
+                $destination = dirname($destination);
+            }
+
+            shell_exec('cp -R "'.$source.'" "'.$destination.'"');
+        }
+    }
+
+    /**
+     * Add a file to copy
+     */
+    public function copy($source, $destination = null)
+    {
+        $this->toCopy[] = array($source, $destination);
     }
 }

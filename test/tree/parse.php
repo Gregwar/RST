@@ -8,6 +8,7 @@ try
 {
     // Build the 'input' files to the 'output' directory
     $builder = new Builder;
+    $builder->copy('css', 'css');
     $builder->build('input', 'output');
 }
 catch (\Exception $exception)
