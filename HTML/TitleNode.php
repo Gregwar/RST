@@ -8,6 +8,6 @@ class TitleNode extends Base
 {
     public function render()
     {
-        return '<h'.$this->level.'>'.$this->value.'</h'.$this->level.">";
+        return '<a id="'.$this->token.'"></a><h'.$this->level.'>'.$this->value.'</h'.$this->level.">";
     }
 }

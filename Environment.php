@@ -31,7 +31,8 @@ class Environment
     protected $links = array();
 
     // Level counters
-    protected $levels;
+    protected $levels = array();
+    protected $counters = array();
 
     // Anonymous links stack
     protected $anonymous = array();
@@ -40,6 +41,7 @@ class Environment
     {
         foreach (self::$letters as $letter => $level) {
             $this->levels[$level] = 1;
+            $this->counters[$level] = 0;
         }
     }
 
@@ -78,14 +80,24 @@ class Environment
     /**
      * Title level
      */
-    public function createTitle($letter)
+    public function createTitle($level)
     {
-        $level = self::$letters[$letter];
         foreach (self::$letters as $letter => $currentLevel) {
             if ($currentLevel > $level) {
-                $this->levels[$level] = 1;
+                $this->levels[$currentLevel] = 1;
+                $this->counters[$currentLevel] = 0;
             }
         }
+
+        $this->levels[$level] = 1;
+        $this->counters[$level]++;
+        $token = array('title');
+
+        for ($i=1; $i<=$level; $i++) {
+            $token[] = $this->counters[$i];
+        }
+
+        return implode('.', $token);
     }
 
     /**

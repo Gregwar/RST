@@ -6,20 +6,22 @@ use Gregwar\RST\Nodes\TocNode as Base;
 
 class TocNode extends Base
 {
-    protected function renderLevel($url, $titles, $level = 1)
+    protected function renderLevel($url, $titles, $level = 1, $path = array())
     {
         if ($level > $this->depth) {
             return false;
         }
 
         $html = '';
-        foreach ($titles as $entry) {
+        foreach ($titles as $k => $entry) {
+            $path[$level-1] = $k+1;
             list($title, $childs) = $entry;
-            $html .= '<li><a href="'.$url.'">'.$title.'</a></li>';
+            $token = 'title.'.implode('.', $path);
+            $html .= '<li><a href="'.$url.'#'.$token.'">'.$title.'</a></li>';
 
             if ($childs) {
                 $html .= '<ul>';
-                $html .= $this->renderLevel($url, $childs, $level+1);
+                $html .= $this->renderLevel($url, $childs, $level+1, $path);
                 $html .= '</ul>';
             }
         }
