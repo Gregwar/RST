@@ -31,6 +31,10 @@ class TocNode extends Base
 
     public function render()
     {
+        if (isset($this->options['hidden'])) {
+            return '';
+        }
+
         $this->depth = isset($this->options['depth']) ? $this->options['depth'] : 2;
 
         $html = '<div class="toc"><ul>';
