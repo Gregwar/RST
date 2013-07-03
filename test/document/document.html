@@ -69,7 +69,23 @@ displayed will be auto-incremented:</p>
 
 <p>You can force a line break by adding an extra space at the end of a line</p>
 
-<a id="title.1.3"></a><h2>3) Lists</h2>
+<a id="title.1.3"></a><h2>3) Tables</h2>
+
+<p>Tables can be created using the line separator <code>====</code>:</p>
+
+<pre><code>============ ============
+First column Other column
+============ ============
+Second row   Second row,
+             other column
+============ ============
+</code></pre>
+
+<p>Will result in:</p>
+
+<table><tr><td>First column</td><td>Other column</td></tr><tr><td>Second row               </td><td>Second row, other column</td></tr></table>
+
+<a id="title.1.4"></a><h2>4) Lists</h2>
 
 <p>Lists can be ordered or unordered, and nested, for instance this:</p>
 
@@ -99,9 +115,9 @@ displayed will be auto-incremented:</p>
 </ul>
 </p>
 
-<a id="title.1.4"></a><h2>4) Blocks</h2>
+<a id="title.1.5"></a><h2>5) Blocks</h2>
 
-<a id="title.1.4.1"></a><h3>1) Quoting</h3>
+<a id="title.1.5.1"></a><h3>1) Quoting</h3>
 
 <p>You can quote a block by indenting it:</p>
 
@@ -117,7 +133,7 @@ displayed will be auto-incremented:</p>
 <blockquote>This is a quote<br />
 </blockquote>
 
-<a id="title.1.4.2"></a><h3>2) Code</h3>
+<a id="title.1.5.2"></a><h3>2) Code</h3>
 
 <p>You can quote code the same way as quote, but using the <code>::</code> at the end
 of the previous paragraph:</p>
@@ -138,9 +154,9 @@ of the previous paragraph:</p>
 echo &quot;I love RST&quot;;
 </code></pre>
 
-<a id="title.1.5"></a><h2>5) Links</h2>
+<a id="title.1.6"></a><h2>6) Links</h2>
 
-<a id="title.1.5.1"></a><h3>1) Standard links</h3>
+<a id="title.1.6.1"></a><h3>1) Standard links</h3>
 
 <p>Links can be defined once for all using the trailing <code>_</code>, like this:</p>
 
@@ -153,7 +169,7 @@ echo &quot;I love RST&quot;;
 
 <p><a href="http://php.net/">PHP</a> is a great language</p>
 
-<a id="title.1.5.2"></a><h3>2) Anonymous links</h3>
+<a id="title.1.6.2"></a><h3>2) Anonymous links</h3>
 
 <p>Anonymous links can also be used to avoid copying the name just after the
 block that uses it, for instance:</p>
@@ -174,7 +190,7 @@ block that uses it, for instance:</p>
 __ http://www.github.com/
 </code></pre>
 
-<a id="title.1.5.3"></a><h3>3) Inline links</h3>
+<a id="title.1.6.3"></a><h3>3) Inline links</h3>
 
 <p>You can also define the link target inside the link:</p>
 
@@ -185,7 +201,7 @@ __ http://www.github.com/
 
 <p>Do you know <a href="http://www.google.com">Google</a> ?</p>
 
-<a id="title.1.5.4"></a><h3>4) Anchor links</h3>
+<a id="title.1.6.4"></a><h3>4) Anchor links</h3>
 
 <p>An anchor can be used like this:</p>
 
@@ -200,16 +216,16 @@ Some anchor section, you can link to it like `this &lt;#anchor&gt;`_
 
 <p>Some anchor section, you can link to it like <a href="#anchor">this</a></p>
 
-<a id="title.1.6"></a><h2>6) Directives</h2>
+<a id="title.1.7"></a><h2>7) Directives</h2>
 
-<a id="title.1.6.1"></a><h3>1) Include</h3>
+<a id="title.1.7.1"></a><h3>1) Include</h3>
 
 <p>You can include a file with the include pseudo-directive:</p>
 
 <pre><code>.. include:: file.rst
 </code></pre>
 
-<a id="title.1.6.2"></a><h3>2) Replace</h3>
+<a id="title.1.7.2"></a><h3>2) Replace</h3>
 
 <p>You can use the replace directive like this:</p>
 
@@ -222,7 +238,7 @@ Hello |name| !
 
 <p>Hello bob !</p>
 
-<a id="title.1.6.3"></a><h3>3) Image</h3>
+<a id="title.1.7.3"></a><h3>3) Image</h3>
 
 <p>The <code>image</code> directive can be used to display images, this way:</p>
 

@@ -12,6 +12,7 @@ class Parser
     const STATE_LIST = 5;
     const STATE_SEPARATOR = 6;
     const STATE_CODE = 7;
+    const STATE_TABLE = 8;
 
     // Current state
     protected $state;
@@ -191,6 +192,41 @@ class Parser
         }
 
         return $letter;
+    }
+
+    /**
+     * Returns true if the line is a table line
+     */
+    protected function parseTableLine($line)
+    {
+        $line = trim($line);
+
+        if (!strlen($line)) {
+            return false;
+        }
+
+        $parts = array(0);
+        $space = false;
+        for ($i=0; $i<strlen($line); $i++) {
+            if ($line[$i] == Environment::$tableLetter) {
+                $space = true;
+            } else {
+                if ($line[$i] == ' ') {
+                    if ($space) {
+                        $parts[] = $i;
+                        $space = false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        if (count($parts) > 1) {
+            return $parts;
+        }
+
+        return false;
     }
 
     /**
@@ -385,6 +421,10 @@ class Parser
             case self::STATE_LIST:
                 $node = $this->createListNode();
                 break;
+            case self::STATE_TABLE:
+                $node = $this->buffer;
+                $node->finalize($this);
+                break;
             case self::STATE_NORMAL:
                 $this->isCode = $this->prepareCode();
                 $node = $this->factory->createNode('ParagraphNode', $this->createSpan($this->buffer));
@@ -447,11 +487,30 @@ class Parser
                     $this->initDirective($line);
                 } else if ($this->parseLink($line)) {
                     return true;
+                } else if ($parts = $this->parseTableLine($line)) {
+                    $this->state = self::STATE_TABLE;
+                    $this->buffer = $this->factory->createNode('TableNode', $parts);
                 } else {
                     $this->state = self::STATE_NORMAL;
                     return false;
                 }
             }
+            break;
+
+        case self::STATE_TABLE:
+            if (!trim($line)) {
+                $this->flush();
+                $this->state = self::STATE_BEGIN;
+            } else {
+                $parts = $this->parseTableLine($line);
+
+                if (!$this->buffer->push($parts, $line)) {
+                    $this->flush();
+                    $this->state = self::STATE_BEGIN;
+                    return false;
+                }
+            }
+
             break;
 
         case self::STATE_NORMAL:

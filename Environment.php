@@ -14,6 +14,8 @@ class Environment
         '*' => 4
     );
 
+    public static $tableLetter = '=';
+
     // Current file name
     protected $currentFileName = null;
     protected $currentDirectory = '.';

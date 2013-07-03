@@ -65,6 +65,27 @@ This will result in a text separation:
 
 You can force a line break by adding an extra space at the end of a line
 
+#=) Tables
+----------
+
+Tables can be created using the line separator ``====``::
+
+    ============ ============
+    First column Other column
+    ============ ============
+    Second row   Second row,
+                 other column
+    ============ ============
+
+Will result in:
+
+============ ============
+First column Other column
+============ ============
+Second row   Second row,
+             other column
+============ ============
+
 #=) Lists
 ---------
 
