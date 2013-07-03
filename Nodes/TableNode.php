@@ -15,6 +15,22 @@ abstract class TableNode extends Node
         $this->data[] = array();
     }
 
+    /**
+     * Gets the columns count of the table
+     */
+    public function getCols()
+    {
+        return count($this->parts);
+    }
+
+    /**
+     * Gets the rows count of the table
+     */
+    public function getRows()
+    {
+        return count($this->data)-1;
+    }
+
     public function push($parts, $line)
     {
         if ($parts) {

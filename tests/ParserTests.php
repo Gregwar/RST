@@ -10,6 +10,7 @@ use Gregwar\RST\Nodes\CodeNode;
 use Gregwar\RST\Nodes\QuoteNode;
 use Gregwar\RST\Nodes\TitleNode;
 use Gregwar\RST\Nodes\ListNode;
+use Gregwar\RST\Nodes\TableNode;
 use Gregwar\RST\Nodes\SeparatorNode;
 
 /**
@@ -124,6 +125,26 @@ class FormTests extends \PHPUnit_Framework_TestCase
                 ))
             )))
         );
+    }
+
+    /**
+     * Testing the table feature
+     */
+    public function testTable()
+    {
+        $document = $this->parse('table.rst');
+
+        $nodes = $document->getNodes(function($node) {
+            return $node instanceof TableNode;
+        });
+
+        $this->assertEquals(count($nodes), 1);
+
+        if ($nodes) {
+            $table = $nodes[0];
+            $this->assertEquals($table->getCols(), 3);
+            $this->assertEquals($table->getRows(), 3);
+        }
     }
 
     /**

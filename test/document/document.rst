@@ -86,6 +86,16 @@ Second row with      Second row, of the
 some contents text   other column
 ============         ================
 
+Another example:
+
+===    ===   ===
+Col A  Col B Col C
+===    ===   ===
+Col X  Col Y Col Z
+===    ===   ===
+Col U  Col J Col K
+===    ===   ===
+
 #=) Lists
 ---------
 
