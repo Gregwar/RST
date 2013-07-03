@@ -4,10 +4,10 @@ Index file
 
 This is the index of all!
 
-Another page: :doc:`/otherpage`
-Another page: :doc:`Something else <otherpage>`
+.. toctree:: 
 
-Test of subdir: :doc:`subdir/test`
+    otherpage
+    subdir/test
 
 Including
 ---------

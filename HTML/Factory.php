@@ -21,6 +21,7 @@ class Factory extends Base
             new Directives\Replace,
             new Directives\Stylesheet,
             new Directives\Title,
+            new \Gregwar\RST\Directives\Toctree
         );
     }
 }

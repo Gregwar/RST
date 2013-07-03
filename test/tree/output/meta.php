@@ -21,12 +21,11 @@
         ),
       ),
     ),
-    'ctime' => 1372850640,
+    'ctime' => 1372853573,
     'depends' => 
     array (
       0 => 'otherpage',
-      1 => 'otherpage',
-      2 => 'subdir/test',
+      1 => 'subdir/test',
     ),
   ),
   'otherpage' => 
@@ -41,10 +40,24 @@
         0 => 'Other page',
         1 => 
         array (
+          0 => 
+          array (
+            0 => 'First title',
+            1 => 
+            array (
+            ),
+          ),
+          1 => 
+          array (
+            0 => 'Second title',
+            1 => 
+            array (
+            ),
+          ),
         ),
       ),
     ),
-    'ctime' => 1372849262,
+    'ctime' => 1372854532,
     'depends' => 
     array (
     ),
