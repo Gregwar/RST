@@ -127,14 +127,27 @@ class FormTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test the include:: pseudo-directive
+     */
+    public function testInclusion()
+    {
+        $document = $this->parse('inclusion.rst');
+
+        $this->assertContains('I was actually included', $document->renderDocument());
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */
     private function parse($file)
     {
+        $directory = __DIR__.'/files/';
         $parser = new Parser;
+        $environment = $parser->getEnvironment();
+        $environment->setCurrentDirectory($directory);
 
-        return $parser->parse(file_get_contents(__DIR__.'/files/'.$file));
+        return $parser->parse(file_get_contents($directory.$file));
     }
 
     /**
