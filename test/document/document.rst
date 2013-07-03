@@ -70,21 +70,21 @@ You can force a line break by adding an extra space at the end of a line
 
 Tables can be created using the line separator ``====``::
 
-    ============ ============
-    First column Other column
-    ============ ============
-    Second row   Second row,
-                 other column
-    ============ ============
+    ================     ================
+    **First column**     **Other column**
+    ================     ================
+    Second row with      Second row, of the
+    some contents text   other column
+    ============         ================
 
 Will result in:
 
-============ ============
-First column Other column
-============ ============
-Second row   Second row,
-             other column
-============ ============
+================     ================
+**First column**     **Other column**
+================     ================
+Second row with      Second row, of the
+some contents text   other column
+============         ================
 
 #=) Lists
 ---------

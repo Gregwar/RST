@@ -209,13 +209,13 @@ class Parser
         $space = false;
         for ($i=0; $i<strlen($line); $i++) {
             if ($line[$i] == Environment::$tableLetter) {
-                $space = true;
+                if ($space) {
+                    $parts[] = $i;
+                }
+                $space = false;
             } else {
                 if ($line[$i] == ' ') {
-                    if ($space) {
-                        $parts[] = $i;
-                        $space = false;
-                    }
+                    $space = true;
                 } else {
                     return false;
                 }

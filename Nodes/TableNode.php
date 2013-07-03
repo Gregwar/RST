@@ -29,7 +29,7 @@ abstract class TableNode extends Node
 
             for ($k=1; $k<=count($parts); $k++) {
                 if ($k == count($parts)) {
-                    $data = substr($line, $parts[$k-1]+1);
+                    $data = substr($line, $parts[$k-1]);
                 } else {
                     $data = substr($line, $parts[$k-1], $parts[$k]-$parts[$k-1]);
                 }
