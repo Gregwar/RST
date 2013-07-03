@@ -9,3 +9,7 @@ Another page: :doc:`Something else <otherpage>`
 
 Test of subdir: :doc:`subdir/test`
 
+Including
+---------
+
+.. include:: include.rst

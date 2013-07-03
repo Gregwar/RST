@@ -114,6 +114,7 @@ class Builder
 
             $environment = $parser->getEnvironment();
             $environment->setCurrentFilename($file);
+            $environment->setCurrentDirectory($this->directory);
 
             if (!file_exists($rst)) {
                 throw new \Exception('Can\'t parse the file '.$rst);

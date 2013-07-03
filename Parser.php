@@ -520,10 +520,12 @@ class Parser
      */
     public function includeFiles($document)
     {
+        $environment = $this->getEnvironment();
         $parser = $this;
 
-        return preg_replace_callback('/\n\.\. include:: (.+)\n/', function($match) use ($parser) {
-            return $parser->includeFiles(file_get_contents($match[1]));
+        return preg_replace_callback('/\n\.\. include:: (.+)\n/', function($match) use ($parser, $environment) {
+            $path = $environment->absoluteRelativePath($match[1]);
+            return $parser->includeFiles(file_get_contents($path));
         }, $document);
     }
 

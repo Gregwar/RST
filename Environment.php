@@ -16,6 +16,7 @@ class Environment
 
     // Current file name
     protected $currentFileName = null;
+    protected $currentDirectory = '.';
 
     // Metas
     protected $metas = null;
@@ -174,6 +175,10 @@ class Environment
      */
     public function relativeUrl($url)
     {
+        if (strlen($url) && $url[0] == '/') {
+            $url = substr($url);
+        }
+
         if ($this->samePrefix($url)) {
             $relative = basename($url);
         } else {
@@ -261,5 +266,21 @@ class Environment
     public function setCurrentFileName($filename)
     {
         $this->currentFileName = $filename;
+    }
+
+    /**
+     * Sets the directory of the current parsing
+     */
+    public function setCurrentDirectory($directory)
+    {
+        $this->currentDirectory = $directory;
+    }
+
+    /**
+     * Returns an absolute path for a relative given URL
+     */
+    public function absoluteRelativePath($url)
+    {
+        return $this->currentDirectory . '/' . $this->relativeUrl($url);
     }
 }
