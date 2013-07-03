@@ -4,5 +4,13 @@ include('../../autoload.php');
 
 use Gregwar\RST\DirectoryParser;
 
-$parser = new DirectoryParser;
-$parser->parse('input', 'output');
+try
+{
+    $parser = new DirectoryParser;
+    $parser->parse('input', 'output');
+}
+catch (\Exception $exception)
+{
+    echo "\n";
+    echo "Error: ".$exception->getMessage()."\n";
+}

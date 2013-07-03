@@ -152,4 +152,12 @@ class Environment
     {
         $this->dependencies[] = $dependency;
     }
+
+    /**
+     * Getting all the dependencies for this environment
+     */
+    public function getDependencies()
+    {
+        return $this->dependencies;
+    }
 }

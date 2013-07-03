@@ -558,7 +558,7 @@ class Parser
      */
     public function parse(&$document)
     {
-        $this->document = $this->factory->createNode('Document');
+        $this->document = $this->factory->createNode('Document', $this->environment);
         $this->init();
         $this->parseLines(trim($document));
 

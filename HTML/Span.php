@@ -33,7 +33,7 @@ class Span extends Base
 
                 if ($reference) {
                     $text = $value['text'] ?: $reference['title'];
-                    $link = '<a href="/'.$value['url'].'.html">'.trim($text).'</a>';
+                    $link = '<a href="'.$value['url'].'.html">'.trim($text).'</a>';
                 } else {
                     $link = '<a href="#">(unresolved reference)</a>';
                 }

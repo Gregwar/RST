@@ -7,8 +7,19 @@ use Gregwar\RST\Nodes\TitleNode;
 
 abstract class Document extends Node
 {
+    protected $environment;
     protected $headerNodes = array();
     protected $nodes = array();
+
+    public function __construct(Environment $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    public function getEnvironment()
+    {
+        return $this->environment;
+    }
 
     public function renderDocument()
     {

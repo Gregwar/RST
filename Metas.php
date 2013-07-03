@@ -6,16 +6,30 @@ class Metas
 {
     protected $entries = array();
 
+    public function __construct($entries)
+    {
+        if ($entries) {
+            $this->entries = $entries;
+        }
+    }
+
+    public function getAll()
+    {
+        return $this->entries;
+    }
+
     /**
      * Sets the meta for url, giving the title, the modification time and
      * the dependencies list
      */
-    public function set($url, $title, $mtime, array $depends)
+    public function set($file, $url, $title, $titles, $ctime, array $depends)
     {
-        $this->entries[$url] = array(
+        $this->entries[$file] = array(
+            'file' => $file,
             'url' => $url,
             'title' => $title,
-            'mtime' => $mtime,
+            'titles' => $titles,
+            'ctime' => $ctime,
             'depends' => $depends
         );
     }

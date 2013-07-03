@@ -52,13 +52,13 @@ abstract class Span
         $prefix = sha1(time().'/'.mt_rand());
         $span = preg_replace_callback('/:doc:`(.+)`/mUsi', function($match) use (&$environment, $prefix, &$tokens) {
             $url = $match[1];
+            $id = $prefix.'/'.sha1($url.$match[0]);
             $text = null;
             if (preg_match('/^(.+)<(.+)>$/mUsi', $url, $match)) {
                 $text = $match[1];
                 $url = $match[2];
             }
 
-            $id = $prefix.'/'.sha1($url);
             $tokens[$id] = array(
                 'type' => 'reference',
                 'url' => $url,
