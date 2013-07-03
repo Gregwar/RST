@@ -2,12 +2,13 @@
 
 include('../../autoload.php');
 
-use Gregwar\RST\DirectoryParser;
+use Gregwar\RST\Builder;
 
 try
 {
-    $parser = new DirectoryParser;
-    $parser->parse('input', 'output');
+    // Build the 'input' files to the 'output' directory
+    $builder = new Builder;
+    $builder->build('input', 'output');
 }
 catch (\Exception $exception)
 {

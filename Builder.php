@@ -3,10 +3,10 @@
 namespace Gregwar\RST;
 
 /**
- * A directory parser can parses a whole directory tree and
- * produces an output tree
+ * A builder can parses a whole directory to build the target architecture
+ * of a document
  */
-class DirectoryParser
+class Builder
 {
     const NO_PARSE = 1;
     const PARSE = 2;
@@ -27,7 +27,7 @@ class DirectoryParser
     // Parsed documents waiting to be rendered
     protected $documents = array();
 
-    public function parse($directory, $targetDirectory = 'output')
+    public function build($directory, $targetDirectory = 'output')
     {
         $this->directory = $directory;
         $this->targetDirectory = $targetDirectory;
@@ -66,6 +66,12 @@ class DirectoryParser
         foreach ($this->documents as $file => &$document) {
             echo " -> Rendering $file...\n";
             $target = $this->getNameOfFile($file);
+
+            $directory = dirname($target);
+            if (!is_dir($directory)) {
+                mkdir($directory, 0755, true);
+            }
+
             file_put_contents($target, $document->renderDocument());
         }
     }
@@ -105,6 +111,9 @@ class DirectoryParser
             // Process the file
             $rst = $this->getRST($file);
             $parser = new Parser($this->metas);
+
+            $environment = $parser->getEnvironment();
+            $environment->setCurrentFilename($file);
 
             if (!file_exists($rst)) {
                 throw new \Exception('Can\'t parse the file '.$rst);

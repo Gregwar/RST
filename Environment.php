@@ -14,6 +14,9 @@ class Environment
         '*' => 4
     );
 
+    // Current file name
+    protected $currentFileName = null;
+
     // Metas
     protected $metas = null;
 
@@ -49,8 +52,12 @@ class Environment
      */
     public function resolve($url)
     {
+        $url = $this->canonicalUrl($url);
+
         if ($this->metas) {
-            return $this->metas->get($url);
+            $entry = $this->metas->get($url);
+            $entry['url'] = $this->relativeUrl($entry['url']);
+            return $entry;
         } else {
             return null;
         }
@@ -150,6 +157,7 @@ class Environment
      */
     public function addDependency($dependency)
     {
+        $dependency = $this->canonicalUrl($dependency);
         $this->dependencies[] = $dependency;
     }
 
@@ -159,5 +167,99 @@ class Environment
     public function getDependencies()
     {
         return $this->dependencies;
+    }
+
+    /**
+     * Resolves a reference URL
+     */
+    public function relativeUrl($url)
+    {
+        if ($this->samePrefix($url)) {
+            $relative = basename($url);
+        } else {
+            $relative = '';
+
+            for ($k=0; $k<$this->getDepth(); $k++) {
+                $relative .= '../';
+            }
+
+            $relative .= $url;
+        }
+
+        return $relative;
+    }
+
+    /**
+     * Get the depth of the current file name (the number of parent
+     * directories)
+     */
+    public function getDepth()
+    {
+        return count(explode('/', $this->currentFileName))-1;
+    }
+
+    /**
+     * Returns true if the given url have the same prefix as the
+     * current document
+     */
+    protected function samePrefix($url)
+    {
+        $partsA = explode('/', $url);
+        $partsB = explode('/', $this->currentFileName);
+
+        $n = count($partsA);
+        if ($n != count($partsB)) {
+            return false;
+        }
+
+        unset($partsA[$n-1]);
+        unset($partsB[$n-1]);
+
+        return $partsA == $partsB;
+    }
+
+    /**
+     * Returns the directory name
+     */
+    public function getDirName()
+    {
+        $dirname = dirname($this->currentFileName);
+
+        if ($dirname == '.') {
+            return null;
+        }
+
+        return $dirname;
+    }
+
+    /**
+     * Gets a canonical URL from the given one
+     */
+    public function canonicalUrl($url)
+    {
+        if (strlen($url)) {
+            if ($url[0] == '/') {
+                // If the URL begins with a "/", the following is the 
+                // canonical URL
+                return substr($url, 1);
+            } else {
+                // Else, the canonical name is under the current dir
+                if ($this->getDirName()) { 
+                    return $this->getDirName() . '/' .$url;
+                } else {
+                    return $url;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sets the current file name
+     */
+    public function setCurrentFileName($filename)
+    {
+        $this->currentFileName = $filename;
     }
 }
