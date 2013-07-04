@@ -6,49 +6,48 @@ use Gregwar\RST\Nodes\ListNode as Base;
 
 class ListNode extends Base
 {
-    protected $stack = array();
-    protected $currentDepth = 0;
+    protected $lines = array();
 
     public function addLine($text, $ordered, $depth)
     {
-        $keyword = $ordered ? 'ol' : 'ul';
-        $depth += 1;
-
-        if ($this->currentDepth < $depth) {
-            $this->currentDepth = $depth;
-            $this->value .= '<'.$keyword.'>'."\n";
-            $this->stack[] = array($depth, '</' . $keyword . '>'."\n");
-        }
-        $this->popTo($depth);
-
-        $this->value .= '<li>'.$text.'</li>'."\n";
-    }
-
-    protected function popTo($depth)
-    {
-        while ($this->currentDepth > $depth) {
-            if ($this->stack) {
-                $value = array_pop($this->stack);
-                $this->value .= $value[1];
-
-                if ($this->stack) {
-                    $this->currentDepth = $this->stack[count($this->stack)-1][0];
-                } else {
-                    $this->currentDepth = 0;
-                }
-            } else {
-                break;
-            }
-        }
-    }
-
-    public function close()
-    {
-        $this->popTo(0);
+        $this->lines[] = array($text, $ordered, $depth);
     }
 
     public function render()
     {
-        return '<p>'.$this->value.'</p>';
+        $depth = -1;
+        $value = '';
+        $stack = array();
+
+        foreach ($this->lines as $line) {
+            list($text, $ordered, $newDepth) = $line;
+            $keyword = $ordered ? 'ol' : 'ul';
+
+            if ($depth < $newDepth) {
+                $value .= '<' . $keyword . '>';
+                $stack[] = array($newDepth, '</' . $keyword . '>');
+                $depth = $newDepth;
+            }
+
+            while ($depth > $newDepth) {
+                $top = $stack[count($stack)-1];
+
+                if ($top[0] > $newDepth) {
+                    $value .= $top[1];
+                    array_pop($stack);
+                    $top = $stack[count($stack)-1];
+                    $depth = $top[0];
+                }
+            }
+
+            $value .= '<li>'.$text.'</li>';
+        }
+
+        while ($stack) {
+            list($d, $closing) = array_pop($stack);
+            $value .= $closing; 
+        }
+
+        return '<p>'.$value.'</p>';
     }
 }
