@@ -15,6 +15,7 @@
         <testsuite name="RST testing">
             <file>./tests/ParserTests.php</file>
             <file>./tests/EnvironmentTests.php</file>
+            <file>./tests/HTMLTests.php</file>
         </testsuite>
     </testsuites>
 
