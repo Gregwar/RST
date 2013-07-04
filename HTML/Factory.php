@@ -17,10 +17,10 @@ class Factory extends Base
             new Directives\CodeBlock,
             new Directives\Image,
             new Directives\Meta,
-            new Directives\Note,
             new Directives\Replace,
             new Directives\Stylesheet,
             new Directives\Title,
+            new Directives\Wrap('note'),
             new \Gregwar\RST\Directives\Toctree
         );
     }
