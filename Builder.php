@@ -30,6 +30,18 @@ class Builder
     // Parsed documents waiting to be rendered
     protected $documents = array();
 
+    // Factory
+    protected $factory;
+
+    public function __construct($factory = null)
+    {
+        if ($factory) {
+            $this->factory = $factory;
+        } else {
+            $this->factory = new HTML\Factory;
+        }
+    }
+
     public function build($directory, $targetDirectory = 'output')
     {
         $this->directory = $directory;
@@ -117,7 +129,7 @@ class Builder
             echo " -> Parsing $file...\n";
             // Process the file
             $rst = $this->getRST($file);
-            $parser = new Parser($this->metas);
+            $parser = new Parser($this->metas, null, array(), $this->factory);
 
             $environment = $parser->getEnvironment();
             $environment->setCurrentFilename($file);
