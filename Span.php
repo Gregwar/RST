@@ -80,6 +80,7 @@ abstract class Span
         $linkCallback = function($match) use ($environment, $generator, &$tokens) {
             $link = $match[2] ?: $match[4];
             $id = $generator();
+            $next = $match[6];
 
             if (preg_match('/^(.+) <(.+)>$/mUsi', $link, $match)) {
                 $link = $match[1];
@@ -88,16 +89,18 @@ abstract class Span
 
             $tokens[$id] = array(
                 'type' => 'link',
-                'link' => $link
+                'link' => $link,
+                'next' => $next
             );
-            return $id;
+
+            return $id.$next;
         };
         
         // Replacing anonymous links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__( |\n|\t|\r|$)(.?+)/mUsi', $linkCallback, $span);
 
         // Replacing links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_( |\n|\t|\r|$)(.?+)/mUsi', $linkCallback, $span);
         
         $this->tokens = $tokens;
         $this->parser = $parser;

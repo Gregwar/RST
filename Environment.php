@@ -19,6 +19,7 @@ class Environment
     // Current file name
     protected $currentFileName = null;
     protected $currentDirectory = '.';
+    protected $targetDirectory = '.';
 
     // Metas
     protected $metas = null;
@@ -309,5 +310,15 @@ class Environment
     public function absoluteRelativePath($url)
     {
         return $this->currentDirectory . '/' . $this->getDirName() . '/' . $this->relativeUrl($url);
+    }
+
+    public function setTargetDirectory($directory)
+    {
+        $this->targetDirectory = $directory;
+    }
+
+    public function getTargetDirectory()
+    {
+        return $this->targetDirectory;
     }
 }

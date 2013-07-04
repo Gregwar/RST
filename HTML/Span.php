@@ -50,7 +50,10 @@ class Span extends Base
                 break;
             case 'link':
                 $url = $environment->getLink($value['link']);
-                $link = '<a href="'.htmlspecialchars($url).'">'.$value['link'].'</a> ';
+                $link = '<a href="'.htmlspecialchars($url).'">'.$value['link'].'</a>';
+                if ($value['next'] != ',' && $value['next'] != '.') {
+                    $link .= ' ';
+                }
                 $span = str_replace($id, $link, $span);
                 break;
             }
