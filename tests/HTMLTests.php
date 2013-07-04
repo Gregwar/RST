@@ -20,6 +20,7 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<a href="http://something.com/">', $document);
         $this->assertContains('<a href="http://anonymous.com/">', $document);
         $this->assertContains('under_score', $document);
+        $this->assertContains(' spacy', $document);
         $this->assertNotContains('`', $document);
     }
 
