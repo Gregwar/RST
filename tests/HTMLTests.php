@@ -24,6 +24,22 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing a table
+     */
+    public function testTable()
+    {
+        $document = $this->parseHTML('table.rst');
+
+        $this->assertEquals(substr_count($document, '<table>'), 1);
+        $this->assertEquals(substr_count($document, '</table>'), 1);
+        $this->assertEquals(substr_count($document, '<tr>'), 2);
+        $this->assertEquals(substr_count($document, '</tr>'), 2);
+        $this->assertEquals(substr_count($document, '<td'), 6);
+        $this->assertEquals(substr_count($document, '</td>'), 6);
+        $this->assertNotContains('==', $document);
+    }
+
+    /**
      * Testing literals
      */
     public function testLiteral()
