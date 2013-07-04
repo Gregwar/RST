@@ -103,6 +103,15 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('This is a code block', $document);
         $this->assertNotContains('::', $document);
         $this->assertNotContains('<br', $document);
+
+        $document = $this->parseHTML('code-block.rst');
+
+        $this->assertEquals(substr_count($document, '<pre>'), 1);
+        $this->assertEquals(substr_count($document, '</pre>'), 1);
+        $this->assertEquals(substr_count($document, '<code>'), 1);
+        $this->assertEquals(substr_count($document, '</code>'), 1);
+        $code = 'cout << "Hello world!" << endl;';
+        $this->assertContains(htmlspecialchars($code), $document);
     }
 
     /**

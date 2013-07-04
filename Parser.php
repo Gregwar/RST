@@ -488,6 +488,7 @@ class Parser
                     $this->state = self::STATE_DIRECTIVE;
                     $this->buffer = array();
                     $this->flush();
+                    $this->isCode = true;
                     $this->initDirective($line);
                 } else if ($this->parseLink($line)) {
                     return true;
