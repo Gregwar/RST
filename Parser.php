@@ -73,6 +73,11 @@ class Parser
     public function parseLink($line)
     {
         // Links
+        if (preg_match('/^\.\. _`(.+)`: (.+)$/mUsi', $line, $match)) {
+            $this->environment->setLink($match[1], $match[2]);
+            return true;
+        }
+
         if (preg_match('/^\.\. _(.+): (.+)$/mUsi', $line, $match)) {
             $this->environment->setLink($match[1], $match[2]);
             return true;
@@ -301,7 +306,6 @@ class Parser
         if ($listLine) {
             $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
         }
-        $node->close();
 
         return $node;
     }
@@ -342,11 +346,11 @@ class Parser
      */
     protected function initDirective($line)
     {
-        if (preg_match('/^\.\. (\|(.+)\| |)(.+):: (.*)$/mUsi', $line, $match)) {
+        if (preg_match('/^\.\. (\|(.+)\| |)(.+)::( (.*)|)$/mUsi', $line, $match)) {
             $this->directive = array(
                 'variable' => $match[2],
                 'name' => $match[3],
-                'data' => $match[4],
+                'data' => trim($match[4]),
                 'options' => array()
             );
 
@@ -375,7 +379,7 @@ class Parser
      */
     protected function isDirective($line)
     {
-        return preg_match('/^\.\. (\|(.+)\| |)(.+):: (.*)$/mUsi', $line);
+        return preg_match('/^\.\. (\|(.+)\| |)(.+)::(.*)$/mUsi', $line);
     }
 
     /**
