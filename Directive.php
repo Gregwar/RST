@@ -20,7 +20,7 @@ abstract class Directive
     /**
      * Get the directive name
      */
-    abstract  public function getName();
+    abstract public function getName();
 
     /**
      * This is the function called by the parser to process the directive, it can be overloaded

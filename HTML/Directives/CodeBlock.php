@@ -6,6 +6,7 @@ use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
 use Gregwar\RST\Nodes\WrapperNode;
+use Gregwar\RST\Nodes\CodeNode;
 
 /**
  * Renders a code block
@@ -26,6 +27,10 @@ class CodeBlock extends Directive
     public function process(Parser $parser, $node, $variable, $data, array $options)
     {
         if ($node) {
+            if ($node instanceof CodeNode) {
+                $node->setLanguage(trim($data));
+            }
+
             $document = $parser->getDocument();
             $document->addNode(new WrapperNode($node, '<div class="codeBlock">', '</div>'));
         }
