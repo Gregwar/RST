@@ -1,7 +1,5 @@
 
-This is a direct link to `Google <http://www.google.com/>`_
-
-This is a link to `xkcd`_
+This is a direct link to `Google <http://www.google.com/>`_ , This is a link to `xkcd`_
 
 This is another link to something_
 

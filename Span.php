@@ -18,7 +18,7 @@ abstract class Span
 
         $tokenId = 0;
         $prefix = mt_rand().'|'.time();
-        $generator = function() use ($prefix, $tokenId) {
+        $generator = function() use ($prefix, &$tokenId) {
             $tokenId++;
             return sha1($prefix.'|'.$tokenId);
         };
