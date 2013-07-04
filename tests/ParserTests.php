@@ -16,7 +16,7 @@ use Gregwar\RST\Nodes\SeparatorNode;
 /**
  * Unit testing for RST
  */
-class FormTests extends \PHPUnit_Framework_TestCase
+class ParserTests extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests that comments are not present in the rendered document
