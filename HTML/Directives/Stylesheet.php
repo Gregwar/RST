@@ -23,7 +23,7 @@ class Stylesheet extends Directive
     {
         $document = $parser->getDocument();
 
-        $document->addHeaderNode(new RawNode('<link rel="stylesheet" type="text/css" href="'.$data.'" />'));
+        $document->addCss($data);
 
         if ($node) {
             $document->addNode($node);

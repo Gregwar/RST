@@ -4,6 +4,8 @@ namespace Gregwar\RST\HTML;
 
 use Gregwar\RST\Document as Base;
 
+use Gregwar\RST\Nodes\RawNode;
+
 class Document extends Base
 {
     public function render()
@@ -34,5 +36,10 @@ class Document extends Base
         $document .= "</html>\n";
 
         return $document;
+    }
+
+    public function addCss($css)
+    {
+        $this->addHeaderNode(new RawNode('<link rel="stylesheet" type="text/css" href="'.$css.'" />'));
     }
 }
