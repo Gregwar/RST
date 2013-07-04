@@ -8,6 +8,9 @@ use Gregwar\RST\Document;
  */
 class HTMLTests extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * Test some links demo
+     */
     public function testLinks()
     {
         $document = $this->parseHTML('links.rst');
@@ -18,6 +21,24 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<a href="http://anonymous.com/">', $document);
         $this->assertContains('under_score', $document);
         $this->assertNotContains('`', $document);
+    }
+
+    /**
+     * Testing the images feature
+     */
+    public function testImage()
+    {
+        $document = $this->parseHTMl('image.rst');
+
+        $this->assertContains('<img', $document);
+        $this->assertContains('src="test.jpg"', $document);
+        $this->assertContains('src="try.jpg"', $document);
+        $this->assertContains('src="other.jpg"', $document);
+        $this->assertContains('width="123"', $document);
+        $this->assertContains('title="Other"', $document);
+        $this->assertNotContains('..', $document);
+        $this->assertNotContains('image', $document);
+        $this->assertNotContains('::', $document);
     }
 
     /**
