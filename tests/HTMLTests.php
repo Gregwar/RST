@@ -48,19 +48,80 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parseHTML('list.rst');
 
-        $this->assertContains('<ul>', $document);
+        $this->assertEquals(substr_count($document, '<ul>'), 1);
+        $this->assertEquals(substr_count($document, '</ul>'), 1);
         $this->assertNotContains('<ol>', $document);
-        $this->assertContains('<li>', $document);
+        $this->assertEquals(substr_count($document, '<li>'), 4);
+        $this->assertEquals(substr_count($document, '</li>'), 4);
         $this->assertNotContains('*', $document);
         $this->assertContains('This is', $document);
 
         $document = $this->parseHTML('ordered.rst');
 
-        $this->assertContains('<ol>', $document);
+        $this->assertEquals(substr_count($document, '<ol>'), 1);
+        $this->assertEquals(substr_count($document, '</ol>'), 1);
         $this->assertNotContains('<ul>', $document);
-        $this->assertContains('<li>', $document);
+        $this->assertEquals(substr_count($document, '<li>'), 3);
+        $this->assertEquals(substr_count($document, '</li>'), 3);
         $this->assertNotContains('.', $document);
         $this->assertContains('First item', $document);
+    }
+
+    /**
+     * Testing css stylesheet
+     */
+    public function testStylesheet()
+    {
+        $document = $this->parseHTML('css.rst');
+
+        $this->assertContains('<link rel="stylesheet" type="text/css" href="style.css"', $document);
+    }
+
+    /**
+     * Testing quote
+     */
+    public function testQuote()
+    {
+        $document = $this->parseHTML('quote.rst');
+
+        $this->assertEquals(substr_count($document, '<blockquote>'), 1);
+        $this->assertContains('<br />', $document);
+        $this->assertEquals(substr_count($document, '</blockquote>'), 1);
+    }
+
+    /**
+     * Testing code blocks
+     */
+    public function testCode()
+    {
+        $document = $this->parseHTML('code.rst');
+
+        $this->assertEquals(substr_count($document, '<pre>'), 1);
+        $this->assertEquals(substr_count($document, '</pre>'), 1);
+        $this->assertEquals(substr_count($document, '<code>'), 1);
+        $this->assertEquals(substr_count($document, '</code>'), 1);
+        $this->assertContains('This is a code block', $document);
+        $this->assertNotContains('::', $document);
+        $this->assertNotContains('<br', $document);
+    }
+
+    /**
+     * Testing titles
+     */
+    public function testTitles()
+    {
+        $document = $this->parseHTML('titles.rst');
+
+        $this->assertEquals(substr_count($document, '<h1>'), 1);
+        $this->assertEquals(substr_count($document, '<h1>'), 1);
+        $this->assertEquals(substr_count($document, '<h2>'), 2);
+        $this->assertEquals(substr_count($document, '</h2>'), 2);
+        $this->assertEquals(substr_count($document, '<h3>'), 4);
+        $this->assertEquals(substr_count($document, '</h3>'), 4);
+        $this->assertContains('<a id="title', $document);
+        $this->assertNotContains('==', $document);
+        $this->assertNotContains('--', $document);
+        $this->assertNotContains('~~', $document);
     }
 
     /**
@@ -79,6 +140,6 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
 
     private function parseHTML($file)
     {
-        return $this->parse($file)->render();
+        return $this->parse($file)->renderDocument();
     }
 }
