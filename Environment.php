@@ -61,7 +61,7 @@ class Environment
 
         if ($this->metas) {
             $entry = $this->metas->get($url);
-            $entry['url'] = $this->relativeUrl($entry['url']);
+            $entry['url'] = $this->relativeUrl('/'.$entry['url']);
             return $entry;
         } else {
             return null;
@@ -201,20 +201,21 @@ class Environment
         // relative path
         if (strlen($url) && $url[0] == '/') {
             $url = substr($url, 1);
-        }
+            if ($this->samePrefix($url)) {
+                // If the prefix is the same, simply returns the file name
+                $relative = basename($url);
+            } else {
+                // Else, returns enough ../ to get upper
+                $relative = '';
 
-        if ($this->samePrefix($url)) {
-            // If the prefix is the same, simply returns the file name
-            $relative = basename($url);
-        } else {
-            // Else, returns enough ../ to get upper
-            $relative = '';
+                for ($k=0; $k<$this->getDepth(); $k++) {
+                    $relative .= '../';
+                }
 
-            for ($k=0; $k<$this->getDepth(); $k++) {
-                $relative .= '../';
+                $relative .= $url;
             }
-
-            $relative .= $url;
+        } else {
+            $relative = $url;
         }
 
         return $relative;
@@ -257,7 +258,7 @@ class Environment
         $dirname = dirname($this->currentFileName);
 
         if ($dirname == '.') {
-            return null;
+            return '';
         }
 
         return $dirname;
