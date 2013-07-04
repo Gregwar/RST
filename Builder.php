@@ -33,6 +33,9 @@ class Builder
     // Factory
     protected $factory;
 
+    // Hooks after the parsing
+    protected $hooks = array();
+
     public function __construct($factory = null)
     {
         if ($factory) {
@@ -40,6 +43,11 @@ class Builder
         } else {
             $this->factory = new HTML\Factory;
         }
+    }
+
+    public function addHook($function)
+    {
+        $this->hooks[] = $function;
     }
 
     public function build($directory, $targetDirectory = 'output')
@@ -140,6 +148,12 @@ class Builder
             }
 
             $document = $this->documents[$file] = $parser->parse(file_get_contents($rst));
+
+            // Calling all the post-process hooks
+            foreach ($this->hooks as $hook) {
+                $hook($document);
+            }
+
             $dependencies = $document->getEnvironment()->getDependencies();
 
             if ($dependencies) {
