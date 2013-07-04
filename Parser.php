@@ -629,6 +629,10 @@ class Parser
         $this->init();
         $this->parseLines(trim($document));
 
+        foreach ($this->directives as $name => $directive) {
+            $directive->finalize($this->document);
+        }
+
         return $this->document;
     }
 

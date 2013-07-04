@@ -71,4 +71,11 @@ abstract class Directive
     public function processAction(Parser $parser, $variabe, $data, array $options)
     {
     }
+
+    /**
+     * Called at the end of the parsing to finalize the document (add something or tweak nodes)
+     */
+    public function finalize(Document &$document)
+    {
+    }
 }
