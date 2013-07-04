@@ -42,6 +42,28 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing a list
+     */
+    public function testList()
+    {
+        $document = $this->parseHTML('list.rst');
+
+        $this->assertContains('<ul>', $document);
+        $this->assertNotContains('<ol>', $document);
+        $this->assertContains('<li>', $document);
+        $this->assertNotContains('*', $document);
+        $this->assertContains('This is', $document);
+
+        $document = $this->parseHTML('ordered.rst');
+
+        $this->assertContains('<ol>', $document);
+        $this->assertNotContains('<ul>', $document);
+        $this->assertContains('<li>', $document);
+        $this->assertNotContains('.', $document);
+        $this->assertContains('First item', $document);
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */
