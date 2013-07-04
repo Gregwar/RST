@@ -98,6 +98,11 @@ abstract class Document extends Node
         $this->nodes[] = $node;
     }
 
+    public function prependNode(Node $node)
+    {
+        array_unshift($this->nodes, $node);
+    }
+
     public function addHeaderNode(Node $node)
     {
         $this->headerNodes[] = $node;

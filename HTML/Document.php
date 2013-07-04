@@ -40,6 +40,17 @@ class Document extends Base
 
     public function addCss($css)
     {
-        $this->addHeaderNode(new RawNode('<link rel="stylesheet" type="text/css" href="'.$css.'" />'));
+        $environment = $this->getEnvironment();
+        $css = $environment->relativeUrl($css);
+
+        $this->addHeaderNode(new RawNode('<link rel="stylesheet" type="text/css" href="'.htmlspecialchars($css).'" />'));
+    }
+
+    public function addJs($js)
+    {
+        $environment = $this->getEnvironment();
+        $js = $environment->relativeUrl($js);
+
+        $this->addHeaderNode(new RawNode('<script type="text/javascript" src="'.htmlspecialchars($js).'"></script>'));
     }
 }
