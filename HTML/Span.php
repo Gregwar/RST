@@ -41,10 +41,10 @@ class Span extends Base
         };
         
         // Replacing anonymous links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__( |\n)/mUsi', $linkCallback, $span);
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
 
         // Replacing links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_( |\n)/mUsi', $linkCallback, $span);
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
 
         // Adding brs when a space is at the end of a line
         $span = preg_replace('/ \n/', '<br />', $span);
