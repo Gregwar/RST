@@ -9,7 +9,7 @@ class Span extends Base
     /**
      * Renders the Span, which includes :
      *
-     * - ``verbatim``
+     * - ``literal``
      * - *italic*
      * - **bold**
      * - |variable|

@@ -24,6 +24,27 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing literals
+     */
+    public function testLiteral()
+    {
+        $document = $this->parseHTML('literal.rst');
+
+        $code = 'this is a *boring* literal `a`_ containing some dirty things <3 hey_ !';
+        $this->assertContains(htmlspecialchars($code), $document);
+    }
+
+    /**
+     * Testing separators
+     */
+    public function testSeparator()
+    {
+        $document = $this->parseHTML('separator.rst');
+
+        $this->assertContains('<hr />', $document);
+    }
+
+    /**
      * Testing the images feature
      */
     public function testImage()
