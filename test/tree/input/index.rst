@@ -2,16 +2,24 @@
 Index file
 ==========
 
+Testing `xkcd`_ !
+
 This is the index of all!
 
 .. toctree:: 
     :depth: 3
 
     otherpage
-    subdir/test
+    subdir/testing_sub
+
+Testing reference in a list:
+
+* :doc:`subdir/testing_sub`
 
 Including
 ---------
 
 .. include:: include.rst
+
+.. _`xkcd`: http://xkcd.com/
 
