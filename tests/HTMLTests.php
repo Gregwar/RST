@@ -24,6 +24,20 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing the emphasis
+     */
+    public function testEmphasis()
+    {
+        $document = $this->parseHTML('italic.rst');
+
+        $this->assertContains('<em>italic emphasis</em>', $document);
+
+        $document = $this->parseHTML('strong.rst');
+
+        $this->assertContains('<b>strong emphasis</b>', $document);
+    }
+
+    /**
      * Testing a table
      */
     public function testTable()

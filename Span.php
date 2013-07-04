@@ -15,12 +15,18 @@ abstract class Span
         if (is_array($span)) {
             $span = implode("\n", $span);
         }
+
+        $tokenId = 0;
+        $prefix = mt_rand().'|'.time();
+        $generator = function() use ($prefix, $tokenId) {
+            $tokenId++;
+            return sha1($prefix.'|'.$tokenId);
+        };
         
         // Replacing literal with tokens
-        $prefix = sha1(time().'/'.mt_rand());
         $tokens = array();
-        $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $prefix) {
-            $id = $prefix.'/'.sha1($match[1]);
+        $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $generator) {
+            $id = $generator();
             $tokens[$id] = array(
                 'type' => 'literal',
                 'text' => htmlspecialchars($match[1])
@@ -49,10 +55,10 @@ abstract class Span
         }
 
         // Looking for references to other documents
-        $prefix = sha1(time().'/'.mt_rand());
-        $span = preg_replace_callback('/:doc:`(.+)`/mUsi', function($match) use (&$environment, $prefix, &$tokens) {
+        $span = preg_replace_callback('/:doc:`(.+)`/mUsi', function($match) use (&$environment, $generator, &$tokens) {
             $url = $match[1];
-            $id = $prefix.'/'.sha1($url.$match[0]);
+            $id = $generator();
+            
             $text = null;
             if (preg_match('/^(.+)<(.+)>$/mUsi', $url, $match)) {
                 $text = $match[1];
@@ -69,6 +75,29 @@ abstract class Span
 
             return $id;
         }, $span);
+
+        // Link callback
+        $linkCallback = function($match) use ($environment, $generator, &$tokens) {
+            $link = $match[2] ?: $match[4];
+            $id = $generator();
+
+            if (preg_match('/^(.+) <(.+)>$/mUsi', $link, $match)) {
+                $link = $match[1];
+                $environment->setLink($link, $match[2]);
+            }
+
+            $tokens[$id] = array(
+                'type' => 'link',
+                'link' => $link
+            );
+            return $id;
+        };
+        
+        // Replacing anonymous links
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
+
+        // Replacing links
+        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
         
         $this->tokens = $tokens;
         $this->parser = $parser;

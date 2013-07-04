@@ -17,7 +17,7 @@ class Span extends Base
     public function render()
     {
         $environment = $this->parser->getEnvironment();
-        $span = $this->span;
+        $span = htmlspecialchars($this->span);
 
         // Emphasis
         $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
@@ -28,33 +28,16 @@ class Span extends Base
             return $environment->getVariable($match[1]);
         }, $span);
 
-        // Link callback
-        $linkCallback = function($match) use ($environment) {
-            $link = $match[2] ?: $match[4];
-
-            if (preg_match('/^(.+) <(.+)>$/mUsi', $link, $match)) {
-                $link = $match[1];
-                $environment->setLink($link, $match[2]);
-            }
-
-            return '<a href="'.$environment->getLink($link).'">'.$link.'</a> ';
-        };
-        
-        // Replacing anonymous links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
-
-        // Replacing links
-        $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_( |\n|\t|\r|$)/mUsi', $linkCallback, $span);
-
         // Adding brs when a space is at the end of a line
         $span = preg_replace('/ \n/', '<br />', $span);
 
         // Replacing literal tokens
         foreach ($this->tokens as $id => $value) {
-            if ($value['type'] == 'literal') {
+            switch ($value['type']) {
+            case 'literal':
                 $span = str_replace($id, '<code>'.$value['text'].'</code>', $span);
-            }
-            if ($value['type'] == 'reference') {
+                break;
+            case 'reference':
                 $reference = $environment->resolve($value['url']);
 
                 if ($reference) {
@@ -64,6 +47,12 @@ class Span extends Base
                     $link = '<a href="#">(unresolved reference)</a>';
                 }
                 $span = str_replace($id, $link, $span);
+                break;
+            case 'link':
+                $url = $environment->getLink($value['link']);
+                $link = '<a href="'.htmlspecialchars($url).'">'.$value['link'].'</a>';
+                $span = str_replace($id, $link, $span);
+                break;
             }
         }
 
