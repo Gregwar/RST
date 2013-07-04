@@ -308,6 +308,6 @@ class Environment
      */
     public function absoluteRelativePath($url)
     {
-        return $this->currentDirectory . '/' . $this->relativeUrl($url);
+        return $this->currentDirectory . '/' . $this->getDirName() . '/' . $this->relativeUrl($url);
     }
 }
