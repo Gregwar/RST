@@ -2,33 +2,31 @@
 
 namespace Gregwar\RST\Directives;
 
-use Gregwar\RST\SubDirective;
+use Gregwar\RST\Directive;
 use Gregwar\RST\Parser;
 
-class Toctree extends SubDirective
+class Toctree extends Directive
 {
     public function getName()
     {
         return 'toctree';
     }
 
-    public function processSub(Parser $parser, $document, $variable, $data, array $options)
+    public function process(Parser $parser, $node, $variable, $data, array $options)
     {
-        $nodes = $document->getNodes();
         $environment = $parser->getEnvironment();
         $factory = $parser->getFactory();
         $files = array();
 
-        foreach ($nodes as $node) {
-            foreach (explode("\n", $node->getValue()) as $file) {
-                $file = trim($file);
-                if ($file) {
-                    $environment->addDependency($file);
-                    $files[] = $file;
-                }
+        foreach (explode("\n", $node->getValue()) as $file) {
+            $file = trim($file);
+            if ($file) {
+                $environment->addDependency($file);
+                $files[] = $file;
             }
         }
 
-        return $factory->createNode('TocNode', $files, $environment, $options);
+        $document = $parser->getDocument();
+        $document->addNode($factory->createNode('TocNode', $files, $environment, $options));
     }
 }
