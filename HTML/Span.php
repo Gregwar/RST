@@ -22,6 +22,9 @@ class Span extends Base
         // Emphasis
         $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
         $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
+
+        // Nbsp
+        $span = preg_replace('/~/', '&nbsp;', $span);
         
         // Replacing variables
         $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {

@@ -26,6 +26,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing the non breakable spaces (~)
+     */
+    public function testNbsp()
+    {
+        $document = $this->parseHTML('nbsp.rst');
+
+        $this->assertContains('&nbsp;', $document);
+        $this->assertNotContains('~', $document);
+    }
+
+    /**
      * Testing that the text is ecaped
      */
     public function testEscape()
