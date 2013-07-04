@@ -24,6 +24,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing that the text is ecaped
+     */
+    public function testEscape()
+    {
+        $document = $this->parseHTML('escape.rst');
+
+        $this->assertContains('&lt;script&gt;', $document);
+        $this->assertNotContains('<script>', $document);
+    }
+
+    /**
      * Testing the emphasis
      */
     public function testEmphasis()
