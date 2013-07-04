@@ -286,7 +286,9 @@ class Builder
     {
         foreach ($this->toCopy as $copy) {
             list($source, $destination) = $copy;
-            $source = $this->getSourceFile($source);
+            if ($source[0] != '/') {
+                $source = $this->getSourceFile($source);
+            }
             $destination = $this->getTargetFile($destination);
 
             if (is_dir($source) && is_dir($destination)) {
