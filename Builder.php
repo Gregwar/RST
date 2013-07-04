@@ -310,7 +310,7 @@ class Builder
                 $destination = dirname($destination);
             }
 
-            shell_exec('cp -R "'.$source.'" "'.$destination.'"');
+            shell_exec('cp -R '.$source.' '.$destination);
         }
     }
 
