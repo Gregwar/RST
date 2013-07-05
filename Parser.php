@@ -38,7 +38,7 @@ class Parser
     // Is the current node code ?
     protected $isCode = false;
 
-    public function __construct($metas = null, $environment = null, array $directives = array(), $factory = null)
+    public function __construct($metas = null, $environment = null, $factory = null)
     {
         $this->environment = $environment ?: new Environment;
         if ($metas) {
@@ -50,11 +50,7 @@ class Parser
         }
         $this->factory = $factory;
 
-        if (!$directives) {
-            $this->initDirectives();
-        } else {
-            $this->directives = $directives;
-        }
+        $this->initDirectives();
     }
 
     /**
@@ -64,7 +60,7 @@ class Parser
      */
     public function getSubParser()
     {
-        return new Parser(null, $this->environment, $this->directives, $this->factory);
+        return new Parser(null, $this->environment, $this->factory);
     }
 
     /**
