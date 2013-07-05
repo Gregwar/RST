@@ -267,18 +267,14 @@ class Parser
     }
 
     /**
-     * Is the current block a list ?
+     * Is the given line a list line ?
      *
-     * @return bool true if the current buffer should be treated as a list
+     * @return bool true if the given line is a list line
      */
-    protected function isList()
+    protected function isListLine($line)
     {
-        if (!$this->buffer) {
-            return false;
-        }
-
-        // A buffer is a list if at leas the first line is a list-style
-        return $this->parseListLine($this->buffer[0]);
+        // A buffer is a list if at least the first line is a list-style
+        return $this->parseListLine($line);
     }
 
     /**
@@ -477,7 +473,10 @@ class Parser
         switch ($this->state) {
         case self::STATE_BEGIN:
             if (trim($line)) {
-                if ($this->isBlockLine($line)) {
+                if ($this->isListLine($line)) {
+                    $this->state = self::STATE_LIST;
+                    return false;
+                } else if ($this->isBlockLine($line)) {
                     if ($this->isCode) {
                         $this->state = self::STATE_CODE;
                     } else {
@@ -499,6 +498,15 @@ class Parser
                     $this->state = self::STATE_NORMAL;
                     return false;
                 }
+            }
+            break;
+
+        case self::STATE_LIST:
+            if (trim($line)) {
+                $this->buffer[] = $line;
+            } else {
+                $this->flush();
+                $this->state = self::STATE_BEGIN;
             }
             break;
 
@@ -541,9 +549,6 @@ class Parser
                     }
                 }
             } else {
-                if ($this->isList()) {
-                    $this->state = self::STATE_LIST;
-                }
                 $this->flush();
                 $this->state = self::STATE_BEGIN;
             }
