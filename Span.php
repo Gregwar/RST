@@ -58,6 +58,7 @@ abstract class Span
         $span = preg_replace_callback('/:doc:`(.+)`/mUsi', function($match) use (&$environment, $generator, &$tokens) {
             $url = $match[1];
             $id = $generator();
+            $anchor = null;
             
             $text = null;
             if (preg_match('/^(.+)<(.+)>$/mUsi', $url, $match)) {
@@ -65,10 +66,16 @@ abstract class Span
                 $url = $match[2];
             }
 
+            if (preg_match('/^(.+)#(.+)$/mUsi', $url, $match)) {
+                $url = $match[1];
+                $anchor = $match[2];
+            }
+
             $tokens[$id] = array(
                 'type' => 'reference',
                 'url' => $url,
-                'text' => $text
+                'text' => $text,
+                'anchor' => $anchor
             );
 
             $environment->addDependency($url);

@@ -32,6 +32,15 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('Introduction page', $contents);
     }
 
+    public function testReferences()
+    {
+        $contents = file_get_contents($this->targetFile('introduction.html'));
+
+        $this->assertContains('<a href="index.html#toc">Index, paragraph toc</a>', $contents);
+        $this->assertContains('<a href="index.html">Index</a>', $contents);
+        $this->assertContains('<a href="index.html">Summary</a>', $contents);
+    }
+
     public function setUp()
     {
         shell_exec('rm -rf '.$this->targetFile());

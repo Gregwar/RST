@@ -45,7 +45,11 @@ class Span extends Base
 
                 if ($reference) {
                     $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
-                    $link = '<a href="'.$reference['url'].'">'.trim($text).'</a>';
+                    $url = $reference['url'];
+                    if ($value['anchor']) {
+                        $url .= '#' . $value['anchor'];
+                    }
+                    $link = '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars(trim($text)).'</a>';
                 } else {
                     $link = '<a href="#">(unresolved reference)</a>';
                 }
@@ -53,7 +57,7 @@ class Span extends Base
                 break;
             case 'link':
                 $url = $environment->getLink($value['link']);
-                $link = '<a href="'.htmlspecialchars($url).'">'.$value['link'].'</a>';
+                $link = '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars($value['link']).'</a>';
                 if ($value['next'] != ',' && $value['next'] != '.') {
                     $link .= ' ';
                 }
