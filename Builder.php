@@ -11,6 +11,9 @@ class Builder
     const NO_PARSE = 1;
     const PARSE = 2;
 
+    // Verbose build ?
+    protected $verbose = true;
+
     // Files to copy at the end of the build
     protected $toCopy = array();
 
@@ -50,8 +53,16 @@ class Builder
         $this->hooks[] = $function;
     }
 
-    public function build($directory, $targetDirectory = 'output')
+    protected function display($text)
     {
+        if ($this->verbose) {
+            echo $text."\n";
+        }
+    }
+
+    public function build($directory, $targetDirectory = 'output', $verbose = true)
+    {
+        $this->verbose = $verbose;
         $this->directory = $directory;
         $this->targetDirectory = $targetDirectory;
 
@@ -61,11 +72,11 @@ class Builder
         }
 
         // Try to load metas, if it does not exists, create it
-        echo "* Loading metas\n";
+        $this->display('* Loading metas');
         $this->metas = new Metas($this->loadMetas());
 
         // Scan all the metas and the index
-        echo "* Pre-scanning files\n";
+        $this->display('* Pre-scanning files');
         $this->scan('index');
         $this->scanMetas();
 
@@ -76,11 +87,11 @@ class Builder
         $this->render();
 
         // Saving the meta
-        echo "* Writing metas\n";
+        $this->display('* Writing metas');
         $this->saveMetas();
 
         // Copy the files
-        echo "* Running the copies\n";
+        $this->display('* Running the copies');
         $this->doCopy();
     }
 
@@ -89,9 +100,9 @@ class Builder
      */
     protected function render()
     {
-        echo "* Rendering documents\n";
+        $this->display('* Rendering documents');
         foreach ($this->documents as $file => &$document) {
-            echo " -> Rendering $file...\n";
+            $this->display(' -> Rendering '.$file.'...');
             $target = $this->getNameOfFile($file);
 
             $directory = dirname($target);
@@ -132,9 +143,9 @@ class Builder
      */
     protected function parseAll()
     {
-        echo "* Parsing files\n";
+        $this->display('* Parsing files');
         while ($file = $this->getFileToParse()) {
-            echo " -> Parsing $file...\n";
+            $this->display(' -> Parsing '.$file.'...');
             // Process the file
             $rst = $this->getRST($file);
             $parser = new Parser($this->metas, null, array(), $this->factory);
@@ -158,7 +169,7 @@ class Builder
             $dependencies = $document->getEnvironment()->getDependencies();
 
             if ($dependencies) {
-                echo " -> Scanning dependencies of $file...\n";
+                $this->display(' -> Scanning dependencies of '.$file.'...');
                 // Scan the dependencies for this document
                 foreach ($dependencies as $dependency) {
                     $this->scan($dependency);
@@ -185,7 +196,7 @@ class Builder
     {
         // If no decision is already made about this file
         if (!isset($this->states[$file])) {
-            echo " -> Scanning $file...\n";
+            $this->display(' -> Scanning '.$file.'...');
             $this->states[$file] = self::NO_PARSE;
             $entry = $this->metas->get($file);
             $rst = $this->getRST($file);
