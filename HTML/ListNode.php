@@ -29,8 +29,8 @@ class ListNode extends Base
             $keyword = $ordered ? 'ol' : 'ul';
 
             if ($depth < $newDepth) {
-                $value .= '<' . $keyword . '>';
-                $stack[] = array($newDepth, '</' . $keyword . '>');
+                $value .= '<' . $keyword . '>'."\n";
+                $stack[] = array($newDepth, '</' . $keyword . '>'."\n");
                 $depth = $newDepth;
             }
 
@@ -45,7 +45,7 @@ class ListNode extends Base
                 }
             }
 
-            $value .= $this->createElement($text);
+            $value .= $this->createElement($text)."\n";
         }
 
         while ($stack) {

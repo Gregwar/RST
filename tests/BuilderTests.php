@@ -18,6 +18,7 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_dir($this->targetFile()));
         $this->assertTrue(file_exists($this->targetFile('index.html')));
         $this->assertTrue(file_exists($this->targetFile('introduction.html')));
+        $this->assertTrue(file_exists($this->targetFile('subdirective.html')));
         $this->assertTrue(file_exists($this->targetFile('file.txt')));
     }
 
@@ -32,6 +33,9 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('Introduction page', $contents);
     }
 
+    /**
+     * Testing references to other documents
+     */
     public function testReferences()
     {
         $contents = file_get_contents($this->targetFile('introduction.html'));
@@ -39,6 +43,22 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<a href="index.html#toc">Index, paragraph toc</a>', $contents);
         $this->assertContains('<a href="index.html">Index</a>', $contents);
         $this->assertContains('<a href="index.html">Summary</a>', $contents);
+    }
+
+    /**
+     * Testing wrapping sub directive
+     */
+    public function testSubDirective()
+    {
+        $contents = file_get_contents($this->targetFile('subdirective.html'));
+
+        $this->assertEquals(2, substr_count($contents, '<div class="note">'));
+        $this->assertEquals(2, substr_count($contents, '<li>'));
+        $this->assertEquals(2, substr_count($contents, '</li>'));
+        $this->assertEquals(1, substr_count($contents, '<ul>'));
+        $this->assertEquals(1, substr_count($contents, '</ul>'));
+        $this->assertContains('<p>This is a simple note!</p>', $contents);
+        $this->assertContains('<h2>There is a title here</h2>', $contents);
     }
 
     public function setUp()

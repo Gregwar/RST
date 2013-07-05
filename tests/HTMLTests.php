@@ -68,12 +68,12 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parseHTML('table.rst');
 
-        $this->assertEquals(substr_count($document, '<table>'), 1);
-        $this->assertEquals(substr_count($document, '</table>'), 1);
-        $this->assertEquals(substr_count($document, '<tr>'), 2);
-        $this->assertEquals(substr_count($document, '</tr>'), 2);
-        $this->assertEquals(substr_count($document, '<td'), 6);
-        $this->assertEquals(substr_count($document, '</td>'), 6);
+        $this->assertEquals(1, substr_count($document, '<table>'));
+        $this->assertEquals(1, substr_count($document, '</table>'));
+        $this->assertEquals(2, substr_count($document, '<tr>'));
+        $this->assertEquals(2, substr_count($document, '</tr>'));
+        $this->assertEquals(6, substr_count($document, '<td'));
+        $this->assertEquals(6, substr_count($document, '</td>'));
         $this->assertNotContains('==', $document);
     }
 
@@ -123,31 +123,31 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parseHTML('list.rst');
 
-        $this->assertEquals(substr_count($document, '<ul>'), 1);
-        $this->assertEquals(substr_count($document, '</ul>'), 1);
+        $this->assertEquals(1, substr_count($document, '<ul>'));
+        $this->assertEquals(1, substr_count($document, '</ul>'));
         $this->assertNotContains('<ol>', $document);
-        $this->assertEquals(substr_count($document, '<li>'), 4);
-        $this->assertEquals(substr_count($document, '</li>'), 4);
+        $this->assertEquals(4, substr_count($document, '<li>'));
+        $this->assertEquals(4, substr_count($document, '</li>'));
         $this->assertNotContains('*', $document);
         $this->assertContains('This is', $document);
         
         $document = $this->parseHTML('indented-list.rst');
 
-        $this->assertEquals(substr_count($document, '<ul>'), 1);
-        $this->assertEquals(substr_count($document, '</ul>'), 1);
+        $this->assertEquals(1, substr_count($document, '<ul>'));
+        $this->assertEquals(1, substr_count($document, '</ul>'));
         $this->assertNotContains('<ol>', $document);
-        $this->assertEquals(substr_count($document, '<li>'), 4);
-        $this->assertEquals(substr_count($document, '</li>'), 4);
+        $this->assertEquals(4, substr_count($document, '<li>'));
+        $this->assertEquals(4, substr_count($document, '</li>'));
         $this->assertNotContains('*', $document);
         $this->assertContains('This is', $document);
 
         $document = $this->parseHTML('ordered.rst');
 
-        $this->assertEquals(substr_count($document, '<ol>'), 1);
-        $this->assertEquals(substr_count($document, '</ol>'), 1);
+        $this->assertEquals(1, substr_count($document, '<ol>'));
+        $this->assertEquals(1, substr_count($document, '</ol>'));
         $this->assertNotContains('<ul>', $document);
-        $this->assertEquals(substr_count($document, '<li>'), 3);
-        $this->assertEquals(substr_count($document, '</li>'), 3);
+        $this->assertEquals(3, substr_count($document, '<li>'));
+        $this->assertEquals(3, substr_count($document, '</li>'));
         $this->assertNotContains('.', $document);
         $this->assertContains('First item', $document);
     }
@@ -169,9 +169,9 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parseHTML('quote.rst');
 
-        $this->assertEquals(substr_count($document, '<blockquote>'), 1);
+        $this->assertEquals(1, substr_count($document, '<blockquote>'));
         $this->assertContains('<br />', $document);
-        $this->assertEquals(substr_count($document, '</blockquote>'), 1);
+        $this->assertEquals(1, substr_count($document, '</blockquote>'));
     }
 
     /**
@@ -181,20 +181,20 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parseHTML('code.rst');
 
-        $this->assertEquals(substr_count($document, '<pre>'), 1);
-        $this->assertEquals(substr_count($document, '</pre>'), 1);
-        $this->assertEquals(substr_count($document, '<code>'), 1);
-        $this->assertEquals(substr_count($document, '</code>'), 1);
+        $this->assertEquals(1, substr_count($document, '<pre>'));
+        $this->assertEquals(1, substr_count($document, '</pre>'));
+        $this->assertEquals(1, substr_count($document, '<code>'));
+        $this->assertEquals(1, substr_count($document, '</code>'));
         $this->assertContains('This is a code block', $document);
         $this->assertNotContains('::', $document);
         $this->assertNotContains('<br', $document);
 
         $document = $this->parseHTML('code-block.rst');
 
-        $this->assertEquals(substr_count($document, '<pre>'), 1);
-        $this->assertEquals(substr_count($document, '</pre>'), 1);
-        $this->assertEquals(substr_count($document, '<code>'), 1);
-        $this->assertEquals(substr_count($document, '</code>'), 1);
+        $this->assertEquals(1, substr_count($document, '<pre>'));
+        $this->assertEquals(1, substr_count($document, '</pre>'));
+        $this->assertEquals(1, substr_count($document, '<code>'));
+        $this->assertEquals(1, substr_count($document, '</code>'));
         $code = 'cout << "Hello world!" << endl;';
         $this->assertContains(htmlspecialchars($code), $document);
     }
@@ -206,12 +206,12 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parseHTML('titles.rst');
 
-        $this->assertEquals(substr_count($document, '<h1>'), 1);
-        $this->assertEquals(substr_count($document, '<h1>'), 1);
-        $this->assertEquals(substr_count($document, '<h2>'), 2);
-        $this->assertEquals(substr_count($document, '</h2>'), 2);
-        $this->assertEquals(substr_count($document, '<h3>'), 4);
-        $this->assertEquals(substr_count($document, '</h3>'), 4);
+        $this->assertEquals(1, substr_count($document, '<h1>'));
+        $this->assertEquals(1, substr_count($document, '<h1>'));
+        $this->assertEquals(2, substr_count($document, '<h2>'));
+        $this->assertEquals(2, substr_count($document, '</h2>'));
+        $this->assertEquals(4, substr_count($document, '<h3>'));
+        $this->assertEquals(4, substr_count($document, '</h3>'));
         $this->assertContains('<a id="title', $document);
         $this->assertNotContains('==', $document);
         $this->assertNotContains('--', $document);

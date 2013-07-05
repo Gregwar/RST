@@ -12,7 +12,7 @@ class Document extends Base
     {
         $document = '';
         foreach ($this->nodes as $node) {
-            $document .= $node->render()."\n\n";
+            $document .= $node->render() . "\n";
         }
 
         return $document;
