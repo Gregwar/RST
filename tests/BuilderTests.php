@@ -54,6 +54,7 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, substr_count($contents, '<div class="note">'));
         $this->assertEquals(2, substr_count($contents, '<li>'));
+        $this->assertContains('</div>', $contents);
         $this->assertEquals(2, substr_count($contents, '</li>'));
         $this->assertEquals(1, substr_count($contents, '<ul>'));
         $this->assertEquals(1, substr_count($contents, '</ul>'));
