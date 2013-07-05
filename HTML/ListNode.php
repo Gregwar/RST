@@ -13,6 +13,11 @@ class ListNode extends Base
         $this->lines[] = array($text, $ordered, $depth);
     }
 
+    public function createElement($text)
+    {
+        return '<li>' . $text . '</li>';
+    }
+
     public function render()
     {
         $depth = -1;
@@ -40,7 +45,7 @@ class ListNode extends Base
                 }
             }
 
-            $value .= '<li>'.$text.'</li>';
+            $value .= $this->createElement($text);
         }
 
         while ($stack) {
