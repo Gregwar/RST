@@ -148,7 +148,7 @@ class Builder
             $this->display(' -> Parsing '.$file.'...');
             // Process the file
             $rst = $this->getRST($file);
-            $parser = new Parser($this->metas, null, array(), $this->factory);
+            $parser = new Parser($this->metas, null, $this->factory);
 
             $environment = $parser->getEnvironment();
             $environment->setCurrentFilename($file);
