@@ -53,4 +53,12 @@ class Document extends Base
 
         $this->addHeaderNode(new RawNode('<script type="text/javascript" src="'.htmlspecialchars($js).'"></script>'));
     }
+
+    public function addFavicon($url = '/favicon.ico')
+    {
+        $environment = $this->getEnvironment();
+        $url = $environment->relativeUrl($url);
+
+        $this->addHeaderNode(new RawNode('<link rel="icon" type="image/x-icon" href="'.htmlspecialchars($url).'" />'));
+    }
 }
