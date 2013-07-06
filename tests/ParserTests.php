@@ -109,6 +109,11 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $this->assertHasNode($document, function($node) {
             return $node instanceof ListNode;
         }, 1);
+
+        $document = $this->parse('list-empty.rst');
+        $this->assertHasNode($document, function($node) {
+            return $node instanceof ListNode;
+        }, 1);
     }
 
     /**
@@ -186,7 +191,7 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $this->assertNotEmpty($nodes);
 
         if ($count !== null) {
-            $this->assertEquals(count($nodes), $count);
+            $this->assertEquals($count, count($nodes));
         }
     }
 

@@ -498,11 +498,16 @@ class Parser
             break;
 
         case self::STATE_LIST:
-            if (trim($line)) {
+            if (!trim($line)) {
+                return true;
+            }
+
+            if ($line[0] == ' ' || $this->isListLine($line)) {
                 $this->buffer[] = $line;
             } else {
                 $this->flush();
                 $this->state = self::STATE_BEGIN;
+                return false;
             }
             break;
 

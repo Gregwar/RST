@@ -150,6 +150,15 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, substr_count($document, '</li>'));
         $this->assertNotContains('.', $document);
         $this->assertContains('First item', $document);
+
+        $document = $this->parseHTML('list-empty.rst');
+        $this->assertEquals(1, substr_count($document, '<ol>'));
+        $this->assertEquals(1, substr_count($document, '</ol>'));
+        $this->assertEquals(1, substr_count($document, '<ul>'));
+        $this->assertEquals(1, substr_count($document, '</ul>'));
+        $this->assertEquals(5, substr_count($document, '<li>'));
+        $this->assertEquals(5, substr_count($document, '</li>'));
+        $this->assertContains('<p>This is not in the list</p>', $document);
     }
 
     /**
