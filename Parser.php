@@ -275,6 +275,7 @@ class Parser
 
     protected $lineInfo;
     protected $listLine;
+    protected $listFlow;
 
     /**
      * Push a line to the current list node buffer
@@ -291,12 +292,15 @@ class Parser
                 $this->listLine = array($infos[2]);
                 $this->lineInfo = $infos;
             } else {
-                if ($line[0] == ' ') {
+                if ($this->listFlow || $line[0] == ' ') {
                     $this->listLine[] = $line;
                 } else {
                     $flush = true;
                 }
             }
+            $this->listFlow = true;
+        } else {
+            $this->listFlow = false;
         }
 
         if ($flush) {
@@ -484,6 +488,7 @@ class Parser
                     $this->buffer = $this->factory->createNode('ListNode');
                     $this->lineInfo = null;
                     $this->listLine = array();
+                    $this->listFlow = true;
                     return false;
                 } else if ($this->isBlockLine($line)) {
                     if ($this->isCode) {

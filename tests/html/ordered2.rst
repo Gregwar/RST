@@ -1,7 +1,8 @@
 
 Testing an ordered list:
 
-#. First item;
+#. First item
+This is still in the list
 
 #. Second item;
 
