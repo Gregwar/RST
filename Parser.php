@@ -273,33 +273,42 @@ class Parser
         return $this->parseListLine($line);
     }
 
+    protected $lineInfo;
+    protected $listLine;
+
     /**
-     * Create a list node from the current buffer
-     *
-     * @return ListNode a list node containing all list items
+     * Push a line to the current list node buffer
      */
-    public function createListNode()
+    public function pushListLine($line, $flush = false)
     {
-        $node = $this->factory->createNode('ListNode');
-        $lineInfo = null;
-        $listLine = array();
-        foreach ($this->buffer as $line) {
+        if (trim($line)) {
             $infos = $this->parseListLine($line);
+
             if ($infos) {
-                if ($listLine) {
-                    $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
+                if ($this->listLine) {
+                    $this->buffer->addLine($this->createSpan($this->listLine), $this->lineInfo[0], $this->lineInfo[1]);
                 }
-                $listLine = array($infos[2]);
-                $lineInfo = $infos;
+                $this->listLine = array($infos[2]);
+                $this->lineInfo = $infos;
             } else {
-                $listLine[] = $line;
+                if ($line[0] == ' ') {
+                    $this->listLine[] = $line;
+                } else {
+                    $flush = true;
+                }
             }
         }
-        if ($listLine) {
-            $node->addLine($this->createSpan($listLine), $lineInfo[0], $lineInfo[1]);
+
+        if ($flush) {
+            if ($this->listLine) {
+                $this->buffer->addLine($this->createSpan($this->listLine), $this->lineInfo[0], $this->lineInfo[1]);
+                $this->listLine = array();
+            }
+
+            return false;
         }
 
-        return $node;
+        return true;
     }
 
     /**
@@ -415,7 +424,8 @@ class Parser
                 $node = $this->factory->createNode('QuoteNode', $this->buffer);
                 break;
             case self::STATE_LIST:
-                $node = $this->createListNode();
+                $this->pushListLine(null, true);
+                $node = $this->buffer;
                 break;
             case self::STATE_TABLE:
                 $node = $this->buffer;
@@ -471,6 +481,9 @@ class Parser
             if (trim($line)) {
                 if ($this->isListLine($line)) {
                     $this->state = self::STATE_LIST;
+                    $this->buffer = $this->factory->createNode('ListNode');
+                    $this->lineInfo = null;
+                    $this->listLine = array();
                     return false;
                 } else if ($this->isBlockLine($line)) {
                     if ($this->isCode) {
@@ -498,13 +511,7 @@ class Parser
             break;
 
         case self::STATE_LIST:
-            if (!trim($line)) {
-                return true;
-            }
-
-            if ($line[0] == ' ' || $this->isListLine($line)) {
-                $this->buffer[] = $line;
-            } else {
+            if (!$this->pushListLine($line)) {
                 $this->flush();
                 $this->state = self::STATE_BEGIN;
                 return false;

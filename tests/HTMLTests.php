@@ -130,6 +130,7 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(4, substr_count($document, '</li>'));
         $this->assertNotContains('*', $document);
         $this->assertContains('This is', $document);
+        $this->assertContains('Last line', $document);
         
         $document = $this->parseHTML('indented-list.rst');
 
