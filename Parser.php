@@ -254,7 +254,7 @@ class Parser
             }
         }
 
-        if (preg_match('/^((\*)|([\d]+)\.) (.+)$/', trim($line), $match)) {
+        if (preg_match('/^((\*)|([\d#]+)\.) (.+)$/', trim($line), $match)) {
             return array($line[$i] == '*' ? false : true,
                 $depth, $match[4]);
         }
