@@ -16,4 +16,9 @@ abstract class TocNode extends Node
         $this->environment = $environment;
         $this->options = $options;
     }
+
+    public function getFiles()
+    {
+        return $this->files;
+    }
 }

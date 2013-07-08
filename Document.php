@@ -4,6 +4,7 @@ namespace Gregwar\RST;
 
 use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Nodes\TitleNode;
+use Gregwar\RST\Nodes\TocNode;
 
 abstract class Document extends Node
 {
@@ -59,6 +60,24 @@ abstract class Document extends Node
         }
 
         return null;
+    }
+
+    /**
+     * Get the table of contents of the document
+     */
+    public function getTocs()
+    {
+        $tocs = array();
+
+        $nodes = $this->getNodes(function($node) {
+            return $node instanceof TocNode;
+        });
+
+        foreach ($nodes as $toc) {
+            $tocs[] = $toc->getFiles();
+        }
+
+        return $tocs;
     }
 
     /**

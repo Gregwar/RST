@@ -182,6 +182,7 @@ class Builder
                 $this->getUrl($file),
                 $document->getTitle(),
                 $document->getTitles(),
+                $document->getTocs(),
                 filectime($rst),
                 $dependencies
             );
