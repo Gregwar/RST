@@ -54,9 +54,9 @@ class Environment
     }
 
     /**
-     * Get the docs involving this document
+     * Get my parent metas
      */
-    public function getMyToc()
+    public function getParent()
     {
         if (!$this->currentFileName || !$this->metas) {
             return null;
@@ -74,17 +74,29 @@ class Environment
             return null;
         }
 
-        foreach ($parent['tocs'] as $toc) {
-            if (in_array($this->currentFileName, $toc)) {
-                $before = array();
-                $after = $toc;
+        return $parent;
+    }
 
-                while ($after) {
-                    $file = array_shift($after);
-                    if ($file == $this->currentFileName) {
-                        return array($before, $after);
+    /**
+     * Get the docs involving this document
+     */
+    public function getMyToc()
+    {
+        $parent = $this->getParent();
+
+        if ($parent) {
+            foreach ($parent['tocs'] as $toc) {
+                if (in_array($this->currentFileName, $toc)) {
+                    $before = array();
+                    $after = $toc;
+
+                    while ($after) {
+                        $file = array_shift($after);
+                        if ($file == $this->currentFileName) {
+                            return array($before, $after);
+                        }
+                        $before[] = $file;
                     }
-                    $before[] = $file;
                 }
             }
         }
