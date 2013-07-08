@@ -54,6 +54,45 @@ class Environment
     }
 
     /**
+     * Get the docs involving this document
+     */
+    public function getMyToc()
+    {
+        if (!$this->currentFileName || !$this->metas) {
+            return null;
+        }
+
+        $meta = $this->metas->get($this->currentFileName);
+
+        if (!$meta || !isset($meta['parent'])) {
+            return null;
+        }
+
+        $parent = $this->metas->get($meta['parent']);
+
+        if (!$parent) {
+            return null;
+        }
+
+        foreach ($parent['tocs'] as $toc) {
+            if (in_array($this->currentFileName, $toc)) {
+                $before = array();
+                $after = $toc;
+
+                while ($after) {
+                    $file = array_shift($after);
+                    if ($file == $this->currentFileName) {
+                        return array($before, $after);
+                    }
+                    $before[] = $file;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Resolves a reference URL
      */
     public function resolve($url)
