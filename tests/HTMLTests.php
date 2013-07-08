@@ -172,6 +172,13 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<p>This is not in the list</p>', $document);
     }
 
+    public function testEmptyParagraph()
+    {
+        $document = $this->parseHTML('empty-p.rst');
+
+        $this->assertNotContains('<p></p>', $document);
+    }
+
     /**
      * Testing css stylesheet
      */

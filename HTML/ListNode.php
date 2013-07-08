@@ -53,6 +53,6 @@ class ListNode extends Base
             $value .= $closing; 
         }
 
-        return '<p>'.$value.'</p>';
+        return $value;
     }
 }

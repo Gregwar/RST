@@ -8,6 +8,12 @@ class ParagraphNode extends Base
 {
     public function render()
     {
-        return "<p>".$this->value."</p>";
+        $text = $this->value;
+
+        if (trim($text)) {
+            return '<p>'.$text.'</p>';
+        } else {
+            return '';
+        }
     }
 }
