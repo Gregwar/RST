@@ -11,6 +11,7 @@ This is the index of all!
 
     otherpage
     subdir/testing_sub
+    special
 
 Testing reference in a list:
 

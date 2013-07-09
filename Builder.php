@@ -179,7 +179,7 @@ class Builder
             // Append the meta for this document
             $this->metas->set(
                 $file,
-                $this->getUrl($file),
+                $this->getUrl($document),
                 $document->getTitle(),
                 $document->getTitles(),
                 $document->getTocs(),
@@ -279,15 +279,17 @@ class Builder
      */
     public function getNameOfFile($file)
     {
-        return $this->getTargetFile($this->getUrl($file));
+        $meta = $this->metas->get($file);
+        return $this->getTargetFile($meta['url']);
     }
 
     /**
      * Gets the URL of a target file
      */
-    public function getUrl($file)
+    public function getUrl($document)
     {
-        return $file . '.html';
+        $environment = $document->getEnvironment();
+        return $environment->getUrl() . '.html';
     }
 
     /**

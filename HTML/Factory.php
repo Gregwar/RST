@@ -20,6 +20,7 @@ class Factory extends Base
             new Directives\Replace,
             new Directives\Stylesheet,
             new Directives\Title,
+            new Directives\Url,
             new Directives\Wrap('note'),
             new \Gregwar\RST\Directives\Toctree
         );

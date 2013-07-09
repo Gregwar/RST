@@ -20,6 +20,7 @@ class Environment
     protected $currentFileName = null;
     protected $currentDirectory = '.';
     protected $targetDirectory = '.';
+    protected $url = null;
 
     // Metas
     protected $metas = null;
@@ -371,5 +372,19 @@ class Environment
     public function getTargetDirectory()
     {
         return $this->targetDirectory;
+    }
+
+    public function getUrl()
+    {
+        if ($this->url) {
+            return $this->url;
+        } else {
+            return $this->currentFileName;
+        }
+    }
+
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }
