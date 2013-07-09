@@ -83,7 +83,6 @@ abstract class Document extends Node
             $tocs[] = $files;
         }
 
-        var_dump($tocs);
         return $tocs;
     }
 
