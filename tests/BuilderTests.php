@@ -19,7 +19,19 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($this->targetFile('index.html')));
         $this->assertTrue(file_exists($this->targetFile('introduction.html')));
         $this->assertTrue(file_exists($this->targetFile('subdirective.html')));
+        $this->assertTrue(file_exists($this->targetFile('magic-link.html')));
         $this->assertTrue(file_exists($this->targetFile('file.txt')));
+    }
+
+    /**
+     * Tests the ..url :: directive
+     */
+    public function testUrl()
+    {
+        $contents = file_get_contents($this->targetFile('index.html'));
+
+        $this->assertContains('magic-link.html', $contents);
+        $this->assertContains('Another page', $contents);
     }
 
     /**
