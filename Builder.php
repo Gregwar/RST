@@ -208,7 +208,13 @@ class Builder
             } else {
                 // Have a look to the file dependencies to knoww if you need to parse
                 // it or not
-                foreach ($entry['depends'] as $dependency) {
+                $depends = $entry['depends'];
+
+                if (isset($entry['parent'])) {
+                    $depends[] = $entry['parent'];
+                }
+
+                foreach ($depends as $dependency) {
                     $this->scan($dependency);
 
                     // If any dependency needs to be parsed, this file needs also to be
