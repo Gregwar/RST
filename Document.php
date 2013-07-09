@@ -77,7 +77,7 @@ abstract class Document extends Node
             $files = $toc->getFiles();
 
             foreach ($files as &$file) {
-                $file = '/'.$this->environment->canonicalUrl($file);
+                $file = $this->environment->canonicalUrl($file);
             }
 
             $tocs[] = $files;
