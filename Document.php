@@ -74,9 +74,16 @@ abstract class Document extends Node
         });
 
         foreach ($nodes as $toc) {
-            $tocs[] = $toc->getFiles();
+            $files = $toc->getFiles();
+
+            foreach ($files as &$file) {
+                $file = '/'.$this->environment->canonicalUrl($file);
+            }
+
+            $tocs[] = $files;
         }
 
+        var_dump($tocs);
         return $tocs;
     }
 
