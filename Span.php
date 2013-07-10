@@ -2,13 +2,13 @@
 
 namespace Gregwar\RST;
 
-abstract class Span
+use Gregwar\RST\Nodes\Node;
+
+abstract class Span extends Node
 {
     protected $parser;
     protected $span;
     protected $tokens;
-    
-    abstract public function render();
 
     public function __construct(Parser $parser, $span)
     {
@@ -116,11 +116,6 @@ abstract class Span
         $this->tokens = $tokens;
         $this->parser = $parser;
         $this->span = $span;
-    }
-
-    public function __toString()
-    {
-        return $this->render();
     }
 }
 

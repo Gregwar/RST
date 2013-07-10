@@ -69,9 +69,4 @@ class Span extends Base
 
         return $span;
     }
-
-    public function __toString()
-    {
-        return $this->render();
-    }
 }
