@@ -13,3 +13,4 @@ This is `something`_, and this is again `something`_
 
 .. _something: http://something.com/
 
+Reference to the :doc:`/index`

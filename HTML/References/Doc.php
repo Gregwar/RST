@@ -19,7 +19,7 @@ class Doc extends Reference
 
         if ($metas) {
             $entry = $metas->get($file);
-            $entry['url'] = $environment->relativeUrl($entry['url']);
+            $entry['url'] = $environment->relativeUrl('/'.$entry['url']);
         } else {
             $entry = array(
                 'title' => '(unresolved)',
