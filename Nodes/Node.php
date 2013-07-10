@@ -17,4 +17,9 @@ abstract class Node
     }
 
     abstract public function render();
+
+    public function __toString()
+    {
+        return $this->render();
+    }
 }
