@@ -56,7 +56,7 @@ class Builder
         $this->hooks[] = $function;
     }
 
-    public function addBuildHook($function)
+    public function addEnvironmentHook($function)
     {
         $this->environmentHooks[] = $function;
     }
