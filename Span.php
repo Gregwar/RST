@@ -80,7 +80,7 @@ abstract class Span
                 'anchor' => $anchor
             );
 
-            $environment->addDependency($url);
+            $environment->found($section, $url);
 
             return $id;
         }, $span);

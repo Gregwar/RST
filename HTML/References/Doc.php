@@ -25,6 +25,6 @@ class Doc extends Reference
 
     public function found(Environment $environment, $data)
     {
-        $environment->addReference($data);
+        $environment->addDependency($data);
     }
 }
