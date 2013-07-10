@@ -114,6 +114,11 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertNotContains('..', $document);
         $this->assertNotContains('image', $document);
         $this->assertNotContains('::', $document);
+
+        $document = $this->parseHTML('image-inline.rst');
+
+        $this->assertContains('<img', $document);
+        $this->assertContains('src="test.jpg"', $document);
     }
 
     /**
