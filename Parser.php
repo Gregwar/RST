@@ -13,6 +13,7 @@ class Parser
     const STATE_SEPARATOR = 6;
     const STATE_CODE = 7;
     const STATE_TABLE = 8;
+    const STATE_COMMENT = 9;
 
     // Current state
     protected $state;
@@ -570,13 +571,25 @@ class Parser
                     $this->flush();
                     $this->state = self::STATE_BEGIN;
                 } else {
-                    if (!$this->isComment($line)) {
+                    if ($this->isComment($line)) {
+                        $this->flush();
+                        $this->state = self::STATE_COMMENT;
+                    } else {
                         $this->buffer[] = $line;
                     }
                 }
             } else {
                 $this->flush();
                 $this->state = self::STATE_BEGIN;
+            }
+            break;
+        
+        case self::STATE_COMMENT:
+            $isComment = false;
+
+            if (!$this->isComment($line) && (!trim($line) || $line[0] != ' ')) {
+                $this->state = self::STATE_BEGIN;
+                return false;
             }
             break;
 

@@ -26,6 +26,15 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $document = $this->parse('comment.rst');
 
         $this->assertNotContains('Testing comment', $document->render());
+        $this->assertContains('Text before', $document->render());
+        $this->assertContains('Text after', $document->render());
+        
+        $document = $this->parse('multi-comment.rst');
+
+        $this->assertNotContains('multi-line', $document->render());
+        $this->assertNotContains('Blha', $document->render());
+        $this->assertContains('Text before', $document->render());
+        $this->assertContains('Text after', $document->render());
     }
 
     /**
