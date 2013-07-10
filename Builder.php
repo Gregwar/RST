@@ -36,6 +36,9 @@ class Builder
     // Factory
     protected $factory;
 
+    // Hooks before the parsing on the environment
+    protected $environmentsHooks = array();
+
     // Hooks after the parsing
     protected $hooks = array();
 
@@ -51,6 +54,11 @@ class Builder
     public function addHook($function)
     {
         $this->hooks[] = $function;
+    }
+
+    public function addBuildHook($function)
+    {
+        $this->environmentHooks[] = $function;
     }
 
     protected function display($text)
@@ -155,8 +163,12 @@ class Builder
             $environment->setCurrentDirectory($this->directory);
             $environment->setTargetDirectory($this->targetDirectory);
 
+            foreach ($this->environmentHooks as $hook) {
+                $hook($environment);
+            }
+
             if (!file_exists($rst)) {
-                // throw new \Exception('Can\'t parse the file '.$rst);
+                throw new \Exception('Can\'t parse the file '.$rst);
                 continue;
             }
 

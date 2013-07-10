@@ -463,7 +463,7 @@ class Parser
                 $currentDirective->process($this, $node, $this->directive['variable'], $this->directive['data'], $this->directive['options']);
                 $node = null;
             } else {
-                // throw new \Exception('Unknown directive: '.$name);
+                throw new \Exception('Unknown directive: '.$name);
             }
         }
 
