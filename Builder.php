@@ -111,7 +111,7 @@ class Builder
         $this->display('* Rendering documents');
         foreach ($this->documents as $file => &$document) {
             $this->display(' -> Rendering '.$file.'...');
-            $target = $this->getUrlOf($file);
+            $target = $this->getTargetOf($file);
 
             $directory = dirname($target);
             if (!is_dir($directory)) {
@@ -293,12 +293,13 @@ class Builder
     }
 
     /**
-     * Gets the name of a target file, for instance /introduction/part1 could
+     * Gets the name of a target for a file, for instance /introduction/part1 could
      * be resolved into /path/to/introduction/part1.html
      */
-    public function getUrlOf($file)
+    public function getTargetOf($file)
     {
         $meta = $this->metas->get($file);
+
         return $this->getTargetFile($meta['url']);
     }
 
@@ -308,6 +309,7 @@ class Builder
     public function getUrl($document)
     {
         $environment = $document->getEnvironment();
+
         return $environment->getUrl() . '.html';
     }
 
