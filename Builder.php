@@ -37,7 +37,7 @@ class Builder
     protected $factory;
 
     // Hooks before the parsing on the environment
-    protected $environmentsHooks = array();
+    protected $environmentHooks = array();
 
     // Hooks after the parsing
     protected $hooks = array();

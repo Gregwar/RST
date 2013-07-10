@@ -10,15 +10,22 @@ namespace Gregwar\RST;
  * Will be resolved as a reference of type method and the given reference will
  * be called to resolve it
  */
-interface Reference
+abstract class Reference
 {
     /**
      * The name of the reference, i.e the :something:
      */
-    public function getName();
+    abstract public function getName();
 
     /**
      * Resolve the reference and returns a link
      */
-    public function resolve(Environment $environment, $data);
+    abstract public function resolve(Environment $environment, $data);
+
+    /**
+     * Called when a reference is just found
+     */
+    public function found(Environment $environment, $data)
+    {
+    }
 }

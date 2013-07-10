@@ -131,6 +131,17 @@ class Environment
         throw new \Exception('Unknown reference section '.$section);
     }
 
+    public function found($section, $data)
+    {
+        if (isset($this->references[$section])) {
+            $reference = $this->references[$section];
+
+            return $reference->found($this, $data);
+        }
+
+        throw new \Exception('Unknown reference section '.$section);
+    }
+
     /**
      * Sets the giving variable to a value
      *

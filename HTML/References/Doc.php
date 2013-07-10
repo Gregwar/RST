@@ -5,7 +5,7 @@ namespace Gregwar\RST\HTML\References;
 use Gregwar\RST\Reference;
 use Gregwar\RST\Environment;
 
-class Doc implements Reference
+class Doc extends Reference
 {
     public function getName()
     {
@@ -21,5 +21,10 @@ class Doc implements Reference
         $entry['url'] = $environment->relativeUrl($entry['url']);
 
         return $entry;
+    }
+
+    public function found(Environment $environment, $data)
+    {
+        $environment->addReference($data);
     }
 }
