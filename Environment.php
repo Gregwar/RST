@@ -210,11 +210,17 @@ class Environment
     /**
      * Get a link value
      */
-    public function getLink($name)
+    public function getLink($name, $relative = true)
     {
         $name = trim(strtolower($name));
         if (isset($this->links[$name])) {
-            return $this->links[$name];
+            $link = $this->links[$name];
+
+            if ($relative) {
+                return $this->relativeUrl($link);
+            }
+
+            return $link;
         }
 
         return null;
@@ -385,6 +391,6 @@ class Environment
 
     public function setUrl($url)
     {
-        $this->url = $url;
+        $this->url = $this->getDirName() . '/' . $url;
     }
 }

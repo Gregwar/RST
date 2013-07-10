@@ -21,6 +21,7 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertTrue(file_exists($this->targetFile('subdirective.html')));
         $this->assertTrue(file_exists($this->targetFile('magic-link.html')));
         $this->assertTrue(file_exists($this->targetFile('file.txt')));
+        $this->assertTrue(file_exists($this->targetFile('subdir/test.html')));
     }
 
     /**
@@ -32,6 +33,22 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
 
         $this->assertContains('magic-link.html', $contents);
         $this->assertContains('Another page', $contents);
+    }
+
+    /**
+     * Tests the links
+     */
+    public function testLinks()
+    {
+        $contents = file_get_contents($this->targetFile('subdir/test.html'));
+
+        $this->assertContains('"../to/resource"', $contents);
+        $this->assertContains('"http://absolute/"', $contents);
+
+        $this->assertContains('"http://google.com"', $contents);
+        $this->assertContains('"http://yahoo.com"', $contents);
+
+        $this->assertEquals(2, substr_count($contents, 'http://something.com'));
     }
 
     /**

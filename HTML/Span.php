@@ -56,7 +56,11 @@ class Span extends Base
                 $span = str_replace($id, $link, $span);
                 break;
             case 'link':
-                $url = $environment->getLink($value['link']);
+                if ($value['url']) {
+                    $url = $environment->relativeUrl($value['url']);
+                } else {
+                    $url = $environment->getLink($value['link']);
+                }
                 $link = '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars($value['link']).'</a>';
                 $span = str_replace($id, $link, $span);
                 break;

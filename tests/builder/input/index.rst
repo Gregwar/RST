@@ -10,4 +10,5 @@ This is the builder test summary
     introduction
     subdirective
     another
+    subdir/index
 

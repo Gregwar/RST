@@ -156,7 +156,8 @@ class Builder
             $environment->setTargetDirectory($this->targetDirectory);
 
             if (!file_exists($rst)) {
-                throw new \Exception('Can\'t parse the file '.$rst);
+                // throw new \Exception('Can\'t parse the file '.$rst);
+                continue;
             }
 
             $document = $this->documents[$file] = $parser->parse(file_get_contents($rst));

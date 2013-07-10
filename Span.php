@@ -88,15 +88,18 @@ abstract class Span
             $link = $match[2] ?: $match[4];
             $id = $generator();
             $next = $match[5];
+            $url = null;
 
             if (preg_match('/^(.+) <(.+)>$/mUsi', $link, $match)) {
                 $link = $match[1];
                 $environment->setLink($link, $match[2]);
+                $url = $match[2];
             }
 
             $tokens[$id] = array(
                 'type' => 'link',
                 'link' => $link,
+                'url' => $url
             );
 
             return $id.$next;
