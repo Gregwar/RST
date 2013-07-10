@@ -22,6 +22,9 @@ class Environment
     protected $targetDirectory = '.';
     protected $url = null;
 
+    // References that can be resolved
+    protected $references = array();
+
     // Metas
     protected $metas = null;
 
@@ -106,19 +109,26 @@ class Environment
     }
 
     /**
-     * Resolves a reference URL
+     * Registers a new reference
      */
-    public function resolve($url)
+    public function registerReference(Reference $reference)
     {
-        $url = $this->canonicalUrl($url);
+        $name = $reference->getName();
+        $this->references[$name] = $reference;
+    }
 
-        if ($this->metas) {
-            $entry = $this->metas->get($url);
-            $entry['url'] = $this->relativeUrl('/'.$entry['url']);
-            return $entry;
-        } else {
-            return null;
+    /**
+     * Resolves a reference
+     */
+    public function resolve($section, $data)
+    {
+        if (isset($this->references[$section])) {
+            $reference = $this->references[$section];
+
+            return $reference->resolve($this, $data);
         }
+
+        throw new \Exception('Unknown reference section '.$section);
     }
 
     /**
@@ -392,5 +402,10 @@ class Environment
     public function setUrl($url)
     {
         $this->url = $this->getDirName() . '/' . $url;
+    }
+
+    public function getMetas()
+    {
+        return $this->metas;
     }
 }

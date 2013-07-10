@@ -55,8 +55,9 @@ abstract class Span
         }
 
         // Looking for references to other documents
-        $span = preg_replace_callback('/:doc:`(.+)`/mUsi', function($match) use (&$environment, $generator, &$tokens) {
-            $url = $match[1];
+        $span = preg_replace_callback('/:([a-z0-9]+):`(.+)`/mUsi', function($match) use (&$environment, $generator, &$tokens) {
+            $section = $match[1];
+            $url = $match[2];
             $id = $generator();
             $anchor = null;
             
@@ -73,6 +74,7 @@ abstract class Span
 
             $tokens[$id] = array(
                 'type' => 'reference',
+                'section' => $section,
                 'url' => $url,
                 'text' => $text,
                 'anchor' => $anchor

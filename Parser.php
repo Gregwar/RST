@@ -51,6 +51,7 @@ class Parser
         $this->factory = $factory;
 
         $this->initDirectives();
+        $this->initReferences();
     }
 
     /**
@@ -106,6 +107,18 @@ class Parser
 
         foreach ($directives as $name => $directive) {
             $this->registerDirective($directive);
+        }
+    }
+
+    /**
+     * Initializing references
+     */
+    public function initReferences()
+    {
+        $references = $this->factory->getReferences();
+
+        foreach ($references as $reference) {
+            $this->environment->registerReference($reference);
         }
     }
 

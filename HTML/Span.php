@@ -41,7 +41,7 @@ class Span extends Base
                 $span = str_replace($id, '<code>'.$value['text'].'</code>', $span);
                 break;
             case 'reference':
-                $reference = $environment->resolve($value['url']);
+                $reference = $environment->resolve($value['section'], $value['url']);
 
                 if ($reference) {
                     $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');

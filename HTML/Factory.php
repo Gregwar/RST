@@ -25,4 +25,11 @@ class Factory extends Base
             new \Gregwar\RST\Directives\Toctree
         );
     }
+
+    public function getReferences()
+    {
+        return array(
+            new References\Doc
+        );
+    }
 }
