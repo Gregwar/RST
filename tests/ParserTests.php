@@ -168,6 +168,16 @@ class ParserTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests that a simple replace works
+     */
+    public function testReplace()
+    {
+        $document = $this->parse('replace.rst');
+
+        $this->assertContains('Hello world!', $document->render());
+    }
+
+    /**
      * Test the include:: pseudo-directive
      */
     public function testInclusion()

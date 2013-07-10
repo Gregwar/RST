@@ -21,4 +21,12 @@ abstract class Factory
 
         return null;
     }
+
+    public function getDirectives()
+    {
+        return array(
+            new Directives\Replace,
+            new Directives\Toctree
+        );
+    }
 }

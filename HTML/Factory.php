@@ -13,17 +13,19 @@ class Factory extends Base
 
     public function getDirectives()
     {
-        return array(
+        $directives = parent::getDirectives();
+
+        $directives = array_merge($directives, array(
             new Directives\CodeBlock,
             new Directives\Image,
             new Directives\Meta,
-            new Directives\Replace,
             new Directives\Stylesheet,
             new Directives\Title,
             new Directives\Url,
-            new Directives\Wrap('note'),
-            new \Gregwar\RST\Directives\Toctree
-        );
+            new Directives\Wrap('note')
+        ));
+
+        return $directives;
     }
 
     public function getReferences()

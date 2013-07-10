@@ -41,7 +41,12 @@ abstract class Directive
         $processNode = $this->processNode($parser, $variable, $data, $options);
 
         if ($processNode) {
-            $document->addNode($processNode);
+            if ($variable) {
+                $environment = $parser->getEnvironment();
+                $environment->setVariable($variable, $processNode);
+            } else {
+                $document->addNode($processNode);
+            }
         }
 
         if ($node) {

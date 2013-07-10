@@ -1,8 +1,8 @@
 <?php
 
-namespace Gregwar\RST\HTML\Directives;
+namespace Gregwar\RST\Directives;
 
-use Gregwar\RST\HTML\Span;
+use Gregwar\RST\Span;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
@@ -18,9 +18,8 @@ class Replace extends Directive
         return 'replace';
     }
 
-    public function processAction(Parser $parser, $variable, $data, array $options)
+    public function processNode(Parser $parser, $variable, $data, array $options)
     {
-        $environment = $parser->getEnvironment();
-        $environment->setVariable($variable, new Span($parser, $data));
+        return $parser->createSpan($data);
     }
 }
