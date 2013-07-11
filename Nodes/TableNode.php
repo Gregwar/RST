@@ -33,6 +33,8 @@ abstract class TableNode extends Node
 
     public function push($parts, $line)
     {
+        $line = utf8_decode($line);
+
         if ($parts) {
             if ($parts != $this->parts) {
                 return false;
@@ -54,7 +56,7 @@ abstract class TableNode extends Node
                     $data = substr($data, 0, -1);
                 }
 
-                $data = trim($data);
+                $data = utf8_encode(trim($data));
 
                 if (isset($row[$k-1])) {
                     $row[$k-1] .= ' '.$data;
