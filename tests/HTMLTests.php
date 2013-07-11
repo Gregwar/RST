@@ -75,6 +75,16 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(6, substr_count($document, '<td'));
         $this->assertEquals(6, substr_count($document, '</td>'));
         $this->assertNotContains('==', $document);
+
+        $document = $this->parseHTML('pretty-table.rst');
+
+        $this->assertEquals(1, substr_count($document, '<table>'));
+        $this->assertEquals(1, substr_count($document, '</table>'));
+        $this->assertEquals(2, substr_count($document, '<tr>'));
+        $this->assertEquals(2, substr_count($document, '</tr>'));
+        $this->assertEquals(6, substr_count($document, '<td'));
+        $this->assertEquals(6, substr_count($document, '</td>'));
+        $this->assertNotContains('==', $document);
     }
 
     /**

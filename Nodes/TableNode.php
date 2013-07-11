@@ -20,7 +20,7 @@ abstract class TableNode extends Node
      */
     public function getCols()
     {
-        return count($this->parts);
+        return count($this->parts[1]);
     }
 
     /**
@@ -40,7 +40,7 @@ abstract class TableNode extends Node
 
             $this->data[] = array();
         } else {
-            $parts = $this->parts;
+            list($pretty, $parts) = $this->parts;
             $row = &$this->data[count($this->data)-1];
 
             for ($k=1; $k<=count($parts); $k++) {
@@ -49,6 +49,12 @@ abstract class TableNode extends Node
                 } else {
                     $data = substr($line, $parts[$k-1], $parts[$k]-$parts[$k-1]);
                 }
+
+                if ($pretty) {
+                    $data = substr($data, 0, -1);
+                }
+
+                $data = trim($data);
 
                 if (isset($row[$k-1])) {
                     $row[$k-1] .= ' '.$data;

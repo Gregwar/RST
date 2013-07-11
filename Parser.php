@@ -210,7 +210,37 @@ class Parser
     }
 
     /**
-     * Returns true if the line is a table line
+     * Finding the table chars
+     */
+    protected function findTableChars($line)
+    {
+        $lineChar = $line[0];
+        $spaceChar = null;
+
+        for ($i=0; $i<strlen($line); $i++) {
+            if ($line[$i] != $lineChar) {
+                if ($spaceChar == null) {
+                    $spaceChar = $line[$i];
+                } else {
+                    if ($line[$i] != $spaceChar) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return array($lineChar, $spaceChar);
+    }
+
+    /**
+     * If the given line is a table line, this will returns the parts
+     * of the given line, i.e the offset of the separators
+     *
+     * ====================== ========= ===========
+     * 0                      23        33
+     *
+     * +---------------------+---------+-----------+
+     *  1                     23        33
      */
     protected function parseTableLine($line)
     {
@@ -220,17 +250,33 @@ class Parser
             return false;
         }
 
-        $parts = array(0);
-        $space = false;
+        // Finds the table chars
+        $chars = $this->findTableChars($line);
+
+        if (!$chars) {
+            return false;
+        }
+
+        if ($chars[0] == '+' && $chars[1] == '-') {
+            $chars = array('-', '+');
+        } else {
+            if (!($chars[0] == Environment::$tableLetter && $chars[1] == ' ')) {
+                return false;
+            }
+        }
+
+        $parts = array();
+        $separator = false;
+        // Crawl the line to match those chars
         for ($i=0; $i<strlen($line); $i++) {
-            if ($line[$i] == Environment::$tableLetter) {
-                if ($space) {
+            if ($line[$i] == $chars[0]) {
+                if (!$separator) {
                     $parts[] = $i;
+                    $separator = true;
                 }
-                $space = false;
             } else {
-                if ($line[$i] == ' ') {
-                    $space = true;
+                if ($line[$i] == $chars[1]) {
+                    $separator = false;
                 } else {
                     return false;
                 }
@@ -238,7 +284,7 @@ class Parser
         }
 
         if (count($parts) > 1) {
-            return $parts;
+            return array($chars[1] == '+', $parts);
         }
 
         return false;

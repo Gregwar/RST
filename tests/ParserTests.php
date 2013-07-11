@@ -162,8 +162,22 @@ class ParserTests extends \PHPUnit_Framework_TestCase
 
         if ($nodes) {
             $table = $nodes[0];
-            $this->assertEquals($table->getCols(), 3);
-            $this->assertEquals($table->getRows(), 3);
+            $this->assertEquals(3, $table->getCols());
+            $this->assertEquals(3, $table->getRows());
+        }
+        
+        $document = $this->parse('pretty-table.rst');
+
+        $nodes = $document->getNodes(function($node) {
+            return $node instanceof TableNode;
+        });
+
+        $this->assertEquals(count($nodes), 1);
+
+        if ($nodes) {
+            $table = $nodes[0];
+            $this->assertEquals(3, $table->getCols(), 3);
+            $this->assertEquals(2, $table->getRows(), 2);
         }
     }
 
