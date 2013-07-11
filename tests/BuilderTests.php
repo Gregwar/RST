@@ -31,7 +31,7 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
     {
         $contents = file_get_contents($this->targetFile('index.html'));
 
-        $this->assertContains('magic-link.html', $contents);
+        $this->assertContains('"magic-link.html', $contents);
         $this->assertContains('Another page', $contents);
     }
 

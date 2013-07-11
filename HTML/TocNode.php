@@ -40,6 +40,7 @@ class TocNode extends Base
         $html = '<div class="toc"><ul>';
         foreach ($this->files as $file) {
             $reference = $this->environment->resolve('doc', $file);
+            $reference['url'] = $this->environment->relativeUrl($reference['url']);
             $html .= $this->renderLevel($reference['url'], $reference['titles']);
         }
         $html .= '</ul></div>';
