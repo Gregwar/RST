@@ -257,8 +257,8 @@ class Parser
             return false;
         }
 
-        if ($chars[0] == '+' && $chars[1] == '-') {
-            $chars = array('-', '+');
+        if ($chars[0] == Environment::$prettyTableJoint && $chars[1] == Environment::$prettyTableLetter) {
+            $chars = array(Environment::$prettyTableLetter, Environment::$prettyTableJoint);
         } else {
             if (!($chars[0] == Environment::$tableLetter && $chars[1] == ' ')) {
                 return false;
@@ -284,7 +284,7 @@ class Parser
         }
 
         if (count($parts) > 1) {
-            return array($chars[1] == '+', $parts);
+            return array($chars[1] == Environment::$prettyTableJoint, $parts);
         }
 
         return false;

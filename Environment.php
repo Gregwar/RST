@@ -14,7 +14,10 @@ class Environment
         '*' => 4
     );
 
+    // Table letters
     public static $tableLetter = '=';
+    public static $prettyTableLetter = '-';
+    public static $prettyTableJoint = '+';
 
     // Current file name
     protected $currentFileName = null;
