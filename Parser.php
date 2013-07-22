@@ -314,9 +314,13 @@ class Parser
             }
         }
 
-        if (preg_match('/^((\*)|([\d#]+)\.) (.+)$/', trim($line), $match)) {
-            return array($line[$i] == '*' ? false : true,
-                $depth, $match[4]);
+        if (preg_match('/^((\*|\-)|([\d#]+)\.) (.+)$/', trim($line), $match)) {
+            return array(
+                'prefix' => $line[$i],
+                'ordered' => ($line[$i] == '*' || $line[$i] == '-') ? false : true,
+                'depth' => $depth,
+                'text' => array($match[4])
+            );
         }
 
         return false;
@@ -346,14 +350,14 @@ class Parser
             $infos = $this->parseListLine($line);
 
             if ($infos) {
-                if ($this->listLine) {
-                    $this->buffer->addLine($this->createSpan($this->listLine), $this->lineInfo[0], $this->lineInfo[1]);
+                if ($this->lineInfo) {
+                    $this->lineInfo['text'] = $this->createSpan($this->lineInfo['text']);
+                    $this->buffer->addLine($this->lineInfo);
                 }
-                $this->listLine = array($infos[2]);
                 $this->lineInfo = $infos;
             } else {
                 if ($this->listFlow || $line[0] == ' ') {
-                    $this->listLine[] = $line;
+                    $this->lineInfo['text'][] = $line;
                 } else {
                     $flush = true;
                 }
@@ -364,9 +368,10 @@ class Parser
         }
 
         if ($flush) {
-            if ($this->listLine) {
-                $this->buffer->addLine($this->createSpan($this->listLine), $this->lineInfo[0], $this->lineInfo[1]);
-                $this->listLine = array();
+            if ($this->lineInfo) {
+                $this->lineInfo['text'] = $this->createSpan($this->lineInfo['text']);
+                $this->buffer->addLine($this->lineInfo);
+                $this->lineInfo = null;
             }
 
             return false;
@@ -547,7 +552,6 @@ class Parser
                     $this->state = self::STATE_LIST;
                     $this->buffer = $this->factory->createNode('ListNode');
                     $this->lineInfo = null;
-                    $this->listLine = array();
                     $this->listFlow = true;
                     return false;
                 } else if ($this->isBlockLine($line)) {

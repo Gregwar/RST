@@ -8,14 +8,19 @@ class ListNode extends Base
 {
     protected $lines = array();
 
-    public function addLine($text, $ordered, $depth)
+    public function addLine(array $line)
     {
-        $this->lines[] = array($text, $ordered, $depth);
+        $this->lines[] = $line;
     }
 
-    public function createElement($text)
+    public function createElement($text, $prefix)
     {
-        return '<li>' . $text . '</li>';
+        $class = '';
+        if ($prefix == '-') {
+            $class = ' class="dash"';
+        }
+
+        return '<li' . $class . '>' . $text . '</li>';
     }
 
     public function render()
@@ -25,7 +30,10 @@ class ListNode extends Base
         $stack = array();
 
         foreach ($this->lines as $line) {
-            list($text, $ordered, $newDepth) = $line;
+            $prefix = $line['prefix'];
+            $text = $line['text'];
+            $ordered = $line['ordered'];
+            $newDepth = $line['depth'];
             $keyword = $ordered ? 'ol' : 'ul';
 
             if ($depth < $newDepth) {
@@ -45,7 +53,7 @@ class ListNode extends Base
                 }
             }
 
-            $value .= $this->createElement($text)."\n";
+            $value .= $this->createElement($text, $prefix)."\n";
         }
 
         while ($stack) {

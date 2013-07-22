@@ -4,5 +4,13 @@ namespace Gregwar\RST\Nodes;
 
 abstract class ListNode extends Node
 {
-    abstract public function addLine($text, $ordered, $depth);
+    /**
+     * Infos contains:
+     * 
+     * - text: the line text
+     * - depth: the depth in the list level
+     * - prefix: the prefix char (*, - etc.)
+     * - ordered: true of false if the list is ordered
+     */
+    abstract public function addLine(array $infos);
 }

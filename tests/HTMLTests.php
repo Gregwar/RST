@@ -191,6 +191,12 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(5, substr_count($document, '<li>'));
         $this->assertEquals(5, substr_count($document, '</li>'));
         $this->assertContains('<p>This is not in the list</p>', $document);
+        
+        $document = $this->parseHTML('list-dash.rst');
+        $this->assertEquals(1, substr_count($document, '<ul>'));
+        $this->assertEquals(1, substr_count($document, '</ul>'));
+        $this->assertEquals(2, substr_count($document, '<li class="dash">'));
+        $this->assertEquals(2, substr_count($document, '</li>'));
     }
 
     public function testEmptyParagraph()
