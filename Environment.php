@@ -415,7 +415,11 @@ class Environment
 
     public function setUrl($url)
     {
-        $this->url = $this->getDirName() . '/' . $url;
+        if ($this->getDirName()) {
+            $url = $this->getDirName() . '/' . $url;
+        }
+
+        $this->url = $url;
     }
 
     public function getMetas()
