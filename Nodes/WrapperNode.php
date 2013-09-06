@@ -8,7 +8,7 @@ class WrapperNode extends Node
     protected $before;
     protected $after;
 
-    public function __construct(Node $node, $before = '', $after = '')
+    public function __construct($node, $before = '', $after = '')
     {
         $this->node = $node;
         $this->before = $before;
@@ -17,6 +17,8 @@ class WrapperNode extends Node
 
     public function render()
     {
-        return $this->before . $this->node->render() . $this->after;
+        $contents = $this->node ? $this->node->render() : '';
+
+        return $this->before . $contents . $this->after;
     }
 }

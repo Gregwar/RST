@@ -273,6 +273,16 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing that a wrapper node can be at end of file
+     */
+    public function testWrapperNodeEnd()
+    {
+        $document = $this->parseHTML('wrap.rst');
+
+        $this->assertEquals(1, substr_count($document, 'note'));
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */
