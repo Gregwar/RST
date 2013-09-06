@@ -1,7 +1,6 @@
 <?php
 
 use Gregwar\RST\Parser;
-
 use Gregwar\RST\Document;
 
 use Gregwar\RST\Nodes\ParagraphNode;
@@ -25,16 +24,29 @@ class ParserTests extends \PHPUnit_Framework_TestCase
     {
         $document = $this->parse('comment.rst');
 
-        $this->assertNotContains('Testing comment', $document->render());
-        $this->assertContains('Text before', $document->render());
-        $this->assertContains('Text after', $document->render());
+        $render = $document->render();
+        $this->assertNotContains('Testing comment', $render);
+        $this->assertContains('Text before', $render);
+        $this->assertContains('Text after', $render);
         
         $document = $this->parse('multi-comment.rst');
 
-        $this->assertNotContains('multi-line', $document->render());
-        $this->assertNotContains('Blha', $document->render());
-        $this->assertContains('Text before', $document->render());
-        $this->assertContains('Text after', $document->render());
+        $render = $document->render();
+        $this->assertNotContains('multi-line', $render);
+        $this->assertNotContains('Blha', $render);
+        $this->assertContains('Text before', $render);
+        $this->assertContains('Text after', $render);
+    }
+
+    /**
+     * Testing raw node
+     */
+    public function testRawNode()
+    {
+        $document = $this->parse('empty.rst');
+        $document->addNode('hello');
+
+        $this->assertContains('hello', $document->render());
     }
 
     /**

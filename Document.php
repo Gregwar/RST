@@ -5,6 +5,7 @@ namespace Gregwar\RST;
 use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Nodes\TitleNode;
 use Gregwar\RST\Nodes\TocNode;
+use Gregwar\RST\Nodes\RawNode;
 
 abstract class Document extends Node
 {
@@ -118,8 +119,16 @@ abstract class Document extends Node
         return $titles;
     }
 
-    public function addNode(Node $node)
+    public function addNode($node)
     {
+        if (is_string($node)) {
+            $node = new RawNode($node);
+        }
+
+        if (!$node instanceof Node) {
+            throw new \Exception('addNode($node): $node should be a string or a Node');
+        }
+
         $this->nodes[] = $node;
     }
 
