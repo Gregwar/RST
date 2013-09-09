@@ -8,6 +8,6 @@ class QuoteNode extends Base
 {
     public function render()
     {
-        return "<blockquote>".nl2br(htmlspecialchars($this->value))."</blockquote>";
+        return "<blockquote>".$this->value."</blockquote>";
     }
 }

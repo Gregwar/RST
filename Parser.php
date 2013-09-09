@@ -491,6 +491,10 @@ class Parser
                 break;
             case self::STATE_BLOCK:
                 $node = $this->factory->createNode('QuoteNode', $this->buffer);
+                $data = $node->getValue();
+                $subParser = $this->getSubParser();
+                $document = $subParser->parse($data);
+                $node->setValue($document);
                 break;
             case self::STATE_LIST:
                 $this->pushListLine(null, true);

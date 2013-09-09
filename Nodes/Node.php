@@ -16,6 +16,11 @@ abstract class Node
         return $this->value;
     }
 
+    public function setValue($value)
+    {
+        $this->value = $value;
+    }
+
     abstract public function render();
 
     public function __toString()
