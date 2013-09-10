@@ -237,6 +237,14 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, substr_count($document, '<b>'));
         $this->assertEquals(1, substr_count($document, '</b>'));
         $this->assertNotContains('*', $document);
+        
+        $document = $this->parseHTML('quote3.rst');
+
+        $this->assertEquals(1, substr_count($document, '<blockquote>'));
+        $this->assertContains('<p>', $document);
+        $this->assertContains('</p>', $document);
+        $this->assertEquals(1, substr_count($document, '</blockquote>'));
+        $this->assertEquals(1, substr_count($document, '<img'));
     }
 
     /**

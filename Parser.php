@@ -467,6 +467,23 @@ class Parser
     }
 
     /**
+     * Gets the current directive
+     */
+    protected function getCurrentDirective()
+    {
+        if (!$this->directive) {
+            throw new \Exception('Asking for current directive, but there is not');
+        }
+
+        $name = $this->directive['name'];
+        if (isset($this->directives[$name])) {
+            return $this->directives[$name];
+        } else {
+            throw new \Exception('Unknown directive: '.$name);
+        }
+    }
+
+    /**
      * Flushes the current buffer to create a node
      */
     protected function flush()
@@ -512,15 +529,9 @@ class Parser
         }
 
         if ($this->directive) {
-            $name = $this->directive['name'];
-
-            if (isset($this->directives[$name])) {
-                $currentDirective = $this->directives[$name];
-                $currentDirective->process($this, $node, $this->directive['variable'], $this->directive['data'], $this->directive['options']);
-                $node = null;
-            } else {
-                throw new \Exception('Unknown directive: '.$name);
-            }
+            $currentDirective = $this->getCurrentDirective();
+            $currentDirective->process($this, $node, $this->directive['variable'], $this->directive['data'], $this->directive['options']);
+            $node = null;
         }
 
         $this->directive = null;
@@ -569,7 +580,6 @@ class Parser
                     $this->state = self::STATE_DIRECTIVE;
                     $this->buffer = array();
                     $this->flush();
-                    $this->isCode = true;
                     $this->initDirective($line);
                 } else if ($this->parseLink($line)) {
                     return true;
@@ -664,6 +674,7 @@ class Parser
                     $this->flush();
                     $this->initDirective($line);
                 } else {
+                    $this->isCode = $this->getCurrentDirective()->wantCode();
                     $this->state = self::STATE_BEGIN;
                     return false;
                 }

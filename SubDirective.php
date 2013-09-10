@@ -38,4 +38,9 @@ abstract class SubDirective extends Directive
     {
         return $document;
     }
+
+    public function wantCode()
+    {
+        return true;
+    }
 }

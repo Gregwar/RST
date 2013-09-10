@@ -83,4 +83,12 @@ abstract class Directive
     public function finalize(Document &$document)
     {
     }
+
+    /**
+     * Should the following block be passed as a CodeNode?
+     */
+    public function wantCode()
+    {
+        return false;
+    }
 }

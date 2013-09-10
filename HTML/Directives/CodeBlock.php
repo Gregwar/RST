@@ -35,4 +35,9 @@ class CodeBlock extends Directive
             $document->addNode(new WrapperNode($node, '<div class="codeBlock">', '</div>'));
         }
     }
+
+    public function wantCode()
+    {
+        return true;
+    }
 }
