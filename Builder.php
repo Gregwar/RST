@@ -52,14 +52,24 @@ class Builder
         }
     }
 
+    /**
+     * Adds an hook which will be called on each document after parsing
+     */
     public function addHook($function)
     {
         $this->hooks[] = $function;
+        
+        return $this;
     }
 
+    /**
+     * Adds an hook which will be called on each environment during building
+     */
     public function addEnvironmentHook($function)
     {
         $this->environmentHooks[] = $function;
+
+        return $this;
     }
 
     protected function display($text)
