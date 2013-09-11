@@ -359,5 +359,7 @@ class Builder
         }
 
         $this->toCopy[] = array($source, $destination);
+
+        return $this;
     }
 }
