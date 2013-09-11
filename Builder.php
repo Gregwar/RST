@@ -354,6 +354,10 @@ class Builder
      */
     public function copy($source, $destination = null)
     {
+        if ($destination === null) {
+            $destination = basename($source);
+        }
+
         $this->toCopy[] = array($source, $destination);
     }
 }
