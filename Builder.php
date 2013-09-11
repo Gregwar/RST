@@ -16,6 +16,7 @@ class Builder
 
     // Files to copy at the end of the build
     protected $toCopy = array();
+    protected $toMkdir = array();
 
     // Source and target directory
     protected $directory;
@@ -100,6 +101,7 @@ class Builder
 
         // Copy the files
         $this->display('* Running the copies');
+        $this->doMkdir();
         $this->doCopy();
     }
 
@@ -359,6 +361,32 @@ class Builder
         }
 
         $this->toCopy[] = array($source, $destination);
+
+        return $this;
+    }
+
+    /**
+     * Run the directories creation
+     */
+    public function doMkdir()
+    {
+        foreach ($this->toMkdir as $mkdir) {
+            $dir = $this->getTargetFile($mkdir);
+
+            if (!is_dir($dir)) {
+                mkdir($dir, 0755, true);
+            }   
+        }   
+    }
+
+    /**
+     * Creates a directory in the target
+     *
+     * @param $directory the directory name to create
+     */
+    public function mkdir($directory)
+    {
+        $this->toMkdir[] = $directory;
 
         return $this;
     }
