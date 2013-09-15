@@ -1,6 +1,6 @@
 <?php
 
-namespace Gregwar\RST\HTML;
+namespace Gregwar\RST\HTML\Nodes;
 
 use Gregwar\RST\Nodes\QuoteNode as Base;
 

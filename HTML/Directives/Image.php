@@ -5,7 +5,7 @@ namespace Gregwar\RST\HTML\Directives;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
-use Gregwar\RST\HTML\ImageNode;
+use Gregwar\RST\HTML\Nodes\ImageNode;
 
 /**
  * Renders an image, example :

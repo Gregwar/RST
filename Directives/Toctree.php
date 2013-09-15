@@ -27,7 +27,7 @@ class Toctree extends Directive
         }
 
         $document = $parser->getDocument();
-        $document->addNode($factory->build('TocNode', $files, $environment, $options));
+        $document->addNode($factory->build('Nodes\TocNode', $files, $environment, $options));
     }
 
     public function wantCode()
