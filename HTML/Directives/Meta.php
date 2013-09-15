@@ -5,7 +5,7 @@ namespace Gregwar\RST\HTML\Directives;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
-use Gregwar\RST\HTML\MetaNode;
+use Gregwar\RST\HTML\Nodes\MetaNode;
 
 /**
  * Add a meta information:
