@@ -11,7 +11,7 @@ abstract class Factory
         return 'Gregwar\RST\\'.$this->getName().'\\'.$name;
     }
 
-    public function createNode($name, $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null)
+    public function build($name, $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null)
     {
         $class = $this->getClass($name);
 

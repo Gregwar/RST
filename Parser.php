@@ -91,7 +91,7 @@ class Parser
         // Anchor link 
         if (preg_match('/^\.\. _(.+):$/mUsi', trim($line), $match)) {
             $anchor = $match[1];
-            $this->document->addNode($this->factory->createNode('AnchorNode', $anchor));
+            $this->document->addNode($this->factory->build('AnchorNode', $anchor));
             $this->environment->setLink($anchor, '#'.$anchor);
             return true;
         }
@@ -498,16 +498,16 @@ class Parser
                 $data = implode("\n", $this->buffer);
                 $level = Environment::$letters[$this->specialLetter];
                 $token = $this->environment->createTitle($level);
-                $node = $this->factory->createNode('TitleNode', $this->createSpan($data), $level, $token);
+                $node = $this->factory->build('TitleNode', $this->createSpan($data), $level, $token);
                 break;
             case self::STATE_SEPARATOR:
-                $node = $this->factory->createNode('SeparatorNode', Environment::$letters[$this->specialLetter]);
+                $node = $this->factory->build('SeparatorNode', Environment::$letters[$this->specialLetter]);
                 break;
             case self::STATE_CODE:
-                $node = $this->factory->createNode('CodeNode', $this->buffer);
+                $node = $this->factory->build('CodeNode', $this->buffer);
                 break;
             case self::STATE_BLOCK:
-                $node = $this->factory->createNode('QuoteNode', $this->buffer);
+                $node = $this->factory->build('QuoteNode', $this->buffer);
                 $data = $node->getValue();
                 $subParser = $this->getSubParser();
                 $document = $subParser->parse($data);
@@ -523,7 +523,7 @@ class Parser
                 break;
             case self::STATE_NORMAL:
                 $this->isCode = $this->prepareCode();
-                $node = $this->factory->createNode('ParagraphNode', $this->createSpan($this->buffer));
+                $node = $this->factory->build('ParagraphNode', $this->createSpan($this->buffer));
                 break;
             }
         }
@@ -565,7 +565,7 @@ class Parser
             if (trim($line)) {
                 if ($this->isListLine($line)) {
                     $this->state = self::STATE_LIST;
-                    $this->buffer = $this->factory->createNode('ListNode');
+                    $this->buffer = $this->factory->build('ListNode');
                     $this->lineInfo = null;
                     $this->listFlow = true;
                     return false;
@@ -585,7 +585,7 @@ class Parser
                     return true;
                 } else if ($parts = $this->parseTableLine($line)) {
                     $this->state = self::STATE_TABLE;
-                    $this->buffer = $this->factory->createNode('TableNode', $parts);
+                    $this->buffer = $this->factory->build('TableNode', $parts);
                 } else {
                     $this->state = self::STATE_NORMAL;
                     return false;
@@ -734,7 +734,7 @@ class Parser
      */
     public function parse(&$document)
     {
-        $this->document = $this->factory->createNode('Document', $this->environment);
+        $this->document = $this->factory->build('Document', $this->environment);
         $this->init();
         $this->parseLines(trim($document));
 
@@ -753,6 +753,6 @@ class Parser
      */
     public function createSpan($span)
     {
-        return $this->factory->createNode('Span', $this, $span);
+        return $this->factory->build('Span', $this, $span);
     }
 }
