@@ -6,6 +6,52 @@ use Gregwar\RST\Span as Base;
 
 class Span extends Base
 {
+    public function emphasis($text)
+    {
+        return '<em>'.$text.'</em>';
+    }
+
+    public function strongEmphasis($text)
+    {
+        return '<b>'.$text.'</b>';
+    }
+
+    public function nbsp()
+    {
+        return '&nbsp;';
+    }
+
+    public function br()
+    {
+        return '<br />';
+    }
+
+    public function literal($text)
+    {
+        return '<code>'.$text.'</code>';
+    }
+
+    public function link($url, $title)
+    {
+        return '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars($title).'</a>';
+    }
+
+    public function reference($reference, $value)
+    {
+        if ($reference) {
+            $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
+            $url = $reference['url'];
+            if ($value['anchor']) {
+                $url .= '#' . $value['anchor'];
+            }
+            $link = $this->link($url, trim($text));
+        } else {
+            $link = $this->link('#', '(unresolved reference)');
+        }
+
+        return $link;
+    }
+
     /**
      * Renders the Span, which includes :
      *
@@ -16,15 +62,20 @@ class Span extends Base
      */
     public function render()
     {
+        $self = $this;
         $environment = $this->parser->getEnvironment();
         $span = htmlspecialchars($this->span);
 
         // Emphasis
-        $span = preg_replace('/\*\*(.+)\*\*/mUsi', '<b>$1</b>', $span);
-        $span = preg_replace('/\*(.+)\*/mUsi', '<em>$1</em>', $span);
+        $span = preg_replace_callback('/\*\*(.+)\*\*/mUsi', function ($matches) use ($self) {
+          return $self->strongEmphasis($matches[1]);
+        }, $span);
+        $span = preg_replace_callback('/\*(.+)\*/mUsi', function ($matches) use ($self) {
+          return $self->emphasis($matches[1]);
+        }, $span);
 
         // Nbsp
-        $span = preg_replace('/~/', '&nbsp;', $span);
+        $span = preg_replace('/~/', $this->nbsp(), $span);
         
         // Replacing variables
         $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {
@@ -32,27 +83,18 @@ class Span extends Base
         }, $span);
 
         // Adding brs when a space is at the end of a line
-        $span = preg_replace('/ \n/', '<br />', $span);
+        $span = preg_replace('/ \n/', $this->br(), $span);
 
-        // Replacing literal tokens
+        // Replacing tokens
         foreach ($this->tokens as $id => $value) {
             switch ($value['type']) {
             case 'literal':
-                $span = str_replace($id, '<code>'.$value['text'].'</code>', $span);
+                $span = str_replace($id, $this->literal($value['text']), $span);
                 break;
             case 'reference':
                 $reference = $environment->resolve($value['section'], $value['url']);
+                $link = $this->reference($reference, $value);
 
-                if ($reference) {
-                    $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
-                    $url = $reference['url'];
-                    if ($value['anchor']) {
-                        $url .= '#' . $value['anchor'];
-                    }
-                    $link = '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars(trim($text)).'</a>';
-                } else {
-                    $link = '<a href="#">(unresolved reference)</a>';
-                }
                 $span = str_replace($id, $link, $span);
                 break;
             case 'link':
@@ -61,7 +103,7 @@ class Span extends Base
                 } else {
                     $url = $environment->getLink($value['link']);
                 }
-                $link = '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars($value['link']).'</a>';
+                $link = $this->link($url, $value['link']);
                 $span = str_replace($id, $link, $span);
                 break;
             }

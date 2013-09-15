@@ -102,6 +102,8 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
 
         $code = 'this is a *boring* literal `a`_ containing some dirty things <3 hey_ !';
         $this->assertContains(htmlspecialchars($code), $document);
+        $this->assertEquals(1, substr_count($document, '<code>'));
+        $this->assertEquals(1, substr_count($document, '</code>'));
     }
 
     /**
