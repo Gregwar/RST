@@ -41,15 +41,15 @@ class Parser
 
     public function __construct($metas = null, $environment = null, $factory = null)
     {
-        $this->environment = $environment ?: new Environment;
-        if ($metas) {
-            $this->environment->setMetas($metas);
-        }
-
         if ($factory == null) {
             $factory = new \Gregwar\RST\HTML\Factory;
         }
         $this->factory = $factory;
+        
+        $this->environment = $environment ?: $this->factory->build('Environment');
+        if ($metas) {
+            $this->environment->setMetas($metas);
+        }
 
         $this->initDirectives();
         $this->initReferences();
