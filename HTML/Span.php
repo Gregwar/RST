@@ -41,7 +41,7 @@ class Span extends Base
         return htmlspecialchars($span);
     }
 
-    public function reference($reference, $value, $file)
+    public function reference($reference, $value)
     {
         if ($reference) {
             $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
