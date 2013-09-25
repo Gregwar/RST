@@ -372,7 +372,6 @@ class Environment
      */
     public function canonicalUrl($url)
     {
-        var_dump("Canonical of $url");
         if (strlen($url)) {
             if ($url[0] == '/') {
                 // If the URL begins with a "/", the following is the 
