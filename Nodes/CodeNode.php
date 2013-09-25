@@ -10,4 +10,9 @@ abstract class CodeNode extends BlockNode
     {
         $this->language = $language;
     }
+
+    public function getLanguage()
+    {
+        return $this->language;
+    }
 }
