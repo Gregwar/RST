@@ -34,7 +34,7 @@ class CodeBlock extends Directive
             }
 
             $document = $parser->getDocument();
-            $document->addNode($kernel->build('Nodes\CodeBlockNode', $node));
+            $document->addNode($node);
         }
     }
 
