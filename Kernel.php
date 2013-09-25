@@ -40,6 +40,7 @@ abstract class Kernel
     public function getDirectives()
     {
         return array(
+            new Directives\CodeBlock,
             new Directives\Replace,
             new Directives\Toctree
         );

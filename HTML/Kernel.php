@@ -16,7 +16,6 @@ class Kernel extends Base
         $directives = parent::getDirectives();
 
         $directives = array_merge($directives, array(
-            new Directives\CodeBlock,
             new Directives\Image,
             new Directives\Meta,
             new Directives\Stylesheet,

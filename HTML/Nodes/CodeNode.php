@@ -8,6 +8,6 @@ class CodeNode extends Base
 {
     public function render()
     {
-        return "<pre><code>".htmlspecialchars($this->value)."</code></pre>";
+        return "<pre><code class=\"".$this->language."\">".htmlspecialchars($this->value)."</code></pre>";
     }
 }

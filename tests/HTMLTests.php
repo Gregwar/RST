@@ -258,7 +258,7 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, substr_count($document, '<pre>'));
         $this->assertEquals(1, substr_count($document, '</pre>'));
-        $this->assertEquals(1, substr_count($document, '<code>'));
+        $this->assertEquals(1, substr_count($document, '<code'));
         $this->assertEquals(1, substr_count($document, '</code>'));
         $this->assertContains('This is a code block', $document);
         $this->assertNotContains('::', $document);
@@ -268,10 +268,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, substr_count($document, '<pre>'));
         $this->assertEquals(1, substr_count($document, '</pre>'));
-        $this->assertEquals(1, substr_count($document, '<code>'));
+        $this->assertEquals(1, substr_count($document, '<code'));
         $this->assertEquals(1, substr_count($document, '</code>'));
         $code = 'cout << "Hello world!" << endl;';
         $this->assertContains(htmlspecialchars($code), $document);
+        
+        $document = $this->parseHTML('code-java.rst');
+
+        $this->assertEquals(1, substr_count($document, '<pre>'));
+        $this->assertEquals(1, substr_count($document, '</pre>'));
+        $this->assertEquals(1, substr_count($document, '<code class="java"'));
+        $this->assertEquals(1, substr_count($document, '</code>'));
     }
 
     /**
