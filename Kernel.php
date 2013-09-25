@@ -2,6 +2,9 @@
 
 namespace Gregwar\RST;
 
+use Gregwar\RST\Builder;
+use Gregwar\RST\Document;
+
 abstract class Kernel
 {
     /**
@@ -40,5 +43,19 @@ abstract class Kernel
             new Directives\Replace,
             new Directives\Toctree
         );
+    }
+
+    /**
+     * Allowing the kernel to tweak document after the build
+     */
+    public function postParse(Document $document)
+    {
+    }
+
+    /**
+     * Allowing the kernel to tweak the builder
+     */
+    public function initBuilder(Builder $builder)
+    {
     }
 }

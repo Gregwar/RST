@@ -50,6 +50,8 @@ class Builder
         } else {
             $this->kernel = new HTML\Kernel;
         }
+
+        $this->kernel->initBuilder($this);
     }
 
     /**
@@ -191,6 +193,9 @@ class Builder
             foreach ($this->hooks as $hook) {
                 $hook($document);
             }
+
+            // Calling the kernel document tweaking
+            $this->kernel->postParse($document);
 
             $dependencies = $document->getEnvironment()->getDependencies();
 
