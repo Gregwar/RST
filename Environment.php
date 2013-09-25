@@ -228,7 +228,7 @@ class Environment
      */
     public function pushAnonymous($name)
     {
-        $this->anonymous[] = $name;
+        $this->anonymous[] = trim(strtolower($name));
     }
 
     /**

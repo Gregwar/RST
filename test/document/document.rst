@@ -143,7 +143,9 @@ This is a normal paragraph
 You can quote code the same way as quote, but using the ``::`` at the end
 of the previous paragraph::
 
-    Here is a piece of code::
+    Here is a piece of code:
+
+    .. code-block:: php
 
         <?php
 
@@ -151,7 +153,9 @@ of the previous paragraph::
 
 Will result in:
 
-Here is a piece of code::
+Here is a piece of code:
+
+.. code-block:: php
 
     <?php
 
