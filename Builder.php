@@ -328,7 +328,7 @@ class Builder
     {
         $environment = $document->getEnvironment();
 
-        return $environment->getUrl() . '.html';
+        return $environment->getUrl() . '.' . $this->kernel->getFileExtension();
     }
 
     /**

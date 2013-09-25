@@ -33,4 +33,9 @@ class Kernel extends Base
             new References\Doc
         );
     }
+    
+    public function getFileExtension()
+    {
+        return 'html';
+    }
 }

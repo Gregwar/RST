@@ -59,4 +59,12 @@ abstract class Kernel
     public function initBuilder(Builder $builder)
     {
     }
+
+    /**
+     * Get the output files extension
+     */
+    public function getFileExtension()
+    {
+        return 'txt';
+    }
 }
