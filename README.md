@@ -28,8 +28,8 @@ $document = $parser->parse($data);
 echo $document;
 ```
 
-For more information, you can have a look at `test/document.rst` and its result
-`test/document.html`
+For more information, you can have a look at `test/document/document.rst` and its result
+`test/document/document.html`
 
 License
 -------
