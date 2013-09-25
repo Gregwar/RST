@@ -331,7 +331,13 @@ class Parser
     protected function isListLine($line)
     {
         // A buffer is a list if at least the first line is a list-style
-        return $this->parseListLine($line);
+        $listLine = $this->parseListLine($line);
+
+        if ($listLine) {
+            return $listLine['depth'] == 0 || !$this->isCode;
+        }
+
+        return false;
     }
 
     protected $lineInfo;

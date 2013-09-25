@@ -280,6 +280,12 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, substr_count($document, '</pre>'));
         $this->assertEquals(1, substr_count($document, '<code class="java"'));
         $this->assertEquals(1, substr_count($document, '</code>'));
+        
+        $document = $this->parseHTML('code-list.rst');
+
+        $this->assertEquals(1, substr_count($document, '<pre>'));
+        $this->assertEquals(1, substr_count($document, '</pre>'));
+        $this->assertContains('*', $document);
     }
 
     /**
