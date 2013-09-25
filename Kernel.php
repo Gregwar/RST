@@ -2,15 +2,24 @@
 
 namespace Gregwar\RST;
 
-abstract class Factory
+abstract class Kernel
 {
+    /**
+     * Get the name of the kernel
+     */
     abstract function getName();
 
+    /**
+     * Gets the class for the given name
+     */
     public function getClass($name)
     {
         return 'Gregwar\RST\\'.$this->getName().'\\'.$name;
     }
 
+    /**
+     * Create an instance of some class
+     */
     public function build($name, $arg1 = null, $arg2 = null, $arg3 = null, $arg4 = null)
     {
         $class = $this->getClass($name);
@@ -22,6 +31,9 @@ abstract class Factory
         return null;
     }
 
+    /**
+     * Gets the available directives
+     */
     public function getDirectives()
     {
         return array(

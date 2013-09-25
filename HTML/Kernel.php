@@ -2,9 +2,9 @@
 
 namespace Gregwar\RST\HTML;
 
-use Gregwar\RST\Factory as Base;
+use Gregwar\RST\Kernel as Base;
 
-class Factory extends Base
+class Kernel extends Base
 {
     function getName()
     {

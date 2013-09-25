@@ -15,7 +15,7 @@ class Toctree extends Directive
     public function process(Parser $parser, $node, $variable, $data, array $options)
     {
         $environment = $parser->getEnvironment();
-        $factory = $parser->getFactory();
+        $kernel = $parser->getKernel();
         $files = array();
 
         foreach (explode("\n", $node->getValue()) as $file) {
@@ -27,7 +27,7 @@ class Toctree extends Directive
         }
 
         $document = $parser->getDocument();
-        $document->addNode($factory->build('Nodes\TocNode', $files, $environment, $options));
+        $document->addNode($kernel->build('Nodes\TocNode', $files, $environment, $options));
     }
 
     public function wantCode()

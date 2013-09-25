@@ -34,8 +34,8 @@ class Builder
     // Parsed documents waiting to be rendered
     protected $documents = array();
 
-    // Factory
-    protected $factory;
+    // Kernel
+    protected $kernel;
 
     // Hooks before the parsing on the environment
     protected $environmentHooks = array();
@@ -43,12 +43,12 @@ class Builder
     // Hooks after the parsing
     protected $hooks = array();
 
-    public function __construct($factory = null)
+    public function __construct($kernel = null)
     {
-        if ($factory) {
-            $this->factory = $factory;
+        if ($kernel) {
+            $this->kernel = $kernel;
         } else {
-            $this->factory = new HTML\Factory;
+            $this->kernel = new HTML\Kernel;
         }
     }
 
@@ -168,7 +168,7 @@ class Builder
             $this->display(' -> Parsing '.$file.'...');
             // Process the file
             $rst = $this->getRST($file);
-            $parser = new Parser(null, $this->factory);
+            $parser = new Parser(null, $this->kernel);
 
             $environment = $parser->getEnvironment();
             $environment->setMetas($this->metas);

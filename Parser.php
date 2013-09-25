@@ -39,14 +39,14 @@ class Parser
     // Is the current node code ?
     protected $isCode = false;
 
-    public function __construct($environment = null, $factory = null)
+    public function __construct($environment = null, $kernel = null)
     {
-        if ($factory == null) {
-            $factory = new \Gregwar\RST\HTML\Factory;
+        if ($kernel == null) {
+            $kernel = new \Gregwar\RST\HTML\Kernel;
         }
-        $this->factory = $factory;
+        $this->kernel = $kernel;
         
-        $this->environment = $environment ?: $this->factory->build('Environment');
+        $this->environment = $environment ?: $this->kernel->build('Environment');
 
         $this->initDirectives();
         $this->initReferences();
@@ -59,7 +59,7 @@ class Parser
      */
     public function getSubParser()
     {
-        return new Parser($this->environment, $this->factory);
+        return new Parser($this->environment, $this->kernel);
     }
 
     /**
@@ -88,7 +88,7 @@ class Parser
         // Anchor link 
         if (preg_match('/^\.\. _(.+):$/mUsi', trim($line), $match)) {
             $anchor = $match[1];
-            $this->document->addNode($this->factory->build('Nodes\AnchorNode', $anchor));
+            $this->document->addNode($this->kernel->build('Nodes\AnchorNode', $anchor));
             $this->environment->setLink($anchor, '#'.$anchor);
             return true;
         }
@@ -101,7 +101,7 @@ class Parser
      */
     public function initDirectives()
     {
-        $directives = $this->factory->getDirectives();
+        $directives = $this->kernel->getDirectives();
 
         foreach ($directives as $name => $directive) {
             $this->registerDirective($directive);
@@ -113,7 +113,7 @@ class Parser
      */
     public function initReferences()
     {
-        $references = $this->factory->getReferences();
+        $references = $this->kernel->getReferences();
 
         foreach ($references as $reference) {
             $this->environment->registerReference($reference);
@@ -131,13 +131,13 @@ class Parser
     }
 
     /**
-     * Get the current factory
+     * Get the current kernel
      *
-     * @return Factory the factory
+     * @return Kernel the kernel
      */
-    public function getFactory()
+    public function getKernel()
     {
-        return $this->factory;
+        return $this->kernel;
     }
 
     /**
@@ -495,16 +495,16 @@ class Parser
                 $data = implode("\n", $this->buffer);
                 $level = Environment::$letters[$this->specialLetter];
                 $token = $this->environment->createTitle($level);
-                $node = $this->factory->build('Nodes\TitleNode', $this->createSpan($data), $level, $token);
+                $node = $this->kernel->build('Nodes\TitleNode', $this->createSpan($data), $level, $token);
                 break;
             case self::STATE_SEPARATOR:
-                $node = $this->factory->build('Nodes\SeparatorNode', Environment::$letters[$this->specialLetter]);
+                $node = $this->kernel->build('Nodes\SeparatorNode', Environment::$letters[$this->specialLetter]);
                 break;
             case self::STATE_CODE:
-                $node = $this->factory->build('Nodes\CodeNode', $this->buffer);
+                $node = $this->kernel->build('Nodes\CodeNode', $this->buffer);
                 break;
             case self::STATE_BLOCK:
-                $node = $this->factory->build('Nodes\QuoteNode', $this->buffer);
+                $node = $this->kernel->build('Nodes\QuoteNode', $this->buffer);
                 $data = $node->getValue();
                 $subParser = $this->getSubParser();
                 $document = $subParser->parse($data);
@@ -520,7 +520,7 @@ class Parser
                 break;
             case self::STATE_NORMAL:
                 $this->isCode = $this->prepareCode();
-                $node = $this->factory->build('Nodes\ParagraphNode', $this->createSpan($this->buffer));
+                $node = $this->kernel->build('Nodes\ParagraphNode', $this->createSpan($this->buffer));
                 break;
             }
         }
@@ -562,7 +562,7 @@ class Parser
             if (trim($line)) {
                 if ($this->isListLine($line)) {
                     $this->state = self::STATE_LIST;
-                    $this->buffer = $this->factory->build('Nodes\ListNode');
+                    $this->buffer = $this->kernel->build('Nodes\ListNode');
                     $this->lineInfo = null;
                     $this->listFlow = true;
                     return false;
@@ -582,7 +582,7 @@ class Parser
                     return true;
                 } else if ($parts = $this->parseTableLine($line)) {
                     $this->state = self::STATE_TABLE;
-                    $this->buffer = $this->factory->build('Nodes\TableNode', $parts);
+                    $this->buffer = $this->kernel->build('Nodes\TableNode', $parts);
                 } else {
                     $this->state = self::STATE_NORMAL;
                     return false;
@@ -731,7 +731,7 @@ class Parser
      */
     public function parse(&$document)
     {
-        $this->document = $this->factory->build('Document', $this->environment);
+        $this->document = $this->kernel->build('Document', $this->environment);
         $this->init();
         $this->parseLines(trim($document));
 
@@ -750,6 +750,6 @@ class Parser
      */
     public function createSpan($span)
     {
-        return $this->factory->build('Span', $this, $span);
+        return $this->kernel->build('Span', $this, $span);
     }
 }
