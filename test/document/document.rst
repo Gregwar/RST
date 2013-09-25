@@ -1,3 +1,4 @@
+.. latex::
 .. title:: Demo document
 .. stylesheet:: style.css
 .. meta:: 

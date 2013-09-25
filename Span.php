@@ -9,6 +9,7 @@ abstract class Span extends Node
     protected $parser;
     protected $span;
     protected $tokens;
+    protected $environment;
 
     public function __construct(Parser $parser, $span)
     {
@@ -36,7 +37,7 @@ abstract class Span extends Node
         }, $span);
         
         $environment = $parser->getEnvironment();
-
+        $this->environment = $environment;
         
         // Replacing numbering
         foreach ($environment::$letters as $letter => $level) {

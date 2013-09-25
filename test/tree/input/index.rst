@@ -1,4 +1,6 @@
 
+.. latex::
+
 Index file
 ==========
 

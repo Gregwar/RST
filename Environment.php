@@ -348,10 +348,31 @@ class Environment
     }
 
     /**
+     * Canonicalize a path, a/b/c/../d/e will become
+     * a/b/d/e
+     */
+    protected function canonicalize($url)
+    {
+        $parts = explode('/', $url);
+        $stack = array();
+
+        foreach ($parts as $part) {
+            if ($part == '..') {
+                array_pop($stack);
+            } else {
+                $stack[] = $part;
+            }
+        }
+
+        return implode('/', $stack);
+    }
+
+    /**
      * Gets a canonical URL from the given one
      */
     public function canonicalUrl($url)
     {
+        var_dump("Canonical of $url");
         if (strlen($url)) {
             if ($url[0] == '/') {
                 // If the URL begins with a "/", the following is the 
@@ -360,9 +381,9 @@ class Environment
             } else {
                 // Else, the canonical name is under the current dir
                 if ($this->getDirName()) { 
-                    return $this->getDirName() . '/' .$url;
+                    return $this->canonicalize($this->getDirName() . '/' .$url);
                 } else {
-                    return $url;
+                    return $this->canonicalize($url);
                 }
             }
         }
