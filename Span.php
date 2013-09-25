@@ -209,25 +209,21 @@ abstract class Span extends Node
         return $title.' ('.$url.')';
     }
 
+    public function escape($span)
+    {
+        return $span;
+    }
+
     public function reference($reference, $value)
     {
         if ($reference) {
             $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
-            $url = $reference['url'];
-            if ($value['anchor']) {
-                $url .= '#' . $value['anchor'];
-            }
             $link = $this->link($url, trim($text));
         } else {
             $link = $this->link('#', '(unresolved reference)');
         }
 
         return $link;
-    }
-
-    public function escape($span)
-    {
-        return $span;
     }
 }
 
