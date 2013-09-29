@@ -1,10 +1,8 @@
-RST
-===
+# RST
 
 PHP library to parse reStructuredText document
 
-Usage
------
+## Usage
 
 The parser can be used this way:
 
@@ -44,8 +42,7 @@ echo $document;
 For more information, you can have a look at `test/document/document.rst` and its result
 `test/document/document.html`
 
-Using the builder
-----------------
+## Using the builder
 
 The builder is another tool that will parses a whole tree of documents and generates
 an output directory containing files.
@@ -73,11 +70,9 @@ You can use those methods on it to customize the build:
 * `addBeforeHook($function)`: adds an hook that will be called before parsing the
   document, the parser will be passed as a parameter
 
-Writing directives
-------------------
+## Writing directives
 
-Step 1: Extends the Directive class
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Step 1: Extends the Directive class
 
 Write your own class that extends the `Gregwar\RST\Directive` class, and define the
 method `getName()` that return the directive name.
@@ -90,8 +85,7 @@ You can then redefine one of the following method:
 
 See `Directive.php` for more information
 
-Step 2: Register your directive
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+### Step 2: Register your directive
 
 You can register your directive by directly calling `registerDirective()` on your
 `Parser` object.
@@ -100,7 +94,6 @@ Else, you will have to also create your own kernel by extending the `Kernel` cla
 and adding your own logic to define extra directives, see `Kernel.php` for more information.
 Then, pass the kernel when constructing the `Parser` or the `Builder`
 
-License
--------
+## License
 
 This library is under MIT license
