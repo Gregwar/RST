@@ -38,7 +38,7 @@ class Builder
     protected $kernel;
 
     // Hooks before the parsing on the environment
-    protected $environmentHooks = array();
+    protected $beforeHooks = array();
 
     // Hooks after the parsing
     protected $hooks = array();
@@ -67,9 +67,9 @@ class Builder
     /**
      * Adds an hook which will be called on each environment during building
      */
-    public function addEnvironmentHook($function)
+    public function addBeforeHook($function)
     {
-        $this->environmentHooks[] = $function;
+        $this->beforeHooks[] = $function;
 
         return $this;
     }
@@ -178,8 +178,8 @@ class Builder
             $environment->setCurrentDirectory($this->directory);
             $environment->setTargetDirectory($this->targetDirectory);
 
-            foreach ($this->environmentHooks as $hook) {
-                $hook($environment);
+            foreach ($this->beforeHooks as $hook) {
+                $hook($parser);
             }
 
             if (!file_exists($rst)) {
