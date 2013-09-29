@@ -50,6 +50,21 @@ class ParserTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing that code node value is good
+     */
+    public function testCodeNode()
+    {
+        $document = $this->parse('code-block-lastline.rst');
+
+        $nodes = $document->getNodes(function ($node) {
+            return $node instanceof CodeNode;
+        });
+
+        $this->assertEquals(1, count($nodes));
+        $this->assertEquals("A\nB\n C", trim($nodes[0]->getValue()));
+    }
+
+    /**
      * Testing paragraph nodes
      */
     public function testParagraphNode()
