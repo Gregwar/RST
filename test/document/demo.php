@@ -21,7 +21,7 @@ You can get it on the `GitHub page <https://github.com/Gregwar/RST>`_
 
 $document = $parser->parse($rst);
 
-echo $document->render();
+echo $document;
 /* Will output:
 <a id="title.1"></a><h1>Hello world</h1>
 <a id="title.1.1"></a><h2>What is it?</h2>
