@@ -1,10 +1,10 @@
 <?php
 
-namespace Gregwar\RST\LaTeX\Nodes;
+namespace Gregwar\RST\Nodes;
 
 use Gregwar\RST\Nodes\Node as Base;
 
-class LaTeXNode extends Base
+class DocumentNode extends Base
 {
     public function render()
     {

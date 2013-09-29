@@ -22,7 +22,7 @@ class Document extends Base
     public function renderDocument()
     {
         $isLatex = count($this->getNodes(function($node) {
-            return $node instanceof LaTeXNode;
+            return $node instanceof DocumentNode;
         })) != 0;
 
         $document = '';

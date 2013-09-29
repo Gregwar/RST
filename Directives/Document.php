@@ -1,24 +1,24 @@
 <?php
 
-namespace Gregwar\RST\LaTeX\Directives;
+namespace Gregwar\RST\Directives;
 
 use Gregwar\RST\Parser;
 use Gregwar\RST\Directive;
 
-use Gregwar\RST\LaTeX\Nodes\LaTeXNode;
+use Gregwar\RST\Nodes\DocumentNode;
 
 /**
  * Tell that this document should be latex compilable
  */
-class LaTeX extends Directive
+class Document extends Directive
 {
     public function getName()
     {
-        return 'latex';
+        return 'document';
     }
 
     public function processNode(Parser $parser, $variable, $data, array $options)
     {
-        return new LaTeXNode;
+        return new DocumentNode;
     }
 }

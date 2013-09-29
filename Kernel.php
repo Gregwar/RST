@@ -42,7 +42,8 @@ abstract class Kernel
         return array(
             new Directives\CodeBlock,
             new Directives\Replace,
-            new Directives\Toctree
+            new Directives\Toctree,
+            new Directives\Document
         );
     }
 
