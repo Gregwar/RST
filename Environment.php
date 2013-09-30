@@ -14,6 +14,9 @@ class Environment
         '*' => 4
     );
 
+    // Error manager
+    public $errorManager = null;
+
     // Table letters
     public static $tableLetter = '=';
     public static $prettyTableLetter = '-';
@@ -49,10 +52,22 @@ class Environment
 
     public function __construct()
     {
+        $this->errorManager = new ErrorManager;
+
         foreach (self::$letters as $letter => $level) {
             $this->levels[$level] = 1;
             $this->counters[$level] = 0;
         }
+    }
+
+    public function getErrorManager()
+    {
+        return $this->errorManager;
+    }
+
+    public function setErrorManager(ErrorManager $errorManager)
+    {
+        $this->errorManager = $errorManager;
     }
 
     public function setMetas($metas)
@@ -131,7 +146,7 @@ class Environment
             return $reference->resolve($this, $data);
         }
 
-        throw new \Exception('Unknown reference section '.$section);
+        $this->errorManager('Unknown reference section '.$section);
     }
 
     public function found($section, $data)
@@ -142,7 +157,7 @@ class Environment
             return $reference->found($this, $data);
         }
 
-        throw new \Exception('Unknown reference section '.$section);
+        $this->errorManager('Unknown reference section '.$section);
     }
 
     /**

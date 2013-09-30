@@ -11,6 +11,9 @@ class Builder
     const NO_PARSE = 1;
     const PARSE = 2;
 
+    // Error manager
+    protected $errorManager = null;
+
     // Verbose build ?
     protected $verbose = true;
 
@@ -45,6 +48,8 @@ class Builder
 
     public function __construct($kernel = null)
     {
+        $this->errorManager = new ErrorManager;
+
         if ($kernel) {
             $this->kernel = $kernel;
         } else {
@@ -52,6 +57,11 @@ class Builder
         }
 
         $this->kernel->initBuilder($this);
+    }
+
+    public function getErrorManager()
+    {
+        return $this->errorManager;
     }
 
     /**
@@ -177,13 +187,14 @@ class Builder
             $environment->setCurrentFilename($file);
             $environment->setCurrentDirectory($this->directory);
             $environment->setTargetDirectory($this->targetDirectory);
+            $environment->setErrorManager($this->errorManager);
 
             foreach ($this->beforeHooks as $hook) {
                 $hook($parser);
             }
 
             if (!file_exists($rst)) {
-                throw new \Exception('Can\'t parse the file '.$rst);
+                $this->errorManager->error('Can\'t parse the file '.$rst);
                 continue;
             }
 

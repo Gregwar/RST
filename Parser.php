@@ -475,14 +475,15 @@ class Parser
     protected function getCurrentDirective()
     {
         if (!$this->directive) {
-            throw new \Exception('Asking for current directive, but there is not');
+            $this->getEnvironment()->getErrorManager()->error('Asking for current directive, but there is not');
         }
 
         $name = $this->directive['name'];
         if (isset($this->directives[$name])) {
             return $this->directives[$name];
         } else {
-            throw new \Exception('Unknown directive: '.$name);
+            $this->getEnvironment()->getErrorManager()->error('Unknown directive: '.$name);
+            return null;
         }
     }
 
@@ -533,7 +534,9 @@ class Parser
 
         if ($this->directive) {
             $currentDirective = $this->getCurrentDirective();
-            $currentDirective->process($this, $node, $this->directive['variable'], $this->directive['data'], $this->directive['options']);
+            if ($currentDirective) {
+                $currentDirective->process($this, $node, $this->directive['variable'], $this->directive['data'], $this->directive['options']);
+            }
             $node = null;
         }
 
@@ -685,7 +688,7 @@ class Parser
             break;
 
         default:
-            throw new \Exception('Parser ended in an unexcepted state');
+            $this->getEnvironment()->getErrorManager()->error('Parser ended in an unexcepted state');
         }
 
         return true;

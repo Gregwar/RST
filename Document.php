@@ -126,7 +126,7 @@ abstract class Document extends Node
         }
 
         if (!$node instanceof Node) {
-            throw new \Exception('addNode($node): $node should be a string or a Node');
+            $this->getEnvironment()->getErrorManager('addNode($node): $node should be a string or a Node');
         }
 
         $this->nodes[] = $node;
