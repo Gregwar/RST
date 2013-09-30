@@ -13,7 +13,7 @@ class ErrorManager
 
     public function error($message)
     {
-        if ($abort) {
+        if ($this->abort) {
             throw new \Exception($message);
         } else {
             echo '/!\\ '.$message."\n";

@@ -680,7 +680,8 @@ class Parser
                     $this->flush();
                     $this->initDirective($line);
                 } else {
-                    $this->isCode = $this->getCurrentDirective()->wantCode();
+                    $directive = $this->getCurrentDirective();
+                    $this->isCode = $directive ? $directive->wantCode() : false;
                     $this->state = self::STATE_BEGIN;
                     return false;
                 }

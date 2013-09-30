@@ -146,7 +146,7 @@ class Environment
             return $reference->resolve($this, $data);
         }
 
-        $this->errorManager('Unknown reference section '.$section);
+        $this->errorManager->error('Unknown reference section '.$section);
     }
 
     public function found($section, $data)
@@ -157,7 +157,7 @@ class Environment
             return $reference->found($this, $data);
         }
 
-        $this->errorManager('Unknown reference section '.$section);
+        $this->errorManager->error('Unknown reference section '.$section);
     }
 
     /**
