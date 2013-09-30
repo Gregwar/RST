@@ -231,6 +231,18 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing a title that follows a wrapping directive
+     */
+    public function testTitleFollowDirective()
+    {
+        $document = $this->parseHTML('directive-title.rst');
+
+        $this->assertEquals(1, substr_count($document, '<div class="note'));
+        $this->assertEquals(1, substr_count($document, '<h1>'));
+        $this->assertEquals(1, substr_count($document, '</h1>'));
+    }
+
+    /**
      * Testing quote
      */
     public function testQuote()
