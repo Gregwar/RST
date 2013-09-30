@@ -141,6 +141,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing that an image that just directly follows some text works
+     */
+    public function testImageFollow()
+    {
+        $document = $this->parseHTML('image-follow.rst');
+
+        $this->assertEquals(1, substr_count($document, '<img'));
+        $this->assertEquals(1, substr_count($document, '"img/test.jpg"'));
+    }
+
+    /**
      * Testing a list
      */
     public function testList()

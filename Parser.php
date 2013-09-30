@@ -641,6 +641,11 @@ class Parser
                     $this->flush();
                     $this->state = self::STATE_BEGIN;
                 } else {
+                    if ($this->isDirective($line)) {
+                        $this->flush();
+                        $this->state = self::STATE_BEGIN;
+                        return false;
+                    }
                     if ($this->isComment($line)) {
                         $this->flush();
                         $this->state = self::STATE_COMMENT;
