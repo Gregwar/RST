@@ -171,7 +171,7 @@ abstract class Span extends Node
                 } else {
                     $url = $environment->getLink($value['link']);
                 }
-                $link = $this->link($url, $value['link']);
+                $link = $this->link($url, $this->escape($value['link']));
                 $span = str_replace($id, $link, $span);
                 break;
             }

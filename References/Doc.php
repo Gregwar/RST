@@ -1,6 +1,6 @@
 <?php
 
-namespace Gregwar\RST\HTML\References;
+namespace Gregwar\RST\References;
 
 use Gregwar\RST\Reference;
 use Gregwar\RST\Environment;

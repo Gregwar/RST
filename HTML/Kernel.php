@@ -26,13 +26,6 @@ class Kernel extends Base
 
         return $directives;
     }
-
-    public function getReferences()
-    {
-        return array(
-            new References\Doc
-        );
-    }
     
     public function getFileExtension()
     {

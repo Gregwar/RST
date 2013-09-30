@@ -48,6 +48,16 @@ abstract class Kernel
     }
 
     /**
+     * Document references
+     */
+    public function getReferences()
+    {
+        return array(
+            new References\Doc
+        );
+    }
+
+    /**
      * Allowing the kernel to tweak document after the build
      */
     public function postParse(Document $document)

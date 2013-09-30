@@ -33,7 +33,7 @@ class Span extends Base
 
     public function link($url, $title)
     {
-        return '<a href="'.htmlspecialchars($url).'">'.htmlspecialchars($title).'</a>';
+        return '<a href="'.htmlspecialchars($url).'">'.$title.'</a>';
     }
 
     public function escape($span)
