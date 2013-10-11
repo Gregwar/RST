@@ -341,6 +341,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests a variable used with a wrap sub directive
+     */
+    public function testVariableWrap()
+    {
+        $document = $this->parseHTML('variable-wrap.rst');
+
+        $this->assertEquals(2, substr_count($document, 'note'));
+        $this->assertEquals(2, substr_count($document, 'important'));
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */

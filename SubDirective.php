@@ -16,7 +16,10 @@ use Gregwar\RST\Nodes\CodeNode;
  */
 abstract class SubDirective extends Directive
 {
-    public function process(Parser $parser, $node, $variable, $data, array $options)
+    /**
+     * Process a directive that should parces the next node as a "sub" document
+     */
+    public final function process(Parser $parser, $node, $variable, $data, array $options)
     {
         $subParser = $parser->getSubParser();
 
@@ -30,13 +33,20 @@ abstract class SubDirective extends Directive
         $newNode = $this->processSub($parser, $document, $variable, $data, $options);
 
         if ($newNode) {
-            $parser->getDocument()->addNode($newNode);
+            if ($variable) {
+                $parser->getEnvironment()->setVariable($variable, $newNode);
+            } else {
+                $parser->getDocument()->addNode($newNode);
+            }
         }
     }
 
+    /**
+     * Process a sub directive
+     */
     public function processSub(Parser $parser, $document, $variable, $data, array $options)
     {
-        return $document;
+        return null;
     }
 
     public function wantCode()
