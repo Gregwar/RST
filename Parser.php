@@ -461,7 +461,7 @@ class Parser
      */
     protected function directiveAddOption($line)
     {
-        if (preg_match('/^([ ]+):(.+):(.*)$/mUsi', $line, $match)) {
+        if (preg_match('/^([ ]+):(.+): (.*)$/mUsi', $line, $match)) {
             $this->directive['options'][$match[2]] = trim($match[3]);
             return true;
         } else {

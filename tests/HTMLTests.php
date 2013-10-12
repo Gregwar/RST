@@ -351,6 +351,14 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, substr_count($document, 'important'));
     }
 
+    public function testReferenceUnderDirective()
+    {
+        $document = $this->parseHTML('reference-directive.rst');
+
+        $this->assertEquals(1, substr_count($document, 'note'));
+        $this->assertEquals(1, substr_count($document, 'unresolved'));
+    }
+
     /**
      * Helper function, parses a file and returns the document
      * produced by the parser
