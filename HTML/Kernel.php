@@ -21,6 +21,7 @@ class Kernel extends Base
             new Directives\Stylesheet,
             new Directives\Title,
             new Directives\Url,
+            new Directives\Div,
             new Directives\Wrap('note')
         ));
 

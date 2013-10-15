@@ -352,6 +352,19 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing div directive
+     */
+    public function testDivDirective()
+    {
+        $document = $this->parseHTML('div.rst');
+
+        $this->assertEquals(1, substr_count($document, '<div'));
+        $this->assertEquals(1, substr_count($document, 'class="testing"'));
+        $this->assertEquals(1, substr_count($document, 'Hello!'));
+        $this->assertEquals(1, substr_count($document, '</div>'));
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */

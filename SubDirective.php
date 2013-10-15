@@ -24,8 +24,7 @@ abstract class SubDirective extends Directive
         $subParser = $parser->getSubParser();
 
         if ($node instanceof CodeNode) {
-            $data = $node->getValue();
-            $document = $subParser->parse($data);
+            $document = $subParser->parse($node->getValue());
         } else {
             $document = $node;
         }
