@@ -373,6 +373,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing that comments starting by ... are not handled as comments
+     */
+    public function testCommentThree()
+    {
+        $document = $this->parseHTML('comment-3.rst');
+
+        $this->assertEquals(1, substr_count($document, '... This is not a comment!'));
+        $this->assertEquals(0, substr_count($document, 'This is a comment!'));
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */

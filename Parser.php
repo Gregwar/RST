@@ -441,7 +441,7 @@ class Parser
      */
     protected function isComment($line)
     {
-        return preg_match('/^\.\.(.*)$/mUsi', $line);
+        return preg_match('/^\.\. (.*)$/mUsi', $line);
     }
 
     /**
