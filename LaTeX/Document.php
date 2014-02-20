@@ -5,7 +5,7 @@ namespace Gregwar\RST\LaTeX;
 use Gregwar\RST\Document as Base;
 
 use Gregwar\RST\Nodes\RawNode;
-use Gregwar\RST\LaTeX\Nodes\LaTeXNode;
+use Gregwar\RST\LaTeX\Nodes\LaTeXMainNode;
 
 class Document extends Base
 {
@@ -21,13 +21,13 @@ class Document extends Base
 
     public function renderDocument()
     {
-        $isLatex = count($this->getNodes(function($node) {
-            return $node instanceof DocumentNode;
+        $isMain = count($this->getNodes(function($node) {
+            return $node instanceof LaTeXMainNode;
         })) != 0;
 
         $document = '';
 
-        if ($isLatex) {
+        if ($isMain) {
             $document .= "\\documentclass[11pt]{report}\n";
             $document .= "\\usepackage[utf8]{inputenc}\n";
             $document .= "\\usepackage[T1]{fontenc}\n";
@@ -49,7 +49,7 @@ class Document extends Base
         $document .= "\label{".$this->environment->getUrl()."}\n";
         $document .= $this->render();
 
-        if ($isLatex) {
+        if ($isMain) {
             $document .= "\\end{document}\n";
         }
 

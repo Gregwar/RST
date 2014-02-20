@@ -16,6 +16,7 @@ class Kernel extends Base
         $directives = parent::getDirectives();
 
         $directives = array_merge($directives, array(
+            new Directives\LaTeXMain,
             new Directives\Image,
             new Directives\Meta,
             new Directives\Stylesheet,

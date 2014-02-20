@@ -1,5 +1,5 @@
 
-.. latex::
+.. latex-main::
 
 Index file
 ==========
