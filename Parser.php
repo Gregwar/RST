@@ -419,7 +419,7 @@ class Parser
      */
     protected function initDirective($line)
     {
-        if (preg_match('/^\.\. (\|(.+)\| |)(.+)::( (.*)|)$/mUsi', $line, $match)) {
+        if (preg_match('/^\.\. (\|(.+)\| |)([^\s]+)::( (.*)|)$/mUsi', $line, $match)) {
             $this->directive = array(
                 'variable' => $match[2],
                 'name' => $match[3],
@@ -452,7 +452,7 @@ class Parser
      */
     protected function isDirective($line)
     {
-        return preg_match('/^\.\. (\|(.+)\| |)(.+)::(.*)$/mUsi', $line);
+        return preg_match('/^\.\. (\|(.+)\| |)([^\s]+)::(.*)$/mUsi', $line);
     }
 
     /**
