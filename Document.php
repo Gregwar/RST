@@ -93,7 +93,8 @@ abstract class Document extends Node
      * array(
      *     array('Main title', array(
      *         array('Sub title', array()),
-     *         array('Sub title 2', array()
+     *         array('Sub title 2', array(),
+     *         array(array('Redirection', 'target'), array(),
      *     )
      * )
      */
@@ -105,11 +106,13 @@ abstract class Document extends Node
         foreach ($this->nodes as $node) {
             if ($node instanceof TitleNode) {
                 $level = $node->getLevel();
-                $text = $node->getValue() . '';
+                $text = (string)$node->getValue();
+                $redirection = $node->getTarget();
+                $value = $redirection ? array($text, $redirection) : $text;
 
                 if (isset($levels[$level-1])) {
                     $parent = &$levels[$level-1];
-                    $element = array($text, array());
+                    $element = array($value, array());
                     $parent[] = $element;
                     $levels[$level] = &$parent[count($parent)-1][1];
                 }

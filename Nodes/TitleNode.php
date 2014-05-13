@@ -6,6 +6,7 @@ abstract class TitleNode extends Node
 {
     protected $level;
     protected $token;
+    protected $target = null;
 
     public function __construct($value, $level, $token)
     {
@@ -17,5 +18,15 @@ abstract class TitleNode extends Node
     public function getLevel()
     {
         return $this->level;
+    }
+
+    public function setTarget($target)
+    {
+        $this->target = $target;
+    }
+
+    public function getTarget()
+    {
+        return $this->target;
     }
 }

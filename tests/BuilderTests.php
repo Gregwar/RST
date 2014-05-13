@@ -95,6 +95,18 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<h2>There is a title here</h2>', $contents);
     }
 
+    /**
+     * Test that redirection-title worked
+     */
+    public function testRedirectionTitle()
+    {
+        $contents = file_get_contents($this->targetFile('magic-link.html'));
+        $this->assertNotContains('redirection', $contents);
+
+        $contents = file_get_contents($this->targetFile('index.html'));
+        $this->assertContains('"subdirective.html">See also', $contents);
+    }
+
     public function setUp()
     {
         shell_exec('rm -rf '.$this->targetFile());

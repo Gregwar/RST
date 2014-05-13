@@ -43,7 +43,8 @@ abstract class Kernel
             new Directives\CodeBlock,
             new Directives\Replace,
             new Directives\Toctree,
-            new Directives\Document
+            new Directives\Document,
+            new Directives\RedirectionTitle
         );
     }
 
