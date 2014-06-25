@@ -59,7 +59,7 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
 
         $document = $this->parseHTML('strong.rst');
 
-        $this->assertContains('<b>strong emphasis</b>', $document);
+        $this->assertContains('<strong>strong emphasis</strong>', $document);
     }
 
     /**
@@ -260,8 +260,8 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<p>', $document);
         $this->assertContains('</p>', $document);
         $this->assertEquals(1, substr_count($document, '</blockquote>'));
-        $this->assertEquals(1, substr_count($document, '<b>'));
-        $this->assertEquals(1, substr_count($document, '</b>'));
+        $this->assertEquals(1, substr_count($document, '<strong>'));
+        $this->assertEquals(1, substr_count($document, '</strong>'));
         $this->assertNotContains('*', $document);
         
         $document = $this->parseHTML('quote3.rst');
@@ -381,6 +381,16 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(1, substr_count($document, '... This is not a comment!'));
         $this->assertEquals(0, substr_count($document, 'This is a comment!'));
+    }
+
+    /**
+     * Testing that emphasis and span elements are evaluated in links
+     */
+    public function testLinkSpan()
+    {
+        $document = $this->parseHTML('link-span.rst');
+
+        $this->assertEquals(1, substr_count($document, '<strong>'));
     }
 
     /**

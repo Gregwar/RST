@@ -13,7 +13,7 @@ class Span extends Base
 
     public function strongEmphasis($text)
     {
-        return '<b>'.$text.'</b>';
+        return '<strong>'.$text.'</strong>';
     }
 
     public function nbsp()

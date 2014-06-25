@@ -120,19 +120,15 @@ abstract class Span extends Node
     }
 
     /**
-     * Renders the Span, which includes :
-     *
-     * - ``literal``
-     * - *italic*
-     * - **bold**
-     * - |variable|
+     * Processes some data in the context of the span, this will process the
+     * **emphasis**, the nbsp, replace variables and end-of-line brs
      */
-    public function render()
+    public function process($data)
     {
         $self = $this;
         $environment = $this->parser->getEnvironment();
 
-        $span = $this->escape($this->span);
+        $span = $this->escape($data);
 
         // Emphasis
         $span = preg_replace_callback('/\*\*(.+)\*\*/mUsi', function ($matches) use ($self) {
@@ -153,6 +149,17 @@ abstract class Span extends Node
         // Adding brs when a space is at the end of a line
         $span = preg_replace('/ \n/', $this->br(), $span);
 
+        return $span;
+    }
+
+    /**
+     * Renders the span
+     */
+    public function render()
+    {
+        $environment = $this->parser->getEnvironment();
+        $span = $this->process($this->span);
+
         // Replacing tokens
         foreach ($this->tokens as $id => $value) {
             switch ($value['type']) {
@@ -171,7 +178,7 @@ abstract class Span extends Node
                 } else {
                     $url = $environment->getLink($value['link']);
                 }
-                $link = $this->link($url, $this->escape($value['link']));
+                $link = $this->link($url, $this->process($value['link']));
                 $span = str_replace($id, $link, $span);
                 break;
             }

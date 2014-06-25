@@ -58,5 +58,7 @@ Second sub title
 Third sub title
 ~~~~~~~~~~~~~~~
 
+.. redirection-title:: special
+
 Fourth sub title
 ~~~~~~~~~~~~~~~~
