@@ -17,6 +17,7 @@ class Wrap extends SubDirective
     public function __construct($class, $uniqid=false)
     {
         $this->class = $class;
+        $this->uniqid = $uniqid;
     }
 
     public function getName()
