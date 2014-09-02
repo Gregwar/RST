@@ -12,8 +12,9 @@ use Gregwar\RST\Nodes\WrapperNode;
 class Wrap extends SubDirective
 {
     protected $class;
+    protected $uniqid;
 
-    public function __construct($class)
+    public function __construct($class, $uniqid=false)
     {
         $this->class = $class;
     }
@@ -25,6 +26,10 @@ class Wrap extends SubDirective
 
     public function processSub(Parser $parser, $document, $variable, $data, array $options)
     {
-        return new WrapperNode($document, '<div class="'.$this->class.'">', '</div>');
+        $class = $this->class;
+        if ($this->uniqid) {
+            $class .= ' '.uniqid($this->class);
+        }
+        return new WrapperNode($document, '<div class="'.$class.'">', '</div>');
     }
 }
