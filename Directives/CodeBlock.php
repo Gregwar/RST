@@ -33,8 +33,13 @@ class CodeBlock extends Directive
                 $node->setLanguage(trim($data));
             }
 
-            $document = $parser->getDocument();
-            $document->addNode($node);
+            if ($variable) {
+                $environment = $parser->getEnvironment();
+                $environment->setVariable($variable, $processNode);
+            } else {
+                $document = $parser->getDocument();
+                $document->addNode($node);
+            }
         }
     }
 
