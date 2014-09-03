@@ -17,6 +17,7 @@ class Wrap extends SubDirective
     public function __construct($class, $uniqid=false)
     {
         $this->class = $class;
+        $this->uniqid = $uniqid;
     }
 
     public function getName()
@@ -28,8 +29,10 @@ class Wrap extends SubDirective
     {
         $class = $this->class;
         if ($this->uniqid) {
-            $class .= ' '.uniqid($this->class);
+            $id = ' id="'.uniqid($this->class).'"';
+        } else {
+            $id = '';
         }
-        return new WrapperNode($document, '<div class="'.$class.'">', '</div>');
+        return new WrapperNode($document, '<div class="'.$class.'"'.$id.'>', '</div>');
     }
 }
