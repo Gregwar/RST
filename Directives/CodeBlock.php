@@ -35,7 +35,7 @@ class CodeBlock extends Directive
 
             if ($variable) {
                 $environment = $parser->getEnvironment();
-                $environment->setVariable($variable, $processNode);
+                $environment->setVariable($variable, $node);
             } else {
                 $document = $parser->getDocument();
                 $document->addNode($node);
