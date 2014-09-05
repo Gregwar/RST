@@ -720,7 +720,7 @@ class Parser
      *
      * @param $document the string (content) of the document
      */
-    protected function parseLines(&$document)
+    protected function parseLines($document)
     {
         // Including files
         $document = "\n$document\n";
@@ -744,7 +744,7 @@ class Parser
      * @param $document the contents (string) of the document
      * @return $document the created document
      */
-    public function parse(&$document)
+    public function parse($document)
     {
         $this->document = $this->kernel->build('Document', $this->environment);
         $this->init();
