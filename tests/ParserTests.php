@@ -239,7 +239,8 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $environment = $parser->getEnvironment();
         $environment->setCurrentDirectory($directory);
 
-        return $parser->parse(file_get_contents($directory.$file));
+        $data = file_get_contents($directory.$file);
+        return $parser->parse($data);
     }
 
     /**
