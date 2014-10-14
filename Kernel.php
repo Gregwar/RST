@@ -45,7 +45,7 @@ abstract class Kernel
             new Directives\Replace,
             new Directives\Toctree,
             new Directives\Document,
-            new Directives\RedirectionTitle
+            new Directives\RedirectionTitle,
         );
     }
 

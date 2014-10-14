@@ -7,7 +7,7 @@ class Environment
     /**
      * Letters used as separators for titles and horizontal line
      */
-    public static $letters = array('=', '-', '~', '*', '^');
+    public static $letters = array('=', '-', '~', '*', '^', '"');
 
     // Error manager
     public $errorManager = null;
