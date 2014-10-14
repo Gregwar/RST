@@ -198,7 +198,7 @@ class Builder
                 continue;
             }
 
-            $document = $this->documents[$file] = $parser->parse(file_get_contents($rst));
+            $document = $this->documents[$file] = $parser->parseFile($rst);
 
             // Calling all the post-process hooks
             foreach ($this->hooks as $hook) {
