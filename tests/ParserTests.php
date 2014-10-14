@@ -11,6 +11,7 @@ use Gregwar\RST\Nodes\TitleNode;
 use Gregwar\RST\Nodes\ListNode;
 use Gregwar\RST\Nodes\TableNode;
 use Gregwar\RST\Nodes\SeparatorNode;
+use Gregwar\RST\Nodes\DummyNode;
 
 /**
  * Unit testing for RST
@@ -226,6 +227,29 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $document = $this->parse('inclusion.rst');
 
         $this->assertContains('I was actually included', $document->renderDocument());
+    }
+
+    public function testDirective()
+    {
+        $document = $this->parse('directive.rst');
+
+        $nodes = $document->getNodes(function($node) {
+            return $node instanceof DummyNode;
+        });
+
+        $this->assertEquals(1, count($nodes));
+
+        if ($nodes) {
+            $node = $nodes[0];
+            $data = $node->data;
+            $this->assertEquals('some data', $data['data']);
+            $options = $data['options'];
+            $this->assertTrue(isset($options['maxdepth']));
+            $this->assertTrue(isset($options['titlesonly']));
+            $this->assertTrue(isset($options['glob']));
+            $this->assertTrue($options['titlesonly']);
+            $this->assertEquals(123, $options['maxdepth']);
+        }
     }
 
     /**
