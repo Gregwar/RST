@@ -750,6 +750,10 @@ class Parser
         // Including files
         $document = "\n$document\n";
         $document = $this->includeFiles($document);
+        
+        // Removing UTF-8 BOM
+        $bom = "\xef\xbb\xbf";
+        $document = str_replace($bom, '', $document);
 
         $lines = explode("\n", $document);
         $this->state = self::STATE_BEGIN;

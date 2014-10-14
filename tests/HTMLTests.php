@@ -434,6 +434,15 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing removing BOM
+     */
+    public function testBom()
+    {
+        $document = $this->parseHTML('bom.rst');
+        $this->assertNotContains('Should be a comment', $document);
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */
