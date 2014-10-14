@@ -100,7 +100,10 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     public function testHeaderTable()
     {
         $document = $this->parseHTML('table2.rst');
-        echo "$document";
+ 
+        $this->assertEquals(2, substr_count($document, '<th>'));
+        $this->assertEquals(2, substr_count($document, '</th>'));
+        $this->assertNotContains('==', $document);
     }
 
     /**
