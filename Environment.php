@@ -7,12 +7,7 @@ class Environment
     /**
      * Letters used as separators for titles and horizontal line
      */
-    public static $letters = array(
-        '=' => 1,
-        '-' => 2,
-        '~' => 3,
-        '*' => 4
-    );
+    public static $letters = array('=', '-', '~', '*', '^');
 
     // Error manager
     public $errorManager = null;
@@ -22,6 +17,10 @@ class Environment
     public static $prettyTableLetter = '-';
     public static $prettyTableHeader = '=';
     public static $prettyTableJoint = '+';
+
+    // Title letter for each levels
+    protected $currentTitleLevel = 0;
+    protected $titleLetters = array();
 
     // Current file name
     protected $currentFileName = null;
@@ -55,7 +54,7 @@ class Environment
     {
         $this->errorManager = new ErrorManager;
 
-        foreach (self::$letters as $letter => $level) {
+        for ($level=0; $level<16; $level++) {
             $this->levels[$level] = 1;
             $this->counters[$level] = 0;
         }
@@ -177,7 +176,7 @@ class Environment
      */
     public function createTitle($level)
     {
-        foreach (self::$letters as $letter => $currentLevel) {
+        for ($currentLevel=0; $currentLevel<16; $currentLevel++) {
             if ($currentLevel > $level) {
                 $this->levels[$currentLevel] = 1;
                 $this->counters[$currentLevel] = 0;
@@ -461,5 +460,23 @@ class Environment
     public function getMetas()
     {
         return $this->metas;
+    }
+
+    public function getLevel($letter)
+    {
+        foreach ($this->titleLetters as $level => $titleLetter) {
+            if ($letter == $titleLetter) {
+                return $level;
+            }
+        }
+
+        $this->currentTitleLevel++;
+        $this->titleLetters[$this->currentTitleLevel] = $letter;
+        return $this->currentTitleLevel;
+    }
+
+    public function getTitleLetters()
+    {
+        return $this->titleLetters;
     }
 }

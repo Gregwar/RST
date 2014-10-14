@@ -40,7 +40,7 @@ abstract class Span extends Node
         $this->environment = $environment;
         
         // Replacing numbering
-        foreach ($environment::$letters as $letter => $level) {
+        foreach ($environment->getTitleLetters() as $level => $letter) {
             $span = preg_replace_callback('/\#\\'.$letter.'/mUsi', function($match) use ($environment, $level) {
                 return $environment->getNumber($level);
             }, $span);

@@ -199,7 +199,8 @@ class Parser
 
         $letter = $line[0];
 
-        if (!isset(Environment::$letters[$letter])) {
+        $environment = $this->environment;
+        if (!in_array($letter, $environment::$letters)) {
             return false;
         }
 
@@ -523,12 +524,13 @@ class Parser
             switch ($this->state) {
             case self::STATE_TITLE:
                 $data = implode("\n", $this->buffer);
-                $level = Environment::$letters[$this->specialLetter];
+                $level = $this->environment->getLevel($this->specialLetter);
                 $token = $this->environment->createTitle($level);
                 $node = $this->kernel->build('Nodes\TitleNode', $this->createSpan($data), $level, $token);
                 break;
             case self::STATE_SEPARATOR:
-                $node = $this->kernel->build('Nodes\SeparatorNode', Environment::$letters[$this->specialLetter]);
+                $level = $this->environment->getLevel($this->specialLetter);
+                $node = $this->kernel->build('Nodes\SeparatorNode', $level);
                 break;
             case self::STATE_CODE:
                 $node = $this->kernel->build('Nodes\CodeNode', $this->buffer);

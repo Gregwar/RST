@@ -341,6 +341,22 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertNotContains('--', $document);
         $this->assertNotContains('~~', $document);
     }
+    
+    public function testTitlesAuto()
+    {
+        $document = $this->parseHTML('titles-auto.rst');
+
+        $this->assertEquals(1, substr_count($document, '<h1>'));
+        $this->assertEquals(1, substr_count($document, '<h1>'));
+        $this->assertEquals(2, substr_count($document, '<h2>'));
+        $this->assertEquals(2, substr_count($document, '</h2>'));
+        $this->assertEquals(4, substr_count($document, '<h3>'));
+        $this->assertEquals(4, substr_count($document, '</h3>'));
+        $this->assertContains('<a id="title', $document);
+        $this->assertNotContains('==', $document);
+        $this->assertNotContains('--', $document);
+        $this->assertNotContains('~~', $document);
+    }
 
     /**
      * Testing that a wrapper node can be at end of file
