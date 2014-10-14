@@ -241,6 +241,8 @@ class Parser
      */
     protected function parseTableLine($line)
     {
+        $header = false;
+        $pretty = false;
         $line = trim($line);
 
         if (!strlen($line)) {
@@ -255,7 +257,12 @@ class Parser
         }
 
         if ($chars[0] == Environment::$prettyTableJoint && $chars[1] == Environment::$prettyTableLetter) {
+            $pretty = true;
             $chars = array(Environment::$prettyTableLetter, Environment::$prettyTableJoint);
+        } else if ($chars[0] == Environment::$prettyTableJoint && $chars[1] == Environment::$prettyTableHeader) {
+            $pretty = true;
+            $header = true;
+            $chars = array(Environment::$prettyTableHeader, Environment::$prettyTableJoint);
         } else {
             if (!($chars[0] == Environment::$tableLetter && $chars[1] == ' ')) {
                 return false;
@@ -281,7 +288,11 @@ class Parser
         }
 
         if (count($parts) > 1) {
-            return array($chars[1] == Environment::$prettyTableJoint, $parts);
+            return array(
+                $header,
+                $pretty,
+                $parts
+            );
         }
 
         return false;

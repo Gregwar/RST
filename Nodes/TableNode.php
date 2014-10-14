@@ -8,6 +8,7 @@ abstract class TableNode extends Node
 {
     protected $parts;
     protected $data = array();
+    protected $headers = array();
 
     public function __construct($parts)
     {
@@ -20,7 +21,7 @@ abstract class TableNode extends Node
      */
     public function getCols()
     {
-        return count($this->parts[1]);
+        return count($this->parts[2]);
     }
 
     /**
@@ -36,13 +37,18 @@ abstract class TableNode extends Node
         $line = utf8_decode($line);
 
         if ($parts) {
-            if ($parts != $this->parts) {
+            // New line in the tab
+            if ($parts[2] != $this->parts[2]) {
                 return false;
             }
 
+            if ($parts[0]) {
+                $this->headers[count($this->data)-1] = true;
+            }
             $this->data[] = array();
         } else {
-            list($pretty, $parts) = $this->parts;
+            // Pushing data in the cells
+            list($header, $pretty, $parts) = $this->parts;
             $row = &$this->data[count($this->data)-1];
 
             for ($k=1; $k<=count($parts); $k++) {

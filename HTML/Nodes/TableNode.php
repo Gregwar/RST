@@ -9,16 +9,16 @@ class TableNode extends Base
     public function render()
     {
         $html = '<table>';
-        foreach ($this->data as &$row) {
+        foreach ($this->data as $k=>&$row) {
             if (!$row) {
                 continue;
             }
 
             $html .= '<tr>';
             foreach ($row as &$col) {
-                $html .= '<td>';
+                $html .= isset($this->headers[$k]) ? '<th>' : '<td>';
                 $html .= $col->render();
-                $html .= '</td>';
+                $html .= isset($this->headers[$k]) ? '</th>' : '</td>';
             }
             $html .= '</tr>';
         }

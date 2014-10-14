@@ -95,6 +95,15 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing HTML table with headers
+     */
+    public function testHeaderTable()
+    {
+        $document = $this->parseHTML('table2.rst');
+        echo "$document";
+    }
+
+    /**
      * Testing literals
      */
     public function testLiteral()

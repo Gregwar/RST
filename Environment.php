@@ -20,6 +20,7 @@ class Environment
     // Table letters
     public static $tableLetter = '=';
     public static $prettyTableLetter = '-';
+    public static $prettyTableHeader = '=';
     public static $prettyTableJoint = '+';
 
     // Current file name
