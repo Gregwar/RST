@@ -371,6 +371,18 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, substr_count($document, 'unresolved'));
     }
 
+    public function testUnknownDirective()
+    {
+        try {
+            $document = $this->parseHTML('unknown-directive.rst');
+            $this->assertTrue(false, 'Unknown directive should raise an exception');
+        } catch (\Exception $e) {
+            $message = $e->getMessage();
+            $this->assertContains('unknown-directive.rst', $message);
+            $this->assertContains('line 2', $message);
+        }
+    }
+
     /**
      * Testing div directive
      */
@@ -416,7 +428,7 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $environment = $parser->getEnvironment();
         $environment->setCurrentDirectory($directory);
 
-        return $parser->parse(file_get_contents($directory.$file));
+        return $parser->parseFile($directory.$file);
     }
 
     private function parseHTML($file)

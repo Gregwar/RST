@@ -39,6 +39,12 @@ class Parser
     // Is the current node code ?
     protected $isCode = false;
 
+    // Current line
+    protected $currentLine = 0;
+
+    // File name
+    protected $filename = null;
+
     public function __construct($environment = null, $kernel = null)
     {
         if ($kernel == null) {
@@ -493,7 +499,9 @@ class Parser
         if (isset($this->directives[$name])) {
             return $this->directives[$name];
         } else {
-            $this->getEnvironment()->getErrorManager()->error('Unknown directive: '.$name);
+            $message = 'Unknown directive: '.$name;
+            $message .= ' in '.$this->getFilename().' line '.$this->getCurrentLine();
+            $this->getEnvironment()->getErrorManager()->error($message);
             return null;
         }
     }
@@ -740,7 +748,8 @@ class Parser
         $lines = explode("\n", $document);
         $this->state = self::STATE_BEGIN;
 
-        foreach ($lines as $line) {
+        foreach ($lines as $n => $line) {
+            $this->currentLine = $n;
             while (!$this->parseLine($line));
         }
 
@@ -766,6 +775,34 @@ class Parser
         }
 
         return $this->document;
+    }
+
+    /**
+     * Parses a given file and return a Document instance
+     *
+     * @param $file the file name to parse
+     * @return $document the document instance
+     */
+    public function parseFile($file)
+    {
+        $this->filename = $file;
+        return $this->parse(file_get_contents($file));
+    }
+
+    /**
+     * Gets the current filename
+     */
+    public function getFilename()
+    {
+        return $this->filename ?: '(unknown)';
+    }
+
+    /**
+     * Gets the current line
+     */
+    public function getCurrentLine()
+    {
+        return $this->currentLine;
     }
 
     /**
