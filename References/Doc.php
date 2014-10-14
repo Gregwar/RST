@@ -7,9 +7,16 @@ use Gregwar\RST\Environment;
 
 class Doc extends Reference
 {
+    protected $name;
+
+    public function __construct($name = 'doc')
+    {
+        $this->name = $name;
+    }
+
     public function getName()
     {
-        return 'doc';
+        return $this->name;
     }
 
     public function resolve(Environment $environment, $data)

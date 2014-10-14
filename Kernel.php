@@ -55,7 +55,8 @@ abstract class Kernel
     public function getReferences()
     {
         return array(
-            new References\Doc
+            new References\Doc,
+            new References\Doc('ref'),
         );
     }
 
