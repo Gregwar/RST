@@ -11,6 +11,9 @@ class Builder
     const NO_PARSE = 1;
     const PARSE = 2;
 
+    // Tree index name
+    protected $indexName = 'index';
+
     // Error manager
     protected $errorManager = null;
 
@@ -108,7 +111,7 @@ class Builder
 
         // Scan all the metas and the index
         $this->display('* Pre-scanning files');
-        $this->scan('index');
+        $this->scan($this->getIndexName());
         $this->scanMetas();
 
         // Parses all the documents
@@ -416,5 +419,17 @@ class Builder
         $this->toMkdir[] = $directory;
 
         return $this;
+    }
+
+    public function setIndexName($name)
+    {
+        $this->indexName = $name;
+
+        return $this;
+    }
+
+    public function getIndexName()
+    {
+        return $this->indexName;
     }
 }
