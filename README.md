@@ -1,6 +1,6 @@
 # RST
 
-![Build status](https://travis-ci.org/Gregwar/RST.svg?branch=master)
+[![Build status](https://travis-ci.org/Gregwar/RST.svg?branch=master)](https://travis-ci.org/Gregwar/RST)
 
 PHP library to parse reStructuredText document
 
