@@ -575,7 +575,7 @@ class Parser
     }
 
     /**
-     i* Get the current document
+     * Get the current document
      *
      * @return Document the document
      */
