@@ -1,5 +1,6 @@
 <?php
 
+use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Document;
 
@@ -250,6 +251,19 @@ class ParserTests extends \PHPUnit_Framework_TestCase
             $this->assertTrue($options['titlesonly']);
             $this->assertEquals(123, $options['maxdepth']);
         }
+    }
+
+    public function testNewlineBeforeAnIncludedIsntGobbled()
+    {
+        /** @var Node[] $nodes */
+        $nodes = $this->parse('inclusion-newline.rst')->getNodes();
+
+        $this->assertCount(3, $nodes);
+        $this->assertInstanceOf('Gregwar\RST\Nodes\TitleNode', $nodes[0]);
+        $this->assertInstanceOf('Gregwar\RST\Nodes\ParagraphNode', $nodes[1]);
+        $this->assertInstanceOf('Gregwar\RST\Nodes\ParagraphNode', $nodes[2]);
+        $this->assertContains('<p>Test this paragraph is present.</p>', $nodes[1]->render());
+        $this->assertContains('<p>And this one as well.</p>', $nodes[2]->render());
     }
 
     /**
