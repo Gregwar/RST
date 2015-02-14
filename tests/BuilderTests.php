@@ -109,7 +109,8 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        shell_exec('rm -rf '.$this->targetFile());
+        shell_exec('rm -rf ' . escapeshellarg(__DIR__ . '/builder/output'));
+
         $builder = new Builder;
         $builder->copy('file.txt');
         $builder->build($this->sourceFile(), $this->targetFile(), false);
