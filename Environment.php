@@ -54,6 +54,19 @@ class Environment
     {
         $this->errorManager = new ErrorManager;
 
+        $this->reset();
+    }
+
+    /**
+     * Puts the environment in a clean state for a new parse, like title level order.
+     */
+    public function reset()
+    {
+        $this->titleLetters = array();
+        $this->currentTitleLevel = 0;
+        $this->levels = array();
+        $this->counters = array();
+
         for ($level=0; $level<16; $level++) {
             $this->levels[$level] = 1;
             $this->counters[$level] = 0;

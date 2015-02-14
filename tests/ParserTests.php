@@ -253,6 +253,24 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testSubsequentParsesDontHaveTheSameTitleLevelOrder()
+    {
+        $directory = __DIR__ . '/files';
+
+        $parser = new Parser;
+        $parser->getEnvironment()->setCurrentDirectory($directory);
+
+        /** @var TitleNode[] $nodes1 */
+        /** @var TitleNode[] $nodes2 */
+        $nodes1 = $parser->parseFile("$directory/mixed-titles-1.rst")->getNodes();
+        $nodes2 = $parser->parseFile("$directory/mixed-titles-2.rst")->getNodes();
+
+        $this->assertSame(1, $nodes1[0]->getLevel());
+        $this->assertSame(2, $nodes1[1]->getLevel());
+        $this->assertSame(1, $nodes2[0]->getLevel(), 'Title level in second parse is influenced by first parse');
+        $this->assertSame(2, $nodes2[1]->getLevel(), 'Title level in second parse is influenced by first parse');
+    }
+
     public function testNewlineBeforeAnIncludedIsntGobbled()
     {
         /** @var Node[] $nodes */
