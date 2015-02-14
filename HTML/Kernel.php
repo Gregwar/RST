@@ -2,7 +2,12 @@
 
 namespace Gregwar\RST\HTML;
 
+use Gregwar\RST\HTML\Roles\AbbrRenderer;
+use Gregwar\RST\HTML\Roles\DocRenderer;
 use Gregwar\RST\Kernel as Base;
+use Gregwar\RST\Roles\AbbrProcessor;
+use Gregwar\RST\Roles\DocProcessor;
+use Gregwar\RST\Roles\RoleConfiguration;
 
 class Kernel extends Base
 {
@@ -27,7 +32,16 @@ class Kernel extends Base
 
         return $directives;
     }
-    
+
+    public function getRoleConfigurations()
+    {
+        return array(
+            new RoleConfiguration('abbr', new AbbrProcessor(), new AbbrRenderer()),
+            new RoleConfiguration('doc', new DocProcessor('doc'), new DocRenderer()),
+            new RoleConfiguration('ref', new DocProcessor('ref'), new DocRenderer()),
+        );
+    }
+
     public function getFileExtension()
     {
         return 'html';

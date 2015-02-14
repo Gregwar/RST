@@ -4,6 +4,7 @@ namespace Gregwar\RST;
 
 use Gregwar\RST\Builder;
 use Gregwar\RST\Document;
+use Gregwar\RST\Roles\RoleConfiguration;
 
 abstract class Kernel
 {
@@ -58,6 +59,14 @@ abstract class Kernel
             new References\Doc,
             new References\Doc('ref'),
         );
+    }
+
+    /**
+     * @return RoleConfiguration[]
+     */
+    public function getRoleConfigurations()
+    {
+        return array();
     }
 
     /**

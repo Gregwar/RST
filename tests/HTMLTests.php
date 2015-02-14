@@ -442,6 +442,16 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertNotContains('Should be a comment', $document);
     }
 
+    public function testAbbr()
+    {
+        $this->assertStringEqualsFile(__DIR__ . '/html/abbr.html', $this->parseHTML('abbr.rst'));
+    }
+
+    public function testMultipleAbbrs()
+    {
+        $this->assertStringEqualsFile(__DIR__ . '/html/abbr-multiple.html', $this->parseHTML('abbr-multiple.rst'));
+    }
+
     /**
      * Helper function, parses a file and returns the document
      * produced by the parser

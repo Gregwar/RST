@@ -3,6 +3,7 @@
 namespace Gregwar\RST;
 
 use Gregwar\RST\Nodes\Node;
+use Gregwar\RST\Roles\Role;
 
 abstract class Span extends Node
 {
@@ -55,33 +56,18 @@ abstract class Span extends Node
             }
         }
 
-        // Looking for references to other documents
-        $span = preg_replace_callback('/:([a-z0-9]+):`(.+)`/mUsi', function($match) use (&$environment, $generator, &$tokens) {
-            $section = $match[1];
-            $url = $match[2];
+        // Looking for roles
+        $span = preg_replace_callback('/:([a-z0-9-]+):`(.+)`/mUsi', function($match) use ($parser, $generator, &$tokens) {
+            $roleName = $match[1];
+            $content = $match[2];
             $id = $generator();
             $anchor = null;
-            
-            $text = null;
-            if (preg_match('/^(.+)<(.+)>$/mUsi', $url, $match)) {
-                $text = $match[1];
-                $url = $match[2];
-            }
-
-            if (preg_match('/^(.+)#(.+)$/mUsi', $url, $match)) {
-                $url = $match[1];
-                $anchor = $match[2];
-            }
 
             $tokens[$id] = array(
-                'type' => 'reference',
-                'section' => $section,
-                'url' => $url,
-                'text' => $text,
-                'anchor' => $anchor
+                'type' => 'role',
+                'name' => $roleName,
+                'role' => $parser->getEnvironment()->processRole($roleName, $content, $parser),
             );
-
-            $environment->found($section, $url);
 
             return $id;
         }, $span);
@@ -166,12 +152,6 @@ abstract class Span extends Node
             case 'literal':
                 $span = str_replace($id, $this->literal($value['text']), $span);
                 break;
-            case 'reference':
-                $reference = $environment->resolve($value['section'], $value['url']);
-                $link = $this->reference($reference, $value);
-
-                $span = str_replace($id, $link, $span);
-                break;
             case 'link':
                 if ($value['url']) {
                     $url = $environment->relativeUrl($value['url']);
@@ -180,6 +160,16 @@ abstract class Span extends Node
                 }
                 $link = $this->link($url, $this->process($value['link']));
                 $span = str_replace($id, $link, $span);
+                break;
+            case 'role':
+                /** @var Role $role */
+                $role = $value['role'];
+                $roleName = $value['name'];
+
+                $config = $environment->getRoleConfiguration($roleName);
+                $config->getProcessor()->finalize($role, $this->parser->getDocument());
+
+                $span = str_replace($id, $config->getRenderer()->render($role, $this->parser), $span);
                 break;
             }
         }
@@ -220,18 +210,6 @@ abstract class Span extends Node
     public function escape($span)
     {
         return $span;
-    }
-
-    public function reference($reference, $value)
-    {
-        if ($reference) {
-            $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
-            $link = $this->link($url, trim($text));
-        } else {
-            $link = $this->link('#', '(unresolved reference)');
-        }
-
-        return $link;
     }
 }
 

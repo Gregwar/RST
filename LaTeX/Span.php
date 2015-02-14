@@ -49,22 +49,4 @@ class Span extends Base
     {
         return $span;
     }
-    
-    public function reference($reference, $value)
-    {
-        if ($reference) {
-            $file = $reference['file'];
-            $text = $value['text'] ?: (isset($reference['title']) ? $reference['title'] : '');
-            $refDoc = $file;
-            $url = '#';
-            if ($value['anchor']) {
-                $url .= $value['anchor'];
-            }
-            $link = $this->link($url, trim($text), $refDoc);
-        } else {
-            $link = $this->link('#', '(unresolved reference)');
-        }
-
-        return $link;
-    }
 }

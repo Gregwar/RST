@@ -2,6 +2,11 @@
 
 namespace Gregwar\RST;
 
+use Gregwar\RST\Roles\Role;
+use Gregwar\RST\Roles\RoleConfiguration;
+use Gregwar\RST\Roles\RoleProcessor;
+use Gregwar\RST\Roles\RoleRenderer;
+
 class Environment
 {
     /**
@@ -30,6 +35,11 @@ class Environment
 
     // References that can be resolved
     protected $references = array();
+
+    /**
+     * @var RoleConfiguration[] Role configurations indexed by their name (string).
+     */
+    protected $roleConfigurations = array();
 
     // Metas
     protected $metas = null;
@@ -133,6 +143,53 @@ class Environment
     {
         $name = $reference->getName();
         $this->references[$name] = $reference;
+    }
+
+    public function registerRoleConfiguration(RoleConfiguration $config)
+    {
+        $this->roleConfigurations[$config->getName()] = $config;
+    }
+
+    /**
+     * @param string $role
+     * @param string $content
+     * @param Parser $parser
+     * @return Role
+     */
+    public function processRole($role, $content, Parser $parser)
+    {
+        return $this->getRoleProcessor($role)->process($content, $parser);
+    }
+
+    /**
+     * @param string $role
+     * @return RoleConfiguration
+     */
+    public function getRoleConfiguration($role)
+    {
+        if (!isset($this->roleConfigurations[$role])) {
+            throw new \RuntimeException("No configuration registered for role '$role'");
+        }
+
+        return $this->roleConfigurations[$role];
+    }
+
+    /**
+     * @param string $role
+     * @return RoleProcessor
+     */
+    public function getRoleProcessor($role)
+    {
+        return $this->getRoleConfiguration($role)->getProcessor();
+    }
+
+    /**
+     * @param string $role
+     * @return RoleRenderer
+     */
+    public function getRoleRenderer($role)
+    {
+        return $this->getRoleConfiguration($role)->getRenderer();
     }
 
     /**
