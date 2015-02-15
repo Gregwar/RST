@@ -266,6 +266,21 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<p>And this one as well.</p>', $nodes[2]->render());
     }
 
+    public function testIncludesKeepScope()
+    {
+        // See http://docutils.sourceforge.net/docs/ref/rst/directives.html#including-an-external-document-fragment
+
+        /** @var Node[] $nodes */
+        $nodes = $this->parse('inclusion-scope.rst')->getNodes();
+
+        $this->assertCount(4, $nodes);
+        $this->assertEquals("This first example will be parsed at the document level, and can\nthus contain any construct, including section headers.", $nodes[0]->getValue()->render());
+        $this->assertEquals('This is included.', $nodes[1]->getValue()->render());
+        $this->assertEquals('Back in the main document.', $nodes[2]->getValue()->render());
+        $this->assertInstanceOf('Gregwar\RST\Nodes\QuoteNode', $nodes[3]);
+        $this->assertContains('This is included.', $nodes[3]->getValue()->render());
+    }
+
     /**
      * Helper function, parses a file and returns the document
      * produced by the parser
