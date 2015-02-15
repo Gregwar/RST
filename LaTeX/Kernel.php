@@ -3,9 +3,6 @@
 namespace Gregwar\RST\LaTeX;
 
 use Gregwar\RST\Kernel as Base;
-use Gregwar\RST\LaTeX\Roles\DocRenderer;
-use Gregwar\RST\Roles\DocProcessor;
-use Gregwar\RST\Roles\RoleConfiguration;
 
 class Kernel extends Base
 {
@@ -33,10 +30,7 @@ class Kernel extends Base
 
     public function getRoleConfigurations()
     {
-        return array(
-            new RoleConfiguration('doc', new DocProcessor('doc'), new DocRenderer()),
-            new RoleConfiguration('ref', new DocProcessor('ref'), new DocRenderer()),
-        );
+        return parent::getRoleConfigurations();
     }
 
     public function getFileExtension()

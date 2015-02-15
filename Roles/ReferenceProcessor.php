@@ -6,7 +6,7 @@ use Gregwar\RST\Document;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Roles\Exception\InvalidArgumentException;
 
-class DocProcessor implements RoleProcessor
+class ReferenceProcessor implements RoleProcessor
 {
     /**
      * @var string
@@ -44,14 +44,14 @@ class DocProcessor implements RoleProcessor
 
         $parser->getEnvironment()->found($this->getName(), $url);
 
-        return new Doc($url, $text, $anchor);
+        return new Reference($url, $text, $anchor);
     }
 
     public function finalize(Role $role, Document $document)
     {
-        InvalidArgumentException::assert('role', $role, 'Gregwar\RST\Roles\Doc');
+        InvalidArgumentException::assert('role', $role, 'Gregwar\RST\Roles\Reference');
 
-        /** @var Doc $role */
+        /** @var Reference $role */
         $reference = $document->getEnvironment()->resolve($this->getName(), $role->url);
         $role->reference = $reference ? DocReference::fromReferenceArray($reference) : null;
     }

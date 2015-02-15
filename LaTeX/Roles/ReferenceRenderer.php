@@ -3,18 +3,18 @@
 namespace Gregwar\RST\LaTeX\Roles;
 
 use Gregwar\RST\Parser;
-use Gregwar\RST\Roles\Doc;
+use Gregwar\RST\Roles\Reference;
 use Gregwar\RST\Roles\Exception\InvalidArgumentException;
 use Gregwar\RST\Roles\Role;
 use Gregwar\RST\Roles\RoleRenderer;
 
-class DocRenderer implements RoleRenderer
+class ReferenceRenderer implements RoleRenderer
 {
     public function render(Role $role, Parser $parser)
     {
-        InvalidArgumentException::assert('role', $role, 'Gregwar\RST\Roles\Doc');
+        InvalidArgumentException::assert('role', $role, 'Gregwar\RST\Roles\Reference');
 
-        /** @var Doc $role */
+        /** @var Reference $role */
         if ($role->reference) {
             $refDoc = $role->reference->file ?: $parser->getEnvironment()->getUrl();
 

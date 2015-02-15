@@ -2,7 +2,7 @@
 
 namespace Gregwar\RST\Roles;
 
-class Doc implements Role
+class Reference implements Role
 {
     /**
      * @var string
