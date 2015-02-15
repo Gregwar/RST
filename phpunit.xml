@@ -17,6 +17,7 @@
             <file>./tests/EnvironmentTests.php</file>
             <file>./tests/HTMLTests.php</file>
             <file>./tests/BuilderTests.php</file>
+            <file>./tests/RoleTests.php</file>
         </testsuite>
     </testsuites>
 

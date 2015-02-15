@@ -15,7 +15,7 @@ class InvalidArgumentException extends \InvalidArgumentException
         if (!$value instanceof $instanceOf) {
             $type = get_class($value);
 
-            throw new self(sprintf("Expected '%s' to be of type '%s', got '%s'", $name, $type));
+            throw new self(sprintf("Expected '%s' to be of type '%s', got '%s'", $name, $instanceOf, $type));
         }
     }
 }
