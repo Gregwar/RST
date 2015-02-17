@@ -57,7 +57,7 @@ abstract class Span extends Node
         }
 
         // Looking for roles
-        $span = preg_replace_callback('/:([a-z0-9-]+):`(.+)`/mUsi', function($match) use ($parser, $generator, &$tokens) {
+        $span = preg_replace_callback('/:([:a-z0-9-]+):`(.+)`/mUsi', function($match) use ($parser, $generator, &$tokens) {
             $roleName = $match[1];
             $content = $match[2];
             $id = $generator();

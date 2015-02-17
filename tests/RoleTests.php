@@ -1,5 +1,6 @@
 <?php
 
+use Gregwar\RST\HTML\Span;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Roles\Exception\InvalidArgumentException;
 use Gregwar\RST\Tests\Roles\PhpNetReference;
@@ -37,5 +38,18 @@ class RoleTests extends TestCase
 
         $html = $parser->parse(':method:`strlen`')->render();
         $this->assertEquals("<p><a href=\"http://php.net/strlen\">strlen</a></p>\n", $html);
+    }
+
+    public function testRoleDomainsAreSupported()
+    {
+        $parser = $this->getMockBuilder('Gregwar\RST\Parser')->getMock();
+
+        $environment = $this->getMockBuilder('Gregwar\RST\Environment')->getMock();
+        $environment->method('getTitleLetters')->willReturn(array());
+        $environment->expects($this->once())->method('processRole')->with('ns:role', 'contents', $parser);
+
+        $parser->method('getEnvironment')->willReturn($environment);
+
+        new Span($parser, ':ns:role:`contents`');
     }
 }
