@@ -151,7 +151,7 @@ class Parser
      *
      * @param $directive a directive handler
      */
-    protected function registerDirective(Directive $directive)
+    public function registerDirective(Directive $directive)
     {
         $this->directives[$directive->getName()] = $directive;
     }
