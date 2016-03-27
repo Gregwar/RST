@@ -252,6 +252,12 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         }
     }
 
+    public function testRoleNameCanContainHyphen()
+    {
+        $this->setExpectedException('RuntimeException', "No configuration registered for role 'role-hyphen'");
+        $this->parse('role-hyphen.rst');
+    }
+
     /**
      * Helper function, parses a file and returns the document
      * produced by the parser

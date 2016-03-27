@@ -56,6 +56,7 @@ class Parser
 
         $this->initDirectives();
         $this->initReferences();
+        $this->initRoles();
     }
 
     /**
@@ -123,6 +124,13 @@ class Parser
 
         foreach ($references as $reference) {
             $this->environment->registerReference($reference);
+        }
+    }
+
+    public function initRoles()
+    {
+        foreach ($this->kernel->getRoleConfigurations() as $config) {
+            $this->environment->registerRoleConfiguration($config);
         }
     }
 

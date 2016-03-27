@@ -2,8 +2,8 @@
 
 namespace Gregwar\RST;
 
-use Gregwar\RST\Builder;
-use Gregwar\RST\Document;
+use Gregwar\RST\Roles\ReferenceProcessor;
+use Gregwar\RST\Roles\RoleConfiguration;
 
 abstract class Kernel
 {
@@ -57,6 +57,25 @@ abstract class Kernel
         return array(
             new References\Doc,
             new References\Doc('ref'),
+        );
+    }
+
+    /**
+     * @return RoleConfiguration[]
+     */
+    public function getRoleConfigurations()
+    {
+        $kernel = $this;
+
+        return array_map(
+            function (Reference $reference) use ($kernel) {
+                return new RoleConfiguration(
+                    $reference->getName(),
+                    new ReferenceProcessor($reference->getName()),
+                    $kernel->build('Roles\ReferenceRenderer', $reference->getName())
+                );
+            },
+            $this->getReferences()
         );
     }
 

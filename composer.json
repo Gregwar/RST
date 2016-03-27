@@ -19,5 +19,8 @@
         "psr-0": {
             "Gregwar\\RST": ""
         }
+    },
+    "autoload-dev": {
+        "classmap": ["tests/roles"]
     }
 }

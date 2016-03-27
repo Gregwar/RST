@@ -28,6 +28,11 @@ class Kernel extends Base
         return $directives;
     }
 
+    public function getRoleConfigurations()
+    {
+        return parent::getRoleConfigurations();
+    }
+
     public function getFileExtension()
     {
         return 'tex';
