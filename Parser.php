@@ -70,6 +70,9 @@ class Parser
 
     /**
      * Try to parse a link definition
+     * 
+     * @param string $line
+     * @return bool
      */
     public function parseLink($line)
     {
@@ -149,7 +152,7 @@ class Parser
     /**
      * Register a new directive handler
      *
-     * @param $directive a directive handler
+     * @param Directive $directive a directive handler
      */
     public function registerDirective(Directive $directive)
     {
@@ -158,6 +161,7 @@ class Parser
 
     /**
      * Tells if the current buffer is announcing a block of code
+     * @return bool
      */
     protected function prepareCode()
     {
@@ -190,6 +194,9 @@ class Parser
     /**
      * Tell if a line is a special separating line for title and separators,
      * returns the depth of the special line
+     * 
+     * @param string $line
+     * @return bool
      */
     protected function isSpecialLine($line)
     {
@@ -215,6 +222,9 @@ class Parser
 
     /**
      * Finding the table chars
+     * 
+     * @param string $line
+     * @return array|bool
      */
     protected function findTableChars($line)
     {
@@ -245,6 +255,9 @@ class Parser
      *
      * +---------------------+---------+-----------+
      *  1                     23        33
+     * 
+     * @param string $line
+     * @return mixed
      */
     protected function parseTableLine($line)
     {
@@ -308,8 +321,8 @@ class Parser
     /**
      * Parses a list line
      *
-     * @param $line the string line
-     * @return an array containing:
+     * @param string $line the string line
+     * @return array containing:
      *         - true if the list is ordered, false else
      *         - the depth of the list
      *         - the text of the first line without the tick
@@ -344,6 +357,7 @@ class Parser
     /**
      * Is the given line a list line ?
      *
+     * @param string $line
      * @return bool true if the given line is a list line
      */
     protected function isListLine($line)
@@ -364,6 +378,10 @@ class Parser
 
     /**
      * Push a line to the current list node buffer
+     * 
+     * @param string $line
+     * @param bool $flush
+     * @return bool
      */
     public function pushListLine($line, $flush = false)
     {
@@ -410,8 +428,8 @@ class Parser
      *
      *     This is still part of the block, even if there is an empty line
      *
-     * @param $line the line text
-     * @return true if the line is still in a block
+     * @param string $line the line text
+     * @return bool true if the line is still in a block
      */
     protected function isBlockLine($line)
     {
@@ -429,6 +447,7 @@ class Parser
      *     :option: value
      *     :otherOption: otherValue
      *
+     * @param string $line
      * @return false if this is not a directive, else an array containing :
      *         - variable: the variable name of the directive
      *         - name: the directive name
@@ -454,7 +473,7 @@ class Parser
     /**
      * Is this line a comment ?
      *
-     * @param $line the line
+     * @param string $line the line
      * @return bool true if it's a comment
      */
     protected function isComment($line)
@@ -465,7 +484,7 @@ class Parser
     /**
      * Is this line a directive ?
      *
-     * @param $line the line
+     * @param string $line the line
      * @return bool true if it's a directive
      */
     protected function isDirective($line)
@@ -476,6 +495,8 @@ class Parser
     /**
      * Try to add an option line to the current directive, returns true if sucess
      * and false if failure
+     * 
+     * @param string $line
      */
     protected function directiveAddOption($line)
     {
@@ -493,6 +514,8 @@ class Parser
 
     /**
      * Gets the current directive
+     * 
+     * @return Directive
      */
     protected function getCurrentDirective()
     {
@@ -587,7 +610,7 @@ class Parser
     /**
      * Process one line
      *
-     * @param $line the line string
+     * @param string $line the line string
      */
     protected function parseLine(&$line)
     {
@@ -743,7 +766,7 @@ class Parser
     /**
      * Process all the lines of a document string
      *
-     * @param $document the string (content) of the document
+     * @param string $document the string (content) of the document
      */
     protected function parseLines($document)
     {
@@ -771,8 +794,8 @@ class Parser
     /**
      * Parse a document and return a Document instance
      *
-     * @param $document the contents (string) of the document
-     * @return $document the created document
+     * @param string $document the contents (string) of the document
+     * @return string $document the created document
      */
     public function parse($document)
     {
@@ -790,7 +813,7 @@ class Parser
     /**
      * Parses a given file and return a Document instance
      *
-     * @param $file the file name to parse
+     * @param string $file the file name to parse
      * @return $document the document instance
      */
     public function parseFile($file)
