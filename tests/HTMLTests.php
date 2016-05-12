@@ -387,6 +387,17 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
         $this->assertEquals(1, substr_count($document, 'unresolved'));
     }
 
+    public function testReferenceMatchingIsntTooEager()
+    {
+        // Before, it would render
+        // <p><code>:doc:`lorem</code><a href="https://consectetur.org"> and 249a92befe90adcd3bb404a91d4e1520a17a8b56` sit `amet</a></p>
+
+        $this->assertSame(
+            "<p><code>:doc:`lorem`</code> and <code>:code:`what`</code> sit <a href=\"https://consectetur.org\">amet</a></p>\n",
+            $this->parse('no-eager-literals.rst')->render()
+        );
+    }
+
     public function testUnknownDirective()
     {
         try {

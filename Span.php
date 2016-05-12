@@ -26,7 +26,7 @@ abstract class Span extends Node
         
         // Replacing literal with tokens
         $tokens = array();
-        $span = preg_replace_callback('/``(.+)``/mUsi', function($match) use (&$tokens, $generator) {
+        $span = preg_replace_callback('/``(.+)``(?!`)/mUsi', function($match) use (&$tokens, $generator) {
             $id = $generator();
             $tokens[$id] = array(
                 'type' => 'literal',
