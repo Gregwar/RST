@@ -794,10 +794,21 @@ class Parser
     /**
      * Parse a document and return a Document instance
      *
-     * @param string $document the contents (string) of the document
-     * @return string $document the created document
+     * @param string $document The contents (string) of the document
+     * @return Document The created document
      */
     public function parse($document)
+    {
+        $this->getEnvironment()->reset();
+
+        return $this->parseLocal($document);
+    }
+
+    /**
+     * @param string $document
+     * @return Document The created document
+     */
+    public function parseLocal($document)
     {
         $this->document = $this->kernel->build('Document', $this->environment);
         $this->init();
@@ -814,7 +825,7 @@ class Parser
      * Parses a given file and return a Document instance
      *
      * @param string $file the file name to parse
-     * @return $document the document instance
+     * @return Document $document the document instance
      */
     public function parseFile($file)
     {
