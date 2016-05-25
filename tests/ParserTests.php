@@ -1,5 +1,6 @@
 <?php
 
+use Gregwar\RST\Nodes\Node;
 use Gregwar\RST\Parser;
 use Gregwar\RST\Document;
 
@@ -250,6 +251,52 @@ class ParserTests extends \PHPUnit_Framework_TestCase
             $this->assertTrue($options['titlesonly']);
             $this->assertEquals(123, $options['maxdepth']);
         }
+    }
+
+    public function testSubsequentParsesDontHaveTheSameTitleLevelOrder()
+    {
+        $directory = __DIR__ . '/files';
+
+        $parser = new Parser;
+        $parser->getEnvironment()->setCurrentDirectory($directory);
+
+        /** @var TitleNode[] $nodes1 */
+        /** @var TitleNode[] $nodes2 */
+        $nodes1 = $parser->parseFile("$directory/mixed-titles-1.rst")->getNodes();
+        $nodes2 = $parser->parseFile("$directory/mixed-titles-2.rst")->getNodes();
+
+        $this->assertSame(1, $nodes1[0]->getLevel());
+        $this->assertSame(2, $nodes1[1]->getLevel());
+        $this->assertSame(1, $nodes2[0]->getLevel(), 'Title level in second parse is influenced by first parse');
+        $this->assertSame(2, $nodes2[1]->getLevel(), 'Title level in second parse is influenced by first parse');
+    }
+
+    public function testNewlineBeforeAnIncludedIsntGobbled()
+    {
+        /** @var Node[] $nodes */
+        $nodes = $this->parse('inclusion-newline.rst')->getNodes();
+
+        $this->assertCount(3, $nodes);
+        $this->assertInstanceOf('Gregwar\RST\Nodes\TitleNode', $nodes[0]);
+        $this->assertInstanceOf('Gregwar\RST\Nodes\ParagraphNode', $nodes[1]);
+        $this->assertInstanceOf('Gregwar\RST\Nodes\ParagraphNode', $nodes[2]);
+        $this->assertContains('<p>Test this paragraph is present.</p>', $nodes[1]->render());
+        $this->assertContains('<p>And this one as well.</p>', $nodes[2]->render());
+    }
+
+    public function testIncludesKeepScope()
+    {
+        // See http://docutils.sourceforge.net/docs/ref/rst/directives.html#including-an-external-document-fragment
+
+        /** @var Node[] $nodes */
+        $nodes = $this->parse('inclusion-scope.rst')->getNodes();
+
+        $this->assertCount(4, $nodes);
+        $this->assertEquals("This first example will be parsed at the document level, and can\nthus contain any construct, including section headers.", $nodes[0]->getValue()->render());
+        $this->assertEquals('This is included.', $nodes[1]->getValue()->render());
+        $this->assertEquals('Back in the main document.', $nodes[2]->getValue()->render());
+        $this->assertInstanceOf('Gregwar\RST\Nodes\QuoteNode', $nodes[3]);
+        $this->assertContains('This is included.', $nodes[3]->getValue()->render());
     }
 
     /**
