@@ -153,6 +153,22 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing figure directive
+     */
+    public function testFigure()
+    {
+        $document = $this->parseHTMl('figure.rst');
+
+        $this->assertContains('<figure>', $document);
+        $this->assertContains('<img', $document);
+        $this->assertContains('src="foo.jpg"', $document);
+        $this->assertContains('width="100"', $document);
+        $this->assertContains('<figcaption>', $document);
+        $this->assertContains('This is a foo!', $document);
+        $this->assertContains('</figcaption>', $document);
+    }
+
+    /**
      * Testing that an image that just directly follows some text works
      */
     public function testImageFollow()

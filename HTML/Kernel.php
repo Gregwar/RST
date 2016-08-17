@@ -17,6 +17,7 @@ class Kernel extends Base
 
         $directives = array_merge($directives, array(
             new Directives\Image,
+            new Directives\Figure,
             new Directives\Meta,
             new Directives\Stylesheet,
             new Directives\Title,
