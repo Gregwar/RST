@@ -562,7 +562,7 @@ class Parser
                 $node = $this->kernel->build('Nodes\QuoteNode', $this->buffer);
                 $data = $node->getValue();
                 $subParser = $this->getSubParser();
-                $document = $subParser->parse($data);
+                $document = $subParser->parseLocal($data);
                 $node->setValue($document);
                 break;
             case self::STATE_LIST:

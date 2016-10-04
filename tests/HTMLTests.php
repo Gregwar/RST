@@ -271,6 +271,18 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Block quotes run a parse and thus can mess with environment, a bug was fixed
+     * and this test avoid it to be reproduced
+     */
+    public function testQuoteResetTitles()
+    {
+        $document = $this->parseHTML('quote-title.rst');
+
+        $this->assertEquals(1, substr_count($document, '<h1>Title</h1>'));
+        $this->assertEquals(1, substr_count($document, '<h2>Another title</h2>'));
+    }
+
+    /**
      * Testing quote
      */
     public function testQuote()
