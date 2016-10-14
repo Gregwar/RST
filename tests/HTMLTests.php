@@ -463,6 +463,16 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing crlf
+     */
+    public function testCRLF()
+    {
+        $document = $this->parseHTML('crlf.rst');
+
+        $this->assertEquals(1, substr_count($document, '<h1>'), 'CRLF should be supported');
+    }
+
+    /**
      * Testing that emphasis and span elements are evaluated in links
      */
     public function testLinkSpan()

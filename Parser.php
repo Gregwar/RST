@@ -771,6 +771,7 @@ class Parser
     protected function parseLines($document)
     {
         // Including files
+        $document = str_replace("\r\n", "\n", $document);
         $document = "\n$document\n";
         $document = $this->includeFiles($document);
         
