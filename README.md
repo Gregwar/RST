@@ -1,6 +1,7 @@
 # RST
 
 [![Build status](https://travis-ci.org/Gregwar/RST.svg?branch=master)](https://travis-ci.org/Gregwar/RST)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YUXRLWHQSWS6L)
 
 PHP library to parse reStructuredText document
 
