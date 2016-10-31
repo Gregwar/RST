@@ -36,6 +36,12 @@ class Parser
     // Environment
     protected $environment = null;
 
+    // Allow include directives?
+    protected $includeAllowed = true;
+
+    // Behaves like PHP's open_basedir
+    protected $includeRoot = '';
+
     // Is the current node code ?
     protected $isCode = false;
 
@@ -749,6 +755,32 @@ class Parser
     }
 
     /**
+     * Is this file allowed to be included?
+     *
+     * @param $path
+     * @return bool
+     */
+    public function includeFileAllowed($path)
+    {
+        if (!$this->includeAllowed) {
+            return false;
+        }
+        if (!@is_readable($path)) {
+            return false;
+        }
+        if (empty($this->includeRoot)) {
+            return true;
+        }
+        $real = realpath($path);
+        foreach (explode(':', $this->includeRoot) as $root) {
+            if (strpos($real, $root) === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Include all files described in $document and returns the new string of the given
      * document with includes processed
      */
@@ -759,7 +791,11 @@ class Parser
 
         return preg_replace_callback('/^\.\. include:: (.+)$/m', function($match) use ($parser, $environment) {
             $path = $environment->absoluteRelativePath($match[1]);
-            return $parser->includeFiles(file_get_contents($path));
+            if ($parser->includeFileAllowed($path)) {
+                return $parser->includeFiles(file_get_contents($path));
+            } else {
+                return '';
+            }
         }, $document);
     }
 
@@ -859,5 +895,37 @@ class Parser
     public function createSpan($span)
     {
         return $this->kernel->build('Span', $this, $span);
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIncludeAllowed()
+    {
+        return $this->includeAllowed;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIncludeRoot()
+    {
+        return $this->includeRoot;
+    }
+
+    /**
+     * Allow/disallow includes, or restrict them to a directory
+     *
+     * @param bool $allow
+     * @param string $directory
+     * @return self
+     */
+    public function setIncludePolicy($allow, $directory = null)
+    {
+        $this->includeAllowed = !empty($allow);
+        if ($directory !== null) {
+            $this->includeRoot = (string) $directory;
+        }
+        return $this;
     }
 }
