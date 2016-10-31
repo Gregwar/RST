@@ -299,6 +299,38 @@ class ParserTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('This is included.', $nodes[3]->getValue()->render());
     }
 
+    public function testIncludesPolicy()
+    {
+        $directory = __DIR__.'/files/';
+        $parser = new Parser;
+        $environment = $parser->getEnvironment();
+        $environment->setCurrentDirectory($directory);
+
+        // Test defaults
+        $this->assertTrue($parser->getIncludeAllowed());
+        $this->assertSame('', $parser->getIncludeRoot());
+
+        // Default policy:
+        $document = (string) $parser->parseFile($directory.'inclusion-policy.rst');
+        $this->assertContains('SUBDIRECTORY OK', $document);
+        $this->assertContains('EXTERNAL FILE INCLUDED!', $document);
+
+        // Disbaled policy:
+        $parser->setIncludePolicy(false);
+        $nodes = $parser->parseFile($directory.'inclusion-policy.rst')->getNodes();
+        $this->assertCount(1, $nodes);
+
+        // Enabled
+        $parser->setIncludePolicy(true);
+        $nodes = $parser->parseFile($directory.'inclusion-policy.rst')->getNodes();
+        $this->assertCount(6, $nodes);
+
+        // Jailed
+        $parser->setIncludePolicy(true, $directory);
+        $nodes = $parser->parseFile($directory.'inclusion-policy.rst')->getNodes();
+        $this->assertCount(5, $nodes);
+    }
+
     /**
      * Helper function, parses a file and returns the document
      * produced by the parser
