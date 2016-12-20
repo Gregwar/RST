@@ -73,6 +73,21 @@ You can use those methods on it to customize the build:
 * `addBeforeHook($function)`: adds an hook that will be called before parsing the
   document, the parser will be passed as a parameter
 
+## Abort on error
+
+In some situation you want the build to continue even if there is some errors,
+like missing references:
+
+```php
+<?php
+
+// Using parser
+$parser->getEnvironment()->getErrorManager()->abortOnError(false);
+
+// Using builder
+$builder->getErrorManager()->abortOnError(false);
+```
+
 ## Writing directives
 
 ### Step 1: Extends the Directive class
