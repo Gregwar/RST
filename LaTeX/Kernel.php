@@ -6,7 +6,7 @@ use Gregwar\RST\Kernel as Base;
 
 class Kernel extends Base
 {
-    function getName()
+    public function getName()
     {
         return 'LaTeX';
     }

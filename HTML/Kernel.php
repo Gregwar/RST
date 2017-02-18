@@ -6,7 +6,7 @@ use Gregwar\RST\Kernel as Base;
 
 class Kernel extends Base
 {
-    function getName()
+    public function getName()
     {
         return 'HTML';
     }
@@ -28,7 +28,7 @@ class Kernel extends Base
 
         return $directives;
     }
-    
+
     public function getFileExtension()
     {
         return 'html';
