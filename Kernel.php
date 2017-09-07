@@ -42,6 +42,7 @@ abstract class Kernel
         return array(
             new Directives\Dummy,
             new Directives\CodeBlock,
+            new Directives\Raw,
             new Directives\Replace,
             new Directives\Toctree,
             new Directives\Document,

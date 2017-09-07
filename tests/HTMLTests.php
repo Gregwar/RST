@@ -492,6 +492,15 @@ class HTMLTests extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Testing with a raw directive
+     */
+    public function testRaw()
+    {
+        $document = $this->parseHTML('raw.rst');
+        $this->assertContains('<u>Underlined!</u>', $document);
+    }
+
+    /**
      * Helper function, parses a file and returns the document
      * produced by the parser
      */
