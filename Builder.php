@@ -49,6 +49,9 @@ class Builder
     // Hooks after the parsing
     protected $hooks = array();
 
+    // Use relative URLs
+    protected $relativeUrls = true;
+
     public function __construct($kernel = null)
     {
         $this->errorManager = new ErrorManager;
@@ -73,7 +76,7 @@ class Builder
     public function addHook($function)
     {
         $this->hooks[] = $function;
-        
+
         return $this;
     }
 
@@ -191,6 +194,7 @@ class Builder
             $environment->setCurrentDirectory($this->directory);
             $environment->setTargetDirectory($this->targetDirectory);
             $environment->setErrorManager($this->errorManager);
+            $environment->setUseRelativeUrls($this->relativeUrls);
 
             foreach ($this->beforeHooks as $hook) {
                 $hook($parser);
@@ -318,7 +322,7 @@ class Builder
 
     /**
      * Gets the .rst of a source file
-     */ 
+     */
     public function getRST($file)
     {
         return $this->getSourceFile($file . '.rst');
@@ -405,8 +409,8 @@ class Builder
 
             if (!is_dir($dir)) {
                 mkdir($dir, 0755, true);
-            }   
-        }   
+            }
+        }
     }
 
     /**
@@ -431,5 +435,13 @@ class Builder
     public function getIndexName()
     {
         return $this->indexName;
+    }
+
+    /**
+     * Use relative URLs for links
+     */
+    public function setUseRelativeUrls($enable)
+    {
+        $this->relativeUrls = $enable;
     }
 }

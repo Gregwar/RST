@@ -72,7 +72,7 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         $this->assertContains('<a href="index.html#toc">Index, paragraph toc</a>', $contents);
         $this->assertContains('<a href="index.html">Index</a>', $contents);
         $this->assertContains('<a href="index.html">Summary</a>', $contents);
-        
+
         $contents = file_get_contents($this->targetFile('subdir/test.html'));
 
         $this->assertContains('"../index.html"', $contents);
@@ -112,6 +112,7 @@ class BuilderTests extends \PHPUnit_Framework_TestCase
         shell_exec('rm -rf '.$this->targetFile());
         $builder = new Builder;
         $builder->copy('file.txt');
+        $builder->setUseRelativeUrls(true);
         $builder->build($this->sourceFile(), $this->targetFile(), false);
     }
 

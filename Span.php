@@ -23,7 +23,7 @@ abstract class Span extends Node
             $tokenId++;
             return sha1($prefix.'|'.$tokenId);
         };
-        
+
         // Replacing literal with tokens
         $tokens = array();
         $span = preg_replace_callback('/``(.+)``(?!`)/mUsi', function($match) use (&$tokens, $generator) {
@@ -35,10 +35,10 @@ abstract class Span extends Node
 
             return $id;
         }, $span);
-        
+
         $environment = $parser->getEnvironment();
         $this->environment = $environment;
-        
+
         // Replacing numbering
         foreach ($environment->getTitleLetters() as $level => $letter) {
             $span = preg_replace_callback('/\#\\'.$letter.'/mUsi', function($match) use ($environment, $level) {
@@ -61,7 +61,7 @@ abstract class Span extends Node
             $url = $match[2];
             $id = $generator();
             $anchor = null;
-            
+
             $text = null;
             if (preg_match('/^(.+)<(.+)>$/mUsi', $url, $match)) {
                 $text = $match[1];
@@ -107,13 +107,13 @@ abstract class Span extends Node
 
             return $id.$next;
         };
-        
+
         // Replacing anonymous links
         $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))__([^a-z0-9]{1}|$)/mUsi', $linkCallback, $span);
 
         // Replacing links
         $span = preg_replace_callback('/(([a-z0-9]+)|(`(.+)`))_([^a-z0-9]{1}|$)/mUsi', $linkCallback, $span);
-        
+
         $this->tokens = $tokens;
         $this->parser = $parser;
         $this->span = $span;
@@ -140,7 +140,7 @@ abstract class Span extends Node
 
         // Nbsp
         $span = preg_replace('/~/', $this->nbsp(), $span);
-        
+
         // Replacing variables
         $span = preg_replace_callback('/\|(.+)\|/mUsi', function($match) use ($environment) {
             return $environment->getVariable($match[1]);
@@ -174,7 +174,11 @@ abstract class Span extends Node
                 break;
             case 'link':
                 if ($value['url']) {
-                    $url = $environment->relativeUrl($value['url']);
+                    if ($environment->useRelativeUrls()) {
+                        $url = $environment->relativeUrl($value['url']);
+                    } else {
+                        $url = $value['url'];
+                    }
                 } else {
                     $url = $environment->getLink($value['link']);
                 }
@@ -234,4 +238,3 @@ abstract class Span extends Node
         return $link;
     }
 }
-

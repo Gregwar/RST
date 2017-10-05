@@ -47,6 +47,9 @@ class Environment
     protected $levels = array();
     protected $counters = array();
 
+    // Enable relative URLs
+    protected $relativeUrls = true;
+
     // Anonymous links stack
     protected $anonymous = array();
 
@@ -333,6 +336,22 @@ class Environment
     }
 
     /**
+     * Use relative URLs for links
+     */
+    public function useRelativeUrls()
+    {
+        return $this->relativeUrls;
+    }
+
+    /**
+     * Use relative URLs for links
+     */
+    public function setUseRelativeUrls($enable)
+    {
+        $this->relativeUrls = $enable;
+    }
+
+    /**
      * Get the depth of the current file name (the number of parent
      * directories)
      */
@@ -402,12 +421,12 @@ class Environment
     {
         if (strlen($url)) {
             if ($url[0] == '/') {
-                // If the URL begins with a "/", the following is the 
+                // If the URL begins with a "/", the following is the
                 // canonical URL
                 return substr($url, 1);
             } else {
                 // Else, the canonical name is under the current dir
-                if ($this->getDirName()) { 
+                if ($this->getDirName()) {
                     return $this->canonicalize($this->getDirName() . '/' .$url);
                 } else {
                     return $this->canonicalize($url);
