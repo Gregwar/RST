@@ -41,6 +41,7 @@ abstract class Kernel
     {
         return array(
             new Directives\Dummy,
+            new Directives\Code,
             new Directives\CodeBlock,
             new Directives\Raw,
             new Directives\Replace,
