@@ -10,23 +10,25 @@ abstract class Span extends Node
     protected $span;
     protected $tokens;
     protected $environment;
-    protected $tokenPrefix;
+    protected $tokenPrefix = null;
     protected $tokenId;
 
     protected function generateToken()
     {
+        if (!$this->tokenPrefix) {
+            $this->tokenPrefix = mt_rand().'|'.time();
+        }
         $this->tokenId++;
         return sha1($this->tokenPrefix.'|'.$this->tokenId);
     }
 
-    public function __construct(Parser $parser, $span)
+    public function __construct(Parser $parser, $span, $tokens = array())
     {
         if (is_array($span)) {
             $span = implode("\n", $span);
         }
 
         // Replacing literal with tokens
-        $tokens = array();
         $span = preg_replace_callback('/``(.+)``(?!`)/mUsi', function($match) use (&$tokens) {
             $id = $this->generateToken();
             $tokens[$id] = array(
