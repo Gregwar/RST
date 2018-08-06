@@ -10,6 +10,14 @@ abstract class Span extends Node
     protected $span;
     protected $tokens;
     protected $environment;
+    protected $tokenPrefix;
+    protected $tokenId;
+
+    protected function generateToken()
+    {
+        $this->tokenId++;
+        return sha1($this->tokenPrefix.'|'.$this->tokenId);
+    }
 
     public function __construct(Parser $parser, $span)
     {
@@ -17,17 +25,10 @@ abstract class Span extends Node
             $span = implode("\n", $span);
         }
 
-        $tokenId = 0;
-        $prefix = mt_rand().'|'.time();
-        $generator = function() use ($prefix, &$tokenId) {
-            $tokenId++;
-            return sha1($prefix.'|'.$tokenId);
-        };
-
         // Replacing literal with tokens
         $tokens = array();
-        $span = preg_replace_callback('/``(.+)``(?!`)/mUsi', function($match) use (&$tokens, $generator) {
-            $id = $generator();
+        $span = preg_replace_callback('/``(.+)``(?!`)/mUsi', function($match) use (&$tokens) {
+            $id = $this->generateToken();
             $tokens[$id] = array(
                 'type' => 'literal',
                 'text' => htmlspecialchars($match[1])
@@ -56,10 +57,10 @@ abstract class Span extends Node
         }
 
         // Looking for references to other documents
-        $span = preg_replace_callback('/:([a-z0-9]+):`(.+)`/mUsi', function($match) use (&$environment, $generator, &$tokens) {
+        $span = preg_replace_callback('/:([a-z0-9]+):`(.+)`/mUsi', function($match) use (&$environment, &$tokens) {
             $section = $match[1];
             $url = $match[2];
-            $id = $generator();
+            $id = $this->generateToken();
             $anchor = null;
 
             $text = null;
@@ -87,9 +88,9 @@ abstract class Span extends Node
         }, $span);
 
         // Link callback
-        $linkCallback = function($match) use ($environment, $generator, &$tokens) {
+        $linkCallback = function($match) use ($environment, &$tokens) {
             $link = $match[2] ?: $match[4];
-            $id = $generator();
+            $id = $this->generateToken();
             $next = $match[5];
             $url = null;
 
@@ -163,6 +164,9 @@ abstract class Span extends Node
         // Replacing tokens
         foreach ($this->tokens as $id => $value) {
             switch ($value['type']) {
+            case 'raw':
+                $span = str_replace($id, $value['text'], $span);
+                break;
             case 'literal':
                 $span = str_replace($id, $this->literal($value['text']), $span);
                 break;
