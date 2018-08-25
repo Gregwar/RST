@@ -366,13 +366,21 @@ class Builder
     }
 
     /**
+     * Is the given path absolute ?
+     */
+    protected function isAbsolute(string $path)
+    {
+        return $path[0] === DIRECTORY_SEPARATOR || preg_match('~\A[A-Z]:(?![^/\\\\])~i', $path) > 0;
+    }
+
+    /**
      * Run the copy
      */
     public function doCopy()
     {
         foreach ($this->toCopy as $copy) {
             list($source, $destination) = $copy;
-            if ($source[0] != '/') {
+            if (!$this->isAbsolute($source)) {
                 $source = $this->getSourceFile($source);
             }
             $destination = $this->getTargetFile($destination);
