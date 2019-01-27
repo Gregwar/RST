@@ -8,7 +8,7 @@ use Gregwar\RST\Builder;
 /**
  * Unit testing for RST
  */
-class BuilderTests extends \PHPUnit_Framework_TestCase
+class BuilderTests extends \PHPUnit\Framework\TestCase
 {
     /**
      * Tests that the build produced the excepted documents

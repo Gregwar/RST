@@ -5,7 +5,7 @@ use Gregwar\RST\Environment;
 /**
  * Unit testing for RST
  */
-class EnvironmentTests extends \PHPUnit_Framework_TestCase
+class EnvironmentTests extends \PHPUnit\Framework\TestCase
 {
     public function testRelativeUrl()
     {

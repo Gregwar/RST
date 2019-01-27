@@ -17,7 +17,7 @@ use Gregwar\RST\Nodes\DummyNode;
 /**
  * Unit testing for RST
  */
-class ParserTests extends \PHPUnit_Framework_TestCase
+class ParserTests extends \PHPUnit\Framework\TestCase
 {
     /**
      * Tests that comments are not present in the rendered document

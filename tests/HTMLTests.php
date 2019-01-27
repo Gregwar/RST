@@ -6,7 +6,7 @@ use Gregwar\RST\Document;
 /**
  * Unit testing for RST
  */
-class HTMLTests extends \PHPUnit_Framework_TestCase
+class HTMLTests extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test some links demo
