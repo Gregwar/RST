@@ -8,7 +8,7 @@ abstract class Span extends Node
 {
     protected $parser;
     protected $span;
-    protected $tokens;
+    protected $tokens = [];
     protected $environment;
     protected $tokenPrefix = null;
     protected $tokenId;
@@ -164,33 +164,35 @@ abstract class Span extends Node
         $span = $this->process($this->span);
 
         // Replacing tokens
-        foreach ($this->tokens as $id => $value) {
-            switch ($value['type']) {
-            case 'raw':
-                $span = str_replace($id, $value['text'], $span);
-                break;
-            case 'literal':
-                $span = str_replace($id, $this->literal($value['text']), $span);
-                break;
-            case 'reference':
-                $reference = $environment->resolve($value['section'], $value['url']);
-                $link = $this->reference($reference, $value);
+        if ($this->tokens) {
+            foreach ($this->tokens as $id => $value) {
+                switch ($value['type']) {
+                case 'raw':
+                    $span = str_replace($id, $value['text'], $span);
+                    break;
+                case 'literal':
+                    $span = str_replace($id, $this->literal($value['text']), $span);
+                    break;
+                case 'reference':
+                    $reference = $environment->resolve($value['section'], $value['url']);
+                    $link = $this->reference($reference, $value);
 
-                $span = str_replace($id, $link, $span);
-                break;
-            case 'link':
-                if ($value['url']) {
-                    if ($environment->useRelativeUrls()) {
-                        $url = $environment->relativeUrl($value['url']);
+                    $span = str_replace($id, $link, $span);
+                    break;
+                case 'link':
+                    if ($value['url']) {
+                        if ($environment->useRelativeUrls()) {
+                            $url = $environment->relativeUrl($value['url']);
+                        } else {
+                            $url = $value['url'];
+                        }
                     } else {
-                        $url = $value['url'];
+                        $url = $environment->getLink($value['link']);
                     }
-                } else {
-                    $url = $environment->getLink($value['link']);
+                    $link = $this->link($url, $this->process($value['link']));
+                    $span = str_replace($id, $link, $span);
+                    break;
                 }
-                $link = $this->link($url, $this->process($value['link']));
-                $span = str_replace($id, $link, $span);
-                break;
             }
         }
 
