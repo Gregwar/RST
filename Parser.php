@@ -391,7 +391,7 @@ class Parser
      */
     public function pushListLine($line, $flush = false)
     {
-        if (trim($line)) {
+        if (trim($line) !== '') {
             $infos = $this->parseListLine($line);
 
             if ($infos) {
@@ -440,9 +440,9 @@ class Parser
     protected function isBlockLine($line)
     {
         if (strlen($line)) {
-            return !trim($line[0]);
+            return trim($line[0]) === '';
         } else {
-            return !trim($line);
+            return trim($line) === '';
         }
     }
 
@@ -662,7 +662,7 @@ class Parser
             break;
 
         case self::STATE_TABLE:
-            if (!trim($line)) {
+            if (trim($line) === '') {
                 $this->flush();
                 $this->state = self::STATE_BEGIN;
             } else {
@@ -716,7 +716,7 @@ class Parser
         case self::STATE_COMMENT:
             $isComment = false;
 
-            if (!$this->isComment($line) && (!trim($line) || $line[0] != ' ')) {
+            if (!$this->isComment($line) && (trim($line) === '' || $line[0] != ' ')) {
                 $this->state = self::STATE_BEGIN;
                 return false;
             }

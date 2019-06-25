@@ -6,3 +6,4 @@ With two lines
 Paragraph 3
 With *emphasis*
 
+0 started to test php casting issues
