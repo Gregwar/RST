@@ -85,10 +85,16 @@ class ParserTests extends \PHPUnit\Framework\TestCase
     public function testParagraphNodes()
     {
         $document = $this->parse('paragraphs.rst');
+
+        $this->assertNotHasNode($document, function($node) {
+            return $node instanceof QuoteNode;
+        });
         
         $this->assertHasNode($document, function($node) {
             return $node instanceof ParagraphNode;
-        }, 3);
+        }, 4);
+
+        $this->assertContains('0 started', $document->render());
     }
 
     /**

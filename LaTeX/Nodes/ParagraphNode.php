@@ -10,7 +10,7 @@ class ParagraphNode extends Base
     {
         $text = $this->value;
 
-        if (trim($text)) {
+        if (trim($text) !== '') {
             return $text."\n";
         } else {
             return '';
