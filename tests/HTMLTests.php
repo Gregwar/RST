@@ -95,6 +95,77 @@ class HTMLTests extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Testing a table with multibyte characters
+     */
+    public function testTableWithMultibyteCharacters()
+    {
+        $oldMbInternalEncoding = mb_internal_encoding();
+        mb_internal_encoding('UTF-8');
+
+        $document = $this->parseHTML('table-multibyte.rst');
+
+        $this->assertEquals(1, substr_count($document, '<table>'));
+        $this->assertEquals(1, substr_count($document, '</table>'));
+
+        $this->assertSame(
+            '<tr>'.
+            '<th>Column 1</th>'.
+            '<th>Column 2</th>'.
+            '</tr>'.
+            '<tr>'.
+            '<td>description</td>'.
+            '<td>string</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td>Hello world 🤡</td>'.
+            '<td>string</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td>123 €</td>'.
+            '<td>string</td>'.
+            '</tr>',
+            preg_replace('=^.*?<table>(.*)</table>.*$=s', '$1', $document)
+        );
+
+        mb_internal_encoding($oldMbInternalEncoding);
+    }
+
+    /**
+     * Testing a table with multibyte characters
+     */
+    public function testPrettyTableWithMultibyteCharacters()
+    {
+        $oldMbInternalEncoding = mb_internal_encoding();
+        mb_internal_encoding('UTF-8');
+
+        $document = $this->parseHTML('pretty-table-multibyte.rst');
+
+        $this->assertEquals(1, substr_count($document, '<table>'));
+        $this->assertEquals(1, substr_count($document, '</table>'));
+
+        $this->assertSame(
+            '<tr>'.
+            '<td>This is a table</td>'.
+            '<td>With é</td>'.
+            '<td>Some</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td>Data</td>'.
+            '<td>2 €</td>'.
+            '<td>Pretty lines!</td>'.
+            '</tr>'.
+            '<tr>'.
+            '<td>Emoji</td>'.
+            '<td>😀</td>'.
+            '<td>XYZ</td>'.
+            '</tr>',
+            preg_replace('=^.*?<table>(.*)</table>.*$=s', '$1', $document)
+        );
+
+        mb_internal_encoding($oldMbInternalEncoding);
+    }
+
+    /**
      * Testing HTML table with headers
      */
     public function testHeaderTable()

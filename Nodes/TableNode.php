@@ -34,8 +34,6 @@ abstract class TableNode extends Node
 
     public function push($parts, $line)
     {
-        $line = utf8_decode($line);
-
         if ($parts) {
             // New line in the tab
             if ($parts[2] != $this->parts[2]) {
@@ -51,21 +49,22 @@ abstract class TableNode extends Node
             list($header, $pretty, $parts) = $this->parts;
             $row = &$this->data[count($this->data)-1];
 
-            for ($k=1; $k<=count($parts); $k++) {
-                if ($k == count($parts)) {
-                    $data = substr($line, $parts[$k-1]);
+            $partsCount = count($parts);
+            for ($k = 1; $k <= $partsCount; $k++) {
+                if ($k === $partsCount) {
+                    $data = mb_substr($line, $parts[$k-1]);
                 } else {
-                    $data = substr($line, $parts[$k-1], $parts[$k]-$parts[$k-1]);
+                    $data = mb_substr($line, $parts[$k-1], $parts[$k]-$parts[$k-1]);
                 }
 
                 if ($pretty) {
-                    $data = substr($data, 0, -1);
+                    $data = mb_substr($data, 0, -1);
                 }
 
-                $data = utf8_encode(trim($data));
+                $data = trim($data);
 
                 if (isset($row[$k-1])) {
-                    $row[$k-1] .= ' '.$data;
+                    $row[$k-1] = trim($row[$k-1].' '.$data);
                 } else {
                     $row[$k-1] = $data;
                 }
