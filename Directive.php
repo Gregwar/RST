@@ -32,7 +32,7 @@ abstract class Directive
      * @param $node the node that follows the directive
      * @param $variable the variable name of the directive
      * @param $data the data of the directive (following ::)
-     * @param $ptions the array of options for this directive
+     * @param $options the array of options for this directive
      */
     public function process(Parser $parser, $node, $variable, $data, array $options)
     {
