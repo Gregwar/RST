@@ -2,6 +2,8 @@
 
 namespace Gregwar\RST;
 
+use Gregwar\RST\Nodes\BlockNode;
+
 class Parser
 {
     const STATE_BEGIN = 0;
@@ -583,6 +585,11 @@ class Parser
                 $this->isCode = $this->prepareCode();
                 $node = $this->kernel->build('Nodes\ParagraphNode', $this->createSpan($this->buffer));
                 break;
+            }
+
+            if ($node instanceof BlockNode) {
+                // We need to subtract one here because the last line of the buffer is an empty line
+                $node->setStartingLineNumber($this->currentLine - count($this->buffer) - 1);
             }
         }
 
