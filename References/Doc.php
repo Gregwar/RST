@@ -24,7 +24,7 @@ class Doc extends Reference
         $metas = $environment->getMetas();
         $file = $environment->canonicalUrl($data);
 
-        if ($metas) {
+        if ($metas && $metas->get($file)) {
             $entry = $metas->get($file);
             $entry['url'] = $environment->relativeUrl('/'.$entry['url']);
         } else {
