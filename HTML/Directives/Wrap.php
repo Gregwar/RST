@@ -14,7 +14,7 @@ class Wrap extends SubDirective
     protected $class;
     protected $uniqid;
 
-    public function __construct($class, $uniqid=false)
+    public function __construct($class, $uniqid = false)
     {
         $this->class = $class;
         $this->uniqid = $uniqid;
@@ -29,10 +29,15 @@ class Wrap extends SubDirective
     {
         $class = $this->class;
         if ($this->uniqid) {
-            $id = ' id="'.uniqid($this->class).'"';
+            $id = ' id="' . uniqid($this->class) . '"';
         } else {
             $id = '';
         }
-        return new WrapperNode($document, '<div class="'.$class.'"'.$id.'>', '</div>');
+        if ($data) {
+            $extra = ' data-params="' . htmlspecialchars($data) . '"';
+        } else {
+            $extra = '';
+        }
+        return new WrapperNode($document, '<div class="' . $class . '"' . $id . $extra . '>', '</div>');
     }
 }
